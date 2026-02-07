@@ -20,6 +20,36 @@ const openings: Record<string, string[]> = {
     "{hero} entered Dino Valley with a backpack of snacks and a compass. The air smelled of rain, and the {location} was hidden beyond the ferns.",
     "A baby triceratops nudged {hero}'s hand. The mission was to solve {conflict}, and the {location} could hold a clue.",
     "{hero} followed a trail of leaves and felt {mood}. The {location} appeared between tall rocks like a quiet secret."
+  ],
+  "Sky Castle": [
+    "{hero} arrived at Sky Castle on a soft cloud bridge. The {location} shimmered above, and {conflict} had to be solved before sunset.",
+    "A breeze carried {hero} to the {location}. The towers sang quietly, and {hero} felt {mood} and ready.",
+    "{hero} spotted {conflict}. The {location} glowed with clues waiting to be found."
+  ],
+  "Robot City": [
+    "{hero} rolled into Robot City where lights blinked like stars. The {location} was buzzing, and {conflict} needed a clever plan.",
+    "Gears whirred as {hero} reached the {location}. The city felt {mood}, and a friendly bot waved hello.",
+    "{hero} noticed {conflict} near the {location}. A tiny drone hovered, ready to help."
+  ],
+  "Candy Kingdom": [
+    "{hero} stepped into Candy Kingdom where streets sparkled like sugar. The {location} smelled sweet, but {conflict} had to be solved.",
+    "A jelly bridge led {hero} to the {location}. The air felt {mood}, and gumdrop lanterns lit the way.",
+    "{hero} discovered {conflict}. The {location} glowed like caramel and promised a clue."
+  ],
+  "Jungle Rescue": [
+    "{hero} entered the jungle and heard drums in the trees. The {location} was hidden in the vines, and {conflict} needed help.",
+    "A parrot guided {hero} to the {location}. The jungle felt {mood}, and a rescue plan began.",
+    "{hero} spotted {conflict} near the {location}. Leaves rustled as a new clue appeared."
+  ],
+  "Ice Mountain": [
+    "{hero} climbed Ice Mountain where the air glittered. The {location} shone like crystal, and {conflict} needed courage.",
+    "A snowy path led {hero} to the {location}. The cold felt {mood}, but the mission was clear.",
+    "{hero} discovered {conflict}. The {location} sparkled with icy hints."
+  ],
+  "Desert Caravan": [
+    "{hero} joined a desert caravan under a golden sky. The {location} was far away, and {conflict} needed a brave choice.",
+    "Warm winds guided {hero} toward the {location}. The sand felt {mood}, and camels hummed softly.",
+    "{hero} noticed {conflict} near the {location}. A lantern flickered with a clue."
   ]
 };
 
@@ -72,6 +102,54 @@ const themeDetails: Record<string, Record<string, string[]>> = {
     sign: ["distant roar", "glowing fireflies", "soft drum"],
     tool: ["map", "flare", "snack pack"],
     friend: ["young dino", "lost runner", "forest goat"]
+  },
+  "Sky Castle": {
+    clue: ["silver feather", "rainbow ribbon", "cloud swirl"],
+    place: ["sun tower", "sky bridge", "wind garden"],
+    guide: ["cloud fox", "sky knight", "singing bell"],
+    sign: ["soft chimes", "glowing mist", "floating light"],
+    tool: ["wing charm", "light compass", "star key"],
+    friend: ["tiny sprite", "young dragon", "sky pup"]
+  },
+  "Robot City": {
+    clue: ["beeping beacon", "laser trail", "metal token"],
+    place: ["circuit plaza", "battery hall", "neon gate"],
+    guide: ["helper bot", "city marshal", "music drone"],
+    sign: ["blinking panel", "whirring fan", "blue glow"],
+    tool: ["tool kit", "signal badge", "magnet wand"],
+    friend: ["lost bot", "mini rover", "spark cat"]
+  },
+  "Candy Kingdom": {
+    clue: ["sugar sparkle", "caramel ribbon", "peppermint trail"],
+    place: ["gumdrop tower", "chocolate bridge", "lollipop lane"],
+    guide: ["candy owl", "marshmallow bear", "jelly guide"],
+    sign: ["sweet bells", "glowing jelly", "fizzy light"],
+    tool: ["candy compass", "gumdrop key", "sprinkle pouch"],
+    friend: ["cookie pup", "gummy fox", "caramel kid"]
+  },
+  "Jungle Rescue": {
+    clue: ["parrot feather", "vine mark", "river ripple"],
+    place: ["canopy hut", "waterfall cave", "sunlit clearing"],
+    guide: ["wise monkey", "forest ranger", "talking toucan"],
+    sign: ["drum beats", "shimmering leaf", "hidden track"],
+    tool: ["rope", "rescue whistle", "trail map"],
+    friend: ["lost cub", "tiny sloth", "jungle pup"]
+  },
+  "Ice Mountain": {
+    clue: ["snow crystal", "ice trail", "frost mark"],
+    place: ["glacier gate", "crystal cave", "frozen ridge"],
+    guide: ["polar fox", "ice guide", "snow owl"],
+    sign: ["blue sparkle", "cold breeze", "ringing ice"],
+    tool: ["warm lantern", "ice pick", "snow compass"],
+    friend: ["baby seal", "snow bunny", "tiny yeti"]
+  },
+  "Desert Caravan": {
+    clue: ["sand swirl", "gold coin", "sunstone"],
+    place: ["oasis well", "dune camp", "market tent"],
+    guide: ["wise camel", "caravan leader", "desert fox"],
+    sign: ["wind song", "lantern glow", "footprint trail"],
+    tool: ["water pouch", "sand compass", "shade cloth"],
+    friend: ["lost traveler", "little lizard", "desert pup"]
   }
 };
 
@@ -79,7 +157,13 @@ const heroByTheme: Record<string, string[]> = {
   "Magic Forest": ["Mia", "Ellis", "Aria"],
   "Space School": ["Leo", "Nova", "Kai"],
   "Ocean Quest": ["Nora", "Finn", "Luna"],
-  "Dino Valley": ["Theo", "Rex", "Maya"]
+  "Dino Valley": ["Theo", "Rex", "Maya"],
+  "Sky Castle": ["Skye", "Ari", "Nova"],
+  "Robot City": ["Robo", "Ivy", "Zed"],
+  "Candy Kingdom": ["Cora", "Milo", "Poppy"],
+  "Jungle Rescue": ["Jade", "Rio", "Lina"],
+  "Ice Mountain": ["Frost", "Mia", "Tari"],
+  "Desert Caravan": ["Sami", "Zara", "Omar"]
 };
 
 const moodWords: Record<Difficulty, string[]> = {
@@ -108,6 +192,36 @@ const conflictByTheme: Record<string, string[]> = {
     "a gentle giant had lost its map",
     "a valley bridge was broken",
     "a rain cloud would not move"
+  ],
+  "Sky Castle": [
+    "a cloud gate was locked",
+    "a rainbow bridge was fading",
+    "a bell tower had gone silent"
+  ],
+  "Robot City": [
+    "the power core was missing",
+    "a signal was lost",
+    "the city lights were flickering"
+  ],
+  "Candy Kingdom": [
+    "the candy fountain stopped",
+    "a sweet bridge cracked",
+    "the sprinkle lights went out"
+  ],
+  "Jungle Rescue": [
+    "a baby animal was lost",
+    "a tree bridge broke",
+    "a rescue call echoed"
+  ],
+  "Ice Mountain": [
+    "a crystal path froze solid",
+    "the warm lantern went out",
+    "an ice gate would not open"
+  ],
+  "Desert Caravan": [
+    "a caravan map was missing",
+    "a sandstorm was coming",
+    "an oasis clue was lost"
   ]
 };
 
@@ -144,6 +258,36 @@ const eventByTheme: Record<string, string[]> = {
     "A friendly roar echoed and then calmed down.",
     "A bird dropped a leaf that pointed the way.",
     "A small tremor revealed a hidden trail."
+  ],
+  "Sky Castle": [
+    "A cloud puff formed a smiling face.",
+    "A rainbow shimmer pointed to a new path.",
+    "A bell rang once, then faded."
+  ],
+  "Robot City": [
+    "A helper bot beeped a short tune.",
+    "A neon sign flickered with a hint.",
+    "A tiny drone zipped by with a clue."
+  ],
+  "Candy Kingdom": [
+    "A sprinkle burst lit up the road.",
+    "A sugar breeze carried a tiny note.",
+    "A jelly light blinked twice."
+  ],
+  "Jungle Rescue": [
+    "A parrot shouted a helpful word.",
+    "A vine swayed, revealing a shortcut.",
+    "A drum beat matched the heart of the path."
+  ],
+  "Ice Mountain": [
+    "Snowflakes formed a gentle arrow.",
+    "A crystal chimed like a bell.",
+    "A warm gust melted a tiny gap."
+  ],
+  "Desert Caravan": [
+    "A lantern glowed brighter for a moment.",
+    "A camel hummed and nodded toward the trail.",
+    "A dune shifted to reveal a hidden mark."
   ]
 };
 
@@ -151,7 +295,13 @@ const inventoryByTheme: Record<string, string[]> = {
   "Magic Forest": ["glowing leaf", "wind charm", "silver key"],
   "Space School": ["star badge", "gravity pass", "tool chip"],
   "Ocean Quest": ["pearl shard", "shell horn", "tide compass"],
-  "Dino Valley": ["leaf map", "stone token", "rain whistle"]
+  "Dino Valley": ["leaf map", "stone token", "rain whistle"],
+  "Sky Castle": ["cloud key", "star ribbon", "wind flute"],
+  "Robot City": ["power cell", "signal chip", "magnet ring"],
+  "Candy Kingdom": ["sprinkle pouch", "gumdrop key", "sugar star"],
+  "Jungle Rescue": ["trail rope", "rescue whistle", "leaf badge"],
+  "Ice Mountain": ["warm lantern", "ice shard", "snow charm"],
+  "Desert Caravan": ["oasis map", "sunstone", "water flask"]
 };
 
 function pick<T>(items: T[], round: number) {

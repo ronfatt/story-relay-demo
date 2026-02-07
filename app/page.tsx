@@ -9,7 +9,13 @@ export default function HomePage() {
     { name: "Magic Forest", emoji: "✨", preview: "Glowing paths and secret doors." },
     { name: "Space School", emoji: "🚀", preview: "Solve star mysteries with robots." },
     { name: "Ocean Quest", emoji: "🌊", preview: "Dive for pearls and sea clues." },
-    { name: "Dino Valley", emoji: "🦕", preview: "Brave trails and friendly giants." }
+    { name: "Dino Valley", emoji: "🦕", preview: "Brave trails and friendly giants." },
+    { name: "Sky Castle", emoji: "🏰", preview: "Cloud bridges and sky bells." },
+    { name: "Robot City", emoji: "🤖", preview: "Beep-boop clues and bright lights." },
+    { name: "Candy Kingdom", emoji: "🍭", preview: "Sweet paths and sparkle hints." },
+    { name: "Jungle Rescue", emoji: "🌿", preview: "Hidden trails and rescue calls." },
+    { name: "Ice Mountain", emoji: "❄️", preview: "Crystal caves and chilly clues." },
+    { name: "Desert Caravan", emoji: "🏜️", preview: "Golden dunes and oasis secrets." }
   ];
   const today = useMemo(() => {
     const pick = themes[Math.floor(Math.random() * themes.length)];

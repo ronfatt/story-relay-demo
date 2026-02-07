@@ -3,7 +3,18 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-const themes = ["Magic Forest", "Space School", "Ocean Quest", "Dino Valley"];
+const themes = [
+  "Magic Forest",
+  "Space School",
+  "Ocean Quest",
+  "Dino Valley",
+  "Sky Castle",
+  "Robot City",
+  "Candy Kingdom",
+  "Jungle Rescue",
+  "Ice Mountain",
+  "Desert Caravan"
+];
 const difficulties = ["Beginner", "Intermediate", "Advanced"];
 
 type Choice = { id: string; text: string };
@@ -202,6 +213,12 @@ function themeEmoji(theme: string) {
   if (theme === "Space School") return "🚀";
   if (theme === "Ocean Quest") return "🌊";
   if (theme === "Dino Valley") return "🦕";
+  if (theme === "Sky Castle") return "🏰";
+  if (theme === "Robot City") return "🤖";
+  if (theme === "Candy Kingdom") return "🍭";
+  if (theme === "Jungle Rescue") return "🌿";
+  if (theme === "Ice Mountain") return "❄️";
+  if (theme === "Desert Caravan") return "🏜️";
   return "⭐";
 }
 
@@ -224,6 +241,12 @@ function avatarEmoji(theme: string) {
   if (theme === "Space School") return "🧑‍🚀";
   if (theme === "Ocean Quest") return "🐬";
   if (theme === "Dino Valley") return "🦖";
+  if (theme === "Sky Castle") return "🦄";
+  if (theme === "Robot City") return "🧠";
+  if (theme === "Candy Kingdom") return "🧁";
+  if (theme === "Jungle Rescue") return "🦜";
+  if (theme === "Ice Mountain") return "🐻‍❄️";
+  if (theme === "Desert Caravan") return "🐪";
   return "⭐";
 }
 
