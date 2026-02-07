@@ -196,6 +196,11 @@ export default function PlayClient({
       {roundData && (
         <section className="card grid play-card">
           <ConfettiBurst burstKey={burstKey} />
+          {roundData.maxRounds && roundData.round >= roundData.maxRounds && (
+            <div className="last-round-banner">
+              <strong>{t.lastRoundTitle}</strong> {t.lastRoundHint}
+            </div>
+          )}
           <div className="badge">
             {t.round} {roundData.round} / {roundData.maxRounds ?? 10}
           </div>

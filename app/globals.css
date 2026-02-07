@@ -261,6 +261,18 @@ body {
   font-size: 12px;
 }
 
+.last-round-banner {
+  background: linear-gradient(120deg, #ffe1f1, #e8f1ff);
+  border: 2px dashed #ff9ad8;
+  color: #5b2c6f;
+  padding: 12px 16px;
+  border-radius: 16px;
+  font-weight: 700;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
 .story-block {
   background: #fff;
   border-radius: 14px;
