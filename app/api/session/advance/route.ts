@@ -42,7 +42,8 @@ export async function POST(req: Request) {
     },
     session.theme,
     choiceId,
-    session.lang
+    session.lang,
+    session.difficulty
   );
 
   const reward = inventoryReward(session.theme, session.round, choiceId, session.lang);

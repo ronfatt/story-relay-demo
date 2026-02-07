@@ -46,7 +46,8 @@ export async function POST(req: Request) {
     session.story,
     session.theme,
     branch,
-    session.lang
+    session.lang,
+    session.difficulty
   );
 
   return NextResponse.json({

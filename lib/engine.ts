@@ -97,10 +97,307 @@ const themeLabelsByLang: Record<Language, Record<string, string>> = {
   }
 };
 
-const targetWordPools: Record<Difficulty, string[]> = {
-  Beginner: ["brave", "glow", "soft", "help", "friend", "safe"],
-  Intermediate: ["suddenly", "whisper", "curious", "path", "promise", "gentle"],
-  Advanced: ["mysterious", "strategy", "resolve", "glimmer", "explore", "twist"]
+const targetWordPoolsByLang: Record<Language, Record<Difficulty, string[]>> = {
+  en: {
+    Beginner: ["eat", "go", "run", "sleep", "drink", "look"],
+    Intermediate: ["because", "then", "key", "door", "find", "help"],
+    Advanced: ["mysterious", "strategy", "resolve", "glimmer", "explore", "twist"]
+  },
+  zh: {
+    Beginner: ["吃", "走", "跑", "睡", "水", "看"],
+    Intermediate: ["因为", "然后", "钥匙", "门", "找到", "帮忙"],
+    Advanced: ["神秘", "策略", "决心", "微光", "探索", "转折"]
+  },
+  ms: {
+    Beginner: ["makan", "pergi", "lari", "tidur", "minum", "lihat"],
+    Intermediate: ["kerana", "kemudian", "kunci", "pintu", "jumpa", "bantu"],
+    Advanced: ["misteri", "strategi", "tekad", "kilauan", "meneroka", "kejutan"]
+  }
+};
+
+const beginnerActionsByLang: Record<Language, Record<string, string[]>> = {
+  en: {
+    "Magic Forest": [
+      "Look at a tree",
+      "Pick a flower",
+      "Go outside",
+      "Run fast",
+      "Drink water",
+      "Sit under a tree",
+      "Wave to a friend",
+      "Go home"
+    ],
+    "Space School": [
+      "Press a button",
+      "Go to class",
+      "Look at a star",
+      "Wave to a robot",
+      "Open the locker",
+      "Run to the door",
+      "Drink water",
+      "Sit down"
+    ],
+    "Ocean Quest": [
+      "Swim in water",
+      "Look at a fish",
+      "Pick a shell",
+      "Wave to a dolphin",
+      "Go to shore",
+      "Jump in water",
+      "Drink water",
+      "Sit on the boat"
+    ],
+    "Dino Valley": [
+      "Look at a dino",
+      "Run fast",
+      "Pick a leaf",
+      "Wave to a dino",
+      "Go to the hill",
+      "Jump on a log",
+      "Drink water",
+      "Sit by a rock"
+    ],
+    "Sky Castle": [
+      "Go to the bridge",
+      "Look at a cloud",
+      "Pick a star",
+      "Wave to a bird",
+      "Run on the path",
+      "Open a door",
+      "Drink water",
+      "Sit down"
+    ],
+    "Robot City": [
+      "Press a button",
+      "Wave to a robot",
+      "Look at a light",
+      "Pick a part",
+      "Go to the gate",
+      "Open a door",
+      "Drink water",
+      "Sit down"
+    ],
+    "Candy Kingdom": [
+      "Eat a candy",
+      "Pick a sweet",
+      "Go outside",
+      "Wave to a friend",
+      "Run to the gate",
+      "Look at a cake",
+      "Drink water",
+      "Sit down"
+    ],
+    "Jungle Rescue": [
+      "Look at a tree",
+      "Go to the river",
+      "Wave to a bird",
+      "Pick a leaf",
+      "Run fast",
+      "Call a friend",
+      "Drink water",
+      "Sit down"
+    ],
+    "Ice Mountain": [
+      "Look at the snow",
+      "Go to the cave",
+      "Pick a stone",
+      "Wave to a friend",
+      "Run to the hill",
+      "Open the gate",
+      "Drink water",
+      "Sit down"
+    ],
+    "Desert Caravan": [
+      "Look at the sand",
+      "Go to the tent",
+      "Pick a stone",
+      "Wave to a camel",
+      "Run to the gate",
+      "Open the bag",
+      "Drink water",
+      "Sit down"
+    ]
+  },
+  zh: {
+    "*": [
+      "看看",
+      "出去",
+      "跑一跑",
+      "喝水",
+      "坐下",
+      "打招呼",
+      "捡起来",
+      "去那边"
+    ]
+  },
+  ms: {
+    "*": [
+      "Lihat sekeliling",
+      "Pergi keluar",
+      "Lari laju",
+      "Minum air",
+      "Duduk dulu",
+      "Sapa kawan",
+      "Ambil benda",
+      "Pergi ke sana"
+    ]
+  }
+};
+
+const intermediateActionsByLang: Record<Language, string[]> = {
+  en: [
+    "Look for a key",
+    "Check the small door",
+    "Ask a friend for help",
+    "Follow the quiet path",
+    "Open the old box",
+    "Go to the bridge",
+    "Look under the table",
+    "Wait for a sound"
+  ],
+  zh: [
+    "找一找钥匙",
+    "看看那扇门",
+    "请朋友帮忙",
+    "跟着小路走",
+    "打开小盒子",
+    "去桥那边",
+    "看看桌子下",
+    "等一等声音"
+  ],
+  ms: [
+    "Cari kunci kecil",
+    "Lihat pintu kecil",
+    "Minta kawan bantu",
+    "Ikut laluan sunyi",
+    "Buka kotak lama",
+    "Pergi ke jambatan",
+    "Lihat bawah meja",
+    "Tunggu bunyi"
+  ]
+};
+
+const beginnerOpeningsByLang: Record<Language, string[]> = {
+  en: [
+    "{hero} is in {theme}.",
+    "{hero} sees {location}.",
+    "{hero} is {mood}.",
+    "It is morning."
+  ],
+  zh: [
+    "{hero} 在 {theme}。",
+    "{hero} 看到 {location}。",
+    "{hero} 很 {mood}。",
+    "现在是早上。"
+  ],
+  ms: [
+    "{hero} di {theme}.",
+    "{hero} nampak {location}.",
+    "{hero} rasa {mood}.",
+    "Sekarang pagi."
+  ]
+};
+
+const intermediateOpeningsByLang: Record<Language, string[]> = {
+  en: [
+    "{hero} is in {theme} today.",
+    "{hero} sees {location} right nearby.",
+    "A small problem is here to solve.",
+    "{hero} feels {mood} and looks around."
+  ],
+  zh: [
+    "{hero} 今天在 {theme}。",
+    "{hero} 看到 {location} 就在附近。",
+    "这里有个小问题要解决。",
+    "{hero} 有点 {mood}，四处看看。"
+  ],
+  ms: [
+    "{hero} di {theme} hari ini.",
+    "{hero} nampak {location} dekat sini.",
+    "Ada masalah kecil untuk diselesaikan.",
+    "{hero} rasa {mood} dan melihat sekeliling."
+  ]
+};
+
+const beginnerLocationsByLang: Record<Language, Record<string, string[]>> = {
+  en: {
+    "Magic Forest": ["a tree", "a pond", "a path"],
+    "Space School": ["a door", "a desk", "a star"],
+    "Ocean Quest": ["the sea", "a shell", "a boat"],
+    "Dino Valley": ["a hill", "a rock", "a leaf"],
+    "Sky Castle": ["a bridge", "a cloud", "a tower"],
+    "Robot City": ["a light", "a gate", "a robot"],
+    "Candy Kingdom": ["a cake", "a sweet", "a road"],
+    "Jungle Rescue": ["a tree", "a river", "a bird"],
+    "Ice Mountain": ["the snow", "a cave", "a rock"],
+    "Desert Caravan": ["the sand", "a tent", "a camel"]
+  },
+  zh: {
+    "Magic Forest": ["一棵树", "一个小湖", "一条路"],
+    "Space School": ["一扇门", "一张桌", "一颗星"],
+    "Ocean Quest": ["大海", "一个贝壳", "一条船"],
+    "Dino Valley": ["一座小山", "一块石头", "一片叶子"],
+    "Sky Castle": ["一座桥", "一朵云", "一座塔"],
+    "Robot City": ["一盏灯", "一扇门", "一个机器人"],
+    "Candy Kingdom": ["一块蛋糕", "一颗糖", "一条路"],
+    "Jungle Rescue": ["一棵树", "一条河", "一只鸟"],
+    "Ice Mountain": ["一片雪", "一个洞", "一块石头"],
+    "Desert Caravan": ["一片沙", "一座帐篷", "一只骆驼"]
+  },
+  ms: {
+    "Magic Forest": ["sebatang pokok", "sebuah kolam", "sebuah laluan"],
+    "Space School": ["sebuah pintu", "sebuah meja", "sebuah bintang"],
+    "Ocean Quest": ["laut", "sebuah cangkerang", "sebuah bot"],
+    "Dino Valley": ["sebuah bukit", "sebuah batu", "sehelai daun"],
+    "Sky Castle": ["sebuah jambatan", "sebuah awan", "sebuah menara"],
+    "Robot City": ["sebuah lampu", "sebuah pintu", "sebuah robot"],
+    "Candy Kingdom": ["sebuah kek", "sebiji gula-gula", "sebuah jalan"],
+    "Jungle Rescue": ["sebatang pokok", "sebuah sungai", "seekor burung"],
+    "Ice Mountain": ["salji", "sebuah gua", "sebuah batu"],
+    "Desert Caravan": ["pasir", "sebuah khemah", "seekor unta"]
+  }
+};
+
+const beginnerConflictsByLang: Record<Language, Record<string, string[]>> = {
+  en: {
+    "Magic Forest": ["the gate is closed", "a light is off", "a path is blocked"],
+    "Space School": ["the door is closed", "a light is off", "a key is missing"],
+    "Ocean Quest": ["the boat is stuck", "a shell is lost", "the path is closed"],
+    "Dino Valley": ["the bridge is down", "a map is lost", "a path is blocked"],
+    "Sky Castle": ["the gate is closed", "a bell is quiet", "a path is blocked"],
+    "Robot City": ["the light is off", "the door is closed", "a part is missing"],
+    "Candy Kingdom": ["the gate is closed", "a sweet is lost", "the path is blocked"],
+    "Jungle Rescue": ["the bridge is down", "a friend is lost", "a path is blocked"],
+    "Ice Mountain": ["the gate is closed", "a light is off", "a path is blocked"],
+    "Desert Caravan": ["the gate is closed", "a map is lost", "a path is blocked"]
+  },
+  zh: {
+    "*": ["门关着", "路被挡住了", "灯不亮"]
+  },
+  ms: {
+    "*": ["pintu tertutup", "laluan terhalang", "lampu tidak menyala"]
+  }
+};
+
+const intermediateConflictsByLang: Record<Language, Record<string, string[]>> = {
+  en: {
+    "Magic Forest": ["a small gate is locked", "a path is hard to see", "a bell is silent"],
+    "Space School": ["a small door is locked", "a badge is missing", "a room is quiet"],
+    "Ocean Quest": ["a tide gate is stuck", "a pearl is missing", "a path is hidden"],
+    "Dino Valley": ["a bridge is shaky", "a map is missing", "a trail is faint"],
+    "Sky Castle": ["a sky gate is locked", "a bell is silent", "a bridge is faint"],
+    "Robot City": ["a light is weak", "a door is locked", "a part is missing"],
+    "Candy Kingdom": ["a gate is sticky", "a sweet is missing", "a bridge is weak"],
+    "Jungle Rescue": ["a trail is hidden", "a call is faint", "a bridge is down"],
+    "Ice Mountain": ["a gate is frozen", "a path is slippery", "a light is dim"],
+    "Desert Caravan": ["a map is missing", "a path is unclear", "a gate is closed"]
+  },
+  zh: {
+    "*": ["一扇小门锁着", "小路不清楚", "线索不见了"]
+  },
+  ms: {
+    "*": ["pintu kecil berkunci", "laluan tidak jelas", "petunjuk hilang"]
+  }
 };
 
 const choiceTemplates = [
@@ -235,21 +532,21 @@ const heroByTheme: Record<string, string[]> = {
 };
 
 const moodWords: Record<Difficulty, string[]> = {
-  Beginner: ["happy", "curious", "brave", "calm"],
-  Intermediate: ["hopeful", "focused", "excited", "steady"],
+  Beginner: ["happy", "sad", "sleepy", "hungry"],
+  Intermediate: ["happy", "excited", "scared", "curious"],
   Advanced: ["determined", "thoughtful", "eager", "confident"]
 };
 
 const moodWordsByLang: Record<Language, Record<Difficulty, string[]>> = {
   en: moodWords,
   zh: {
-    Beginner: ["开心", "好奇", "勇敢", "平静"],
-    Intermediate: ["充满希望", "专注", "兴奋", "稳重"],
+    Beginner: ["开心", "难过", "困", "饿"],
+    Intermediate: ["开心", "兴奋", "有点怕", "好奇"],
     Advanced: ["坚定", "深思", "渴望", "自信"]
   },
   ms: {
-    Beginner: ["gembira", "ingin tahu", "berani", "tenang"],
-    Intermediate: ["berharap", "fokus", "teruja", "steady"],
+    Beginner: ["gembira", "sedih", "mengantuk", "lapar"],
+    Intermediate: ["gembira", "teruja", "takut", "ingin tahu"],
     Advanced: ["bertekad", "berfikir", "bersemangat", "yakin"]
   }
 };
@@ -418,6 +715,71 @@ function pick<T>(items: T[], round: number) {
   return items[round % items.length];
 }
 
+function getLocationPool(theme: string, difficulty: Difficulty, lang: Language) {
+  if (difficulty === "Beginner") {
+    const pool =
+      beginnerLocationsByLang[lang]?.[theme] ||
+      beginnerLocationsByLang[lang]?.["Magic Forest"];
+    return pool || ["a place"];
+  }
+  const pool = themeDetails[theme]?.place || themeDetails["Magic Forest"].place;
+  return pool;
+}
+
+function getConflictPool(theme: string, difficulty: Difficulty, lang: Language) {
+  if (difficulty === "Beginner") {
+    const pool =
+      beginnerConflictsByLang[lang]?.[theme] ||
+      beginnerConflictsByLang[lang]?.["*"];
+    return pool || ["a small problem"];
+  }
+  if (difficulty === "Intermediate") {
+    const pool =
+      intermediateConflictsByLang[lang]?.[theme] ||
+      intermediateConflictsByLang[lang]?.["*"];
+    return pool || ["a small problem"];
+  }
+  return conflictByTheme[theme] || conflictByTheme["Magic Forest"];
+}
+
+function buildOpeningByDifficulty(
+  difficulty: Difficulty,
+  hero: string,
+  themeLabel: string,
+  location: string,
+  mood: string,
+  conflict: string,
+  lang: Language
+) {
+  if (difficulty === "Beginner") {
+    const lines = beginnerOpeningsByLang[lang] || beginnerOpeningsByLang.en;
+    return lines
+      .map((line) =>
+        line
+          .replace("{hero}", hero)
+          .replace("{theme}", themeLabel)
+          .replace("{location}", location)
+          .replace("{mood}", mood)
+          .replace("{conflict}", conflict)
+      )
+      .join("\n");
+  }
+  if (difficulty === "Intermediate") {
+    const lines = intermediateOpeningsByLang[lang] || intermediateOpeningsByLang.en;
+    return lines
+      .map((line) =>
+        line
+          .replace("{hero}", hero)
+          .replace("{theme}", themeLabel)
+          .replace("{location}", location)
+          .replace("{mood}", mood)
+          .replace("{conflict}", conflict)
+      )
+      .join("\n");
+  }
+  return "";
+}
+
 export function createOpening(
   theme: string,
   difficulty: Difficulty,
@@ -427,21 +789,32 @@ export function createOpening(
   const hero = heroName && heroName.trim().length > 0
     ? heroName.trim()
     : pick(heroByTheme[theme] || heroByTheme["Magic Forest"], 0);
-  const location = pick(themeDetails[theme]?.place || themeDetails["Magic Forest"].place, 1);
+  const location = pick(getLocationPool(theme, difficulty, lang), 1);
   const moodPool = moodWordsByLang[lang]?.[difficulty] || moodWords[difficulty];
   const mood = pick(moodPool, 2);
-  const conflict = pick(conflictByTheme[theme] || conflictByTheme["Magic Forest"], 3);
+  const conflict = pick(getConflictPool(theme, difficulty, lang), 3);
 
   const themeLabel = themeLabelsByLang[lang]?.[theme] || theme;
-  const templates =
-    lang === "en" ? openings[theme] || openings["Magic Forest"] : openingTemplatesByLang[lang];
-  const template = templates[Math.floor(Math.random() * templates.length)];
-  const opening = template
-    .replace("{hero}", hero)
-    .replace("{location}", location)
-    .replace("{mood}", mood)
-    .replace("{conflict}", conflict)
-    .replace("{theme}", themeLabel);
+  let opening = buildOpeningByDifficulty(
+    difficulty,
+    hero,
+    themeLabel,
+    location,
+    mood,
+    conflict,
+    lang
+  );
+  if (!opening) {
+    const templates =
+      lang === "en" ? openings[theme] || openings["Magic Forest"] : openingTemplatesByLang[lang];
+    const template = templates[Math.floor(Math.random() * templates.length)];
+    opening = template
+      .replace("{hero}", hero)
+      .replace("{location}", location)
+      .replace("{mood}", mood)
+      .replace("{conflict}", conflict)
+      .replace("{theme}", themeLabel);
+  }
 
   return {
     opening: clampByDifficulty(opening, difficulty),
@@ -462,25 +835,14 @@ export function makeRound(
   conflict?: string,
   lang: Language = "en"
 ) {
-  const pool = themeDetails[theme] || themeDetails["Magic Forest"];
-  const templateList = choiceTemplatesByLang[lang] || choiceTemplates;
-  const template = templateList[round % templateList.length];
-
-  const choiceTexts = ["A", "B", "C"].map((label, index) => {
-    const fill = (key: keyof typeof pool) => pick(pool[key], round + index + key.length);
-    const text = template
-      .replace("{clue}", fill("clue"))
-      .replace("{place}", fill("place"))
-      .replace("{guide}", fill("guide"))
-      .replace("{sign}", fill("sign"))
-      .replace("{tool}", fill("tool"))
-      .replace("{friend}", fill("friend"));
-    return { id: label, text };
-  });
-
-  const targetWords = targetWordPools[difficulty].slice(0, 3);
-
-  const question = buildQuestion(lang, hero || "the hero", conflict || "the mystery");
+  const choiceTexts = buildChoices(theme, difficulty, round, lang);
+  const targetWords = getTargetWords(difficulty, lang);
+  const question = buildQuestion(
+    lang,
+    hero || "the hero",
+    conflict || "the mystery",
+    difficulty
+  );
 
   return {
     question,
@@ -495,7 +857,22 @@ export function makeRound(
   };
 }
 
-function buildQuestion(lang: Language, hero: string, conflict: string) {
+function buildQuestion(
+  lang: Language,
+  hero: string,
+  conflict: string,
+  difficulty: Difficulty
+) {
+  if (difficulty === "Beginner") {
+    if (lang === "zh") return `${hero} 做什么？`;
+    if (lang === "ms") return `Apa ${hero} buat?`;
+    return `What does ${hero} do?`;
+  }
+  if (difficulty === "Intermediate") {
+    if (lang === "zh") return `${hero} 现在做什么？`;
+    if (lang === "ms") return `Apa ${hero} buat sekarang?`;
+    return `What does ${hero} do now?`;
+  }
   if (lang === "zh") {
     return `${hero} 接下来该怎么做，才能解决“${conflict}”？`;
   }
@@ -503,6 +880,179 @@ function buildQuestion(lang: Language, hero: string, conflict: string) {
     return `Apa langkah seterusnya ${hero} untuk selesaikan ${conflict}?`;
   }
   return `What should ${hero} do next to solve ${conflict}?`;
+}
+
+function getTargetWords(difficulty: Difficulty, lang: Language) {
+  const pool =
+    targetWordPoolsByLang[lang]?.[difficulty] ||
+    targetWordPoolsByLang.en[difficulty];
+  return pool.slice(0, 3);
+}
+
+function getActionPool(theme: string, difficulty: Difficulty, lang: Language) {
+  if (difficulty === "Beginner") {
+    const perTheme = beginnerActionsByLang[lang]?.[theme];
+    const generic = beginnerActionsByLang[lang]?.["*"];
+    return perTheme || generic || beginnerActionsByLang.en[theme];
+  }
+  if (difficulty === "Intermediate") {
+    return intermediateActionsByLang[lang] || intermediateActionsByLang.en;
+  }
+  return [];
+}
+
+function buildChoices(
+  theme: string,
+  difficulty: Difficulty,
+  round: number,
+  lang: Language
+) {
+  if (difficulty === "Beginner" || difficulty === "Intermediate") {
+    const pool = getActionPool(theme, difficulty, lang);
+    return ["A", "B", "C"].map((label, index) => ({
+      id: label,
+      text: pool[(round + index) % pool.length]
+    }));
+  }
+  const pool = themeDetails[theme] || themeDetails["Magic Forest"];
+  const templateList = choiceTemplatesByLang[lang] || choiceTemplates;
+  const template = templateList[round % templateList.length];
+  return ["A", "B", "C"].map((label, index) => {
+    const fill = (key: keyof typeof pool) => pick(pool[key], round + index + key.length);
+    const text = template
+      .replace("{clue}", fill("clue"))
+      .replace("{place}", fill("place"))
+      .replace("{guide}", fill("guide"))
+      .replace("{sign}", fill("sign"))
+      .replace("{tool}", fill("tool"))
+      .replace("{friend}", fill("friend"));
+    return { id: label, text };
+  });
+}
+
+function buildBeginnerUpdate(
+  choiceText: string,
+  round: number,
+  scene: { hero: string; location: string; mood: string; conflict: string } | undefined,
+  lang: Language
+) {
+  const hero = scene?.hero || "The hero";
+  const mood = scene?.mood || "happy";
+  const actionLine = actionSentence(choiceText, hero, lang, "Beginner");
+  const extrasEn = [
+    "The sky is blue.",
+    "The path is clear.",
+    "The sun is up.",
+    "The air is soft.",
+    "The day is bright."
+  ];
+  const extrasZh = ["天空很蓝。", "小路很清。", "太阳升起。", "空气很软。", "今天很亮。"];
+  const extrasMs = ["Langit biru.", "Laluan jelas.", "Matahari naik.", "Udara lembut.", "Hari cerah."];
+  const extra =
+    lang === "zh" ? pick(extrasZh, round) : lang === "ms" ? pick(extrasMs, round) : pick(extrasEn, round);
+  const moodLine =
+    lang === "zh"
+      ? `${hero} 很${mood}。`
+      : lang === "ms"
+      ? `${hero} rasa ${mood}.`
+      : `${hero} is ${mood}.`;
+  return [actionLine, extra, moodLine].join("\n");
+}
+
+function buildIntermediateUpdate(
+  choiceText: string,
+  round: number,
+  scene: { hero: string; location: string; mood: string; conflict: string } | undefined,
+  choiceId: string | undefined,
+  lang: Language
+) {
+  const hero = scene?.hero || "The hero";
+  const mood = scene?.mood || "happy";
+  const actionLine = actionSentence(choiceText, hero, lang, "Intermediate");
+  if (lang === "zh") {
+    const consequence = pick(
+      [
+        "所以线索更清楚。",
+        "于是朋友过来帮忙。",
+        "结果花了更多时间。"
+      ],
+      round + (choiceId ? choiceId.charCodeAt(0) : 0)
+    );
+    const moodLine = `${hero} 有点${mood}，继续前进。`;
+    return [actionLine, consequence, moodLine].join("\n");
+  }
+  if (lang === "ms") {
+    const consequence = pick(
+      [
+        "Jadi petunjuk jadi lebih jelas.",
+        "Jadi kawan datang membantu.",
+        "Jadi ia ambil lebih masa."
+      ],
+      round + (choiceId ? choiceId.charCodeAt(0) : 0)
+    );
+    const moodLine = `${hero} rasa ${mood} dan terus bergerak.`;
+    return [actionLine, consequence, moodLine].join("\n");
+  }
+  const consequence = pick(
+    [
+      "So the clue feels more clear.",
+      "So a friend comes to help.",
+      "So the task takes more time."
+    ],
+    round + (choiceId ? choiceId.charCodeAt(0) : 0)
+  );
+  const moodLine = `${hero} is ${mood} and keeps moving.`;
+  return [actionLine, consequence, moodLine].join("\n");
+}
+
+function actionSentence(
+  choiceText: string,
+  hero: string,
+  lang: Language,
+  difficulty: Difficulty
+) {
+  if (lang === "zh") {
+    return `${hero} ${choiceText}。`;
+  }
+  if (lang === "ms") {
+    return `${hero} ${choiceText}.`;
+  }
+  const parts = choiceText.replace(/\.$/, "").split(" ");
+  const verb = parts[0]?.toLowerCase() || "do";
+  const rest = parts.slice(1).join(" ");
+  const verbMap: Record<string, string> = {
+    eat: "eats",
+    go: "goes",
+    run: "runs",
+    drink: "drinks",
+    look: "looks",
+    ask: "asks",
+    jump: "jumps",
+    sit: "sits",
+    open: "opens",
+    follow: "follows",
+    help: "helps",
+    take: "takes",
+    use: "uses",
+    play: "plays",
+    find: "finds",
+    pick: "picks",
+    wave: "waves",
+    climb: "climbs",
+    swim: "swims",
+    wait: "waits",
+    check: "checks",
+    press: "presses",
+    call: "calls"
+  };
+  const verb3 = verbMap[verb] || `${verb}s`;
+  const base = rest ? `${hero} ${verb3} ${rest}.` : `${hero} ${verb3}.`;
+  if (difficulty === "Intermediate") {
+    return rest
+      ? `Then ${hero} ${verb3} ${rest} now.`
+      : `Then ${hero} ${verb3} now.`;
+  }
+  return base;
 }
 
 export function updateStory(
@@ -513,8 +1063,19 @@ export function updateStory(
   scene?: { hero: string; location: string; mood: string; conflict: string },
   theme?: string,
   choiceId?: string,
-  lang: Language = "en"
+  lang: Language = "en",
+  difficulty: Difficulty = "Advanced"
 ) {
+  if (difficulty === "Beginner") {
+    const additions = buildBeginnerUpdate(choiceText, round, scene, lang);
+    const userAdd = userLine && userLine.trim().length > 0 ? `\n${userLine.trim()}` : "";
+    return story + `\n\n${additions}${userAdd}`;
+  }
+  if (difficulty === "Intermediate") {
+    const additions = buildIntermediateUpdate(choiceText, round, scene, choiceId, lang);
+    const userAdd = userLine && userLine.trim().length > 0 ? `\n${userLine.trim()}` : "";
+    return story + `\n\n${additions}${userAdd}`;
+  }
   const narrative = narrateChoice(choiceText, round, scene, choiceId, lang);
   const transition = buildSceneTransition(round, scene, lang);
   const event = buildRandomEvent(round, theme, lang);
@@ -989,8 +1550,53 @@ export function finalizeStoryWithBranch(
   story: string,
   theme: string,
   branch: "A" | "B" | "C",
-  lang: Language = "en"
+  lang: Language = "en",
+  difficulty: Difficulty = "Advanced"
 ) {
+  if (difficulty === "Beginner") {
+    const ending =
+      lang === "zh"
+        ? "\n\n最后，门打开了。\n主角很开心。\n这是美好的一天。"
+        : lang === "ms"
+        ? "\n\nAkhirnya, pintu terbuka.\nWira gembira.\nHari ini baik."
+        : "\n\nIn the end, the door opens.\nThe hero is happy.\nIt is a good day.";
+    const themeLabel = themeLabelsByLang[lang]?.[theme] || theme;
+    const title =
+      lang === "zh"
+        ? `${themeLabel}：小小结局`
+        : lang === "ms"
+        ? `${themeLabel}: Tamat Ringkas`
+        : `${theme}: A Little Ending`;
+    const moral =
+      lang === "zh"
+        ? "勇敢又善良。"
+        : lang === "ms"
+        ? "Berani dan baik hati."
+        : "Be brave and kind.";
+    return { title, fullStory: story + ending, moral };
+  }
+  if (difficulty === "Intermediate") {
+    const ending =
+      lang === "zh"
+        ? "\n\n最后，线索被找到。\n门慢慢打开。\n主角很开心。"
+        : lang === "ms"
+        ? "\n\nAkhirnya, petunjuk dijumpai.\nPintu terbuka perlahan.\nWira gembira."
+        : "\n\nIn the end, the clue is found.\nThe door opens slowly.\nThe hero feels happy.";
+    const themeLabel = themeLabelsByLang[lang]?.[theme] || theme;
+    const title =
+      lang === "zh"
+        ? `${themeLabel}：小小胜利`
+        : lang === "ms"
+        ? `${themeLabel}: Kemenangan Kecil`
+        : `${theme}: A Small Win`;
+    const moral =
+      lang === "zh"
+        ? "做对选择会有好结果。"
+        : lang === "ms"
+        ? "Pilihan baik beri hasil baik."
+        : "Good choices bring good results.";
+    return { title, fullStory: story + ending, moral };
+  }
   const endingsEn: Record<string, Record<string, string>> = {
     "Magic Forest": {
       A: "The fox revealed a hidden door, and the forest celebrated the brave choice.",
@@ -1193,10 +1799,10 @@ export function suggestedVocab(targetWords: string[], lang: Language = "en") {
     meaningEn: meaningForWord(word, lang),
     example:
       lang === "zh"
-        ? `“${word}” 的光指引了道路。`
+        ? `我会用“${word}”。`
         : lang === "ms"
-        ? `Cahaya “${word}” membimbing jalan.`
-        : `The ${word} light guided the way.`
+        ? `Saya guna “${word}”.`
+        : `I can use “${word}”.`
   }));
 }
 
@@ -1208,6 +1814,17 @@ function meaningForWord(word: string, lang: Language = "en") {
     help: "to assist someone",
     friend: "a person you like and trust",
     safe: "free from danger",
+    eat: "to put food in your mouth",
+    go: "to move to a place",
+    run: "to move fast",
+    sleep: "to rest",
+    drink: "to take water",
+    look: "to see with your eyes",
+    because: "for a reason",
+    then: "after that",
+    key: "a small tool to open",
+    door: "an entry way",
+    find: "to discover",
     suddenly: "quickly and unexpectedly",
     whisper: "to speak very softly",
     curious: "wanting to know more",
@@ -1228,6 +1845,24 @@ function meaningForWord(word: string, lang: Language = "en") {
     help: "帮助",
     friend: "朋友",
     safe: "安全的",
+    eat: "吃",
+    go: "走",
+    run: "跑",
+    sleep: "睡",
+    drink: "喝",
+    look: "看",
+    "因为": "因为",
+    "然后": "然后",
+    "钥匙": "钥匙",
+    "门": "门",
+    "找到": "找到",
+    "帮忙": "帮忙",
+    "神秘": "神秘",
+    "策略": "策略",
+    "决心": "决心",
+    "微光": "微光",
+    "探索": "探索",
+    "转折": "转折",
     suddenly: "突然地",
     whisper: "低声说",
     curious: "好奇的",
@@ -1248,6 +1883,24 @@ function meaningForWord(word: string, lang: Language = "en") {
     help: "membantu",
     friend: "kawan",
     safe: "selamat",
+    makan: "makan",
+    pergi: "pergi",
+    lari: "lari",
+    tidur: "tidur",
+    minum: "minum",
+    lihat: "lihat",
+    kerana: "kerana",
+    kemudian: "kemudian",
+    kunci: "kunci",
+    pintu: "pintu",
+    jumpa: "jumpa",
+    bantu: "bantu",
+    misteri: "misteri",
+    strategi: "strategi",
+    tekad: "tekad",
+    kilauan: "kilauan",
+    meneroka: "meneroka",
+    kejutan: "kejutan",
     suddenly: "tiba-tiba",
     whisper: "berbisik",
     curious: "ingin tahu",
