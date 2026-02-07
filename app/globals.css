@@ -408,8 +408,116 @@ body {
   align-items: center;
 }
 
+.chest-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chest {
+  display: inline-block;
+  font-size: 18px;
+}
+
+.sparkles {
+  font-size: 16px;
+  animation: sparkle 1.6s ease-in-out infinite;
+}
+
 .how-card {
   background: linear-gradient(120deg, #fff2c9, #fff);
+}
+
+.adventure-card {
+  background: linear-gradient(120deg, #eef7ff, #fff);
+}
+
+.adventure-row {
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  gap: 14px;
+  align-items: center;
+}
+
+.adventure-emoji {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  font-size: 32px;
+  background: #fff;
+  border: 2px solid var(--line);
+  box-shadow: 0 8px 0 #e7d8ff;
+}
+
+.adventure-title {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.adventure-text {
+  font-size: 13px;
+  color: #4b4b57;
+}
+
+.adventure-hook {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #7b55ff;
+  font-weight: 700;
+}
+
+.carousel-card {
+  background: linear-gradient(120deg, #f7fff0, #fff);
+}
+
+.carousel {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(220px, 1fr);
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scroll-snap-type: x mandatory;
+}
+
+.world-card {
+  background: #fff;
+  border: 2px solid var(--line);
+  border-radius: 18px;
+  padding: 14px;
+  display: grid;
+  gap: 6px;
+  text-decoration: none;
+  color: inherit;
+  scroll-snap-align: start;
+  box-shadow: 0 8px 0 #eef5ff;
+  transition: transform 0.12s ease, border-color 0.12s ease;
+}
+
+.world-card:hover {
+  border-color: var(--accent-2);
+  transform: translateY(-2px) scale(1.01);
+}
+
+.world-emoji {
+  font-size: 28px;
+}
+
+.world-name {
+  font-weight: 700;
+}
+
+.world-preview {
+  font-size: 12px;
+  color: #5b5b63;
+}
+
+.world-cta {
+  font-size: 12px;
+  font-weight: 700;
+  color: #5f7bff;
 }
 
 .step-grid {
@@ -453,6 +561,10 @@ body {
   }
 
   .hero-header {
+    grid-template-columns: 1fr;
+  }
+
+  .adventure-row {
     grid-template-columns: 1fr;
   }
 }

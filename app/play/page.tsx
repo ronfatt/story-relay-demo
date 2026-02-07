@@ -5,7 +5,12 @@ export const dynamic = "force-dynamic";
 export default function PlayPage({
   searchParams
 }: {
-  searchParams?: { name?: string };
+  searchParams?: { name?: string; theme?: string };
 }) {
-  return <PlayClient initialName={searchParams?.name ?? ""} />;
+  return (
+    <PlayClient
+      initialName={searchParams?.name ?? ""}
+      initialTheme={searchParams?.theme ?? ""}
+    />
+  );
 }

@@ -28,14 +28,17 @@ type RoundPayload = {
 
 type PlayClientProps = {
   initialName?: string;
+  initialTheme?: string;
 };
 
-export default function PlayClient({ initialName = "" }: PlayClientProps) {
+export default function PlayClient({ initialName = "", initialTheme }: PlayClientProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [roundData, setRoundData] = useState<RoundPayload | null>(null);
-  const [theme, setTheme] = useState(themes[0]);
+  const [theme, setTheme] = useState(
+    initialTheme && themes.includes(initialTheme) ? initialTheme : themes[0]
+  );
   const [difficulty, setDifficulty] = useState(difficulties[0]);
   const [userLine, setUserLine] = useState("");
   const [heroName, setHeroName] = useState(initialName);
