@@ -45,6 +45,7 @@ type PlayClientProps = {
 export default function PlayClient({ initialName = "", initialTheme }: PlayClientProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [roundData, setRoundData] = useState<RoundPayload | null>(null);
   const [theme, setTheme] = useState(
@@ -62,12 +63,18 @@ export default function PlayClient({ initialName = "", initialTheme }: PlayClien
 
   async function startSession() {
     setLoading(true);
+    setError(null);
     const res = await fetch("/api/session/start", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ theme, difficulty, heroName })
     });
     const data = await res.json();
+    if (!res.ok || data.error) {
+      setError(data.error || "Could not start the story. Please try again.");
+      setLoading(false);
+      return;
+    }
     setSessionId(data.sessionId);
     setRoundData(data);
     setLoading(false);
@@ -76,12 +83,18 @@ export default function PlayClient({ initialName = "", initialTheme }: PlayClien
   async function submitChoice(choiceId: string) {
     if (!sessionId || !roundData) return;
     setLoading(true);
-    const res = await fetch("/api/session/next", {
+    setError(null);
+    const res = await fetch("/api/session/advance", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ sessionId, choiceId, userLine })
     });
     const data = await res.json();
+    if (!res.ok || data.error) {
+      setError(data.error || "Something went wrong. Please try again.");
+      setLoading(false);
+      return;
+    }
     setUserLine("");
     setBurstKey(Date.now());
     if (data.done) {
@@ -96,6 +109,7 @@ export default function PlayClient({ initialName = "", initialTheme }: PlayClien
     <main className="grid">
       <section className="card grid">
         <h2>Let’s Start!</h2>
+        {error && <div className="error-banner">{error}</div>}
         <div className="grid">
           <div className="section-title">Pick a World</div>
           <div className="choice-grid">
