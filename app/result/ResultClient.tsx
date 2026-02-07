@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 type Score = {
@@ -23,10 +23,12 @@ type ResultPayload = {
   inventory?: string[];
 };
 
-export default function ResultClient() {
-  const params = useSearchParams();
+type ResultClientProps = {
+  sessionId?: string;
+};
+
+export default function ResultClient({ sessionId }: ResultClientProps) {
   const router = useRouter();
-  const sessionId = params.get("sessionId");
   const [data, setData] = useState<ResultPayload | null>(null);
 
   useEffect(() => {

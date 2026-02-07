@@ -1,12 +1,11 @@
-import dynamic from "next/dynamic";
+import ReplayClient from "./ReplayClient";
 
 export const dynamic = "force-dynamic";
 
-const ReplayClient = dynamic(() => import("./ReplayClient"), {
-  ssr: false,
-  loading: () => <main className="card">Loading...</main>
-});
-
-export default function ReplayPage() {
-  return <ReplayClient />;
+export default function ReplayPage({
+  searchParams
+}: {
+  searchParams?: { sessionId?: string };
+}) {
+  return <ReplayClient sessionId={searchParams?.sessionId} />;
 }

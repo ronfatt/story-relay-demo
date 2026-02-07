@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 type HistoryItem = {
@@ -18,10 +18,12 @@ type HistoryPayload = {
   history: HistoryItem[];
 };
 
-export default function ReplayClient() {
-  const params = useSearchParams();
+type ReplayClientProps = {
+  sessionId?: string;
+};
+
+export default function ReplayClient({ sessionId }: ReplayClientProps) {
   const router = useRouter();
-  const sessionId = params.get("sessionId");
   const [data, setData] = useState<HistoryPayload | null>(null);
 
   useEffect(() => {

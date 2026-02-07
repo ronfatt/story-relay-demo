@@ -1,12 +1,11 @@
-import dynamic from "next/dynamic";
+import PlayClient from "./PlayClient";
 
 export const dynamic = "force-dynamic";
 
-const PlayClient = dynamic(() => import("./PlayClient"), {
-  ssr: false,
-  loading: () => <main className="card">Loading...</main>
-});
-
-export default function PlayPage() {
-  return <PlayClient />;
+export default function PlayPage({
+  searchParams
+}: {
+  searchParams?: { name?: string };
+}) {
+  return <PlayClient initialName={searchParams?.name ?? ""} />;
 }

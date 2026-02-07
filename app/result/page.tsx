@@ -1,12 +1,11 @@
-import dynamic from "next/dynamic";
+import ResultClient from "./ResultClient";
 
 export const dynamic = "force-dynamic";
 
-const ResultClient = dynamic(() => import("./ResultClient"), {
-  ssr: false,
-  loading: () => <main className="card">Loading...</main>
-});
-
-export default function ResultPage() {
-  return <ResultClient />;
+export default function ResultPage({
+  searchParams
+}: {
+  searchParams?: { sessionId?: string };
+}) {
+  return <ResultClient sessionId={searchParams?.sessionId} />;
 }

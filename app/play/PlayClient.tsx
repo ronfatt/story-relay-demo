@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const themes = ["Magic Forest", "Space School", "Ocean Quest", "Dino Valley"];
 const difficulties = ["Beginner", "Intermediate", "Advanced"];
@@ -26,17 +26,19 @@ type RoundPayload = {
   };
 };
 
-export default function PlayClient() {
+type PlayClientProps = {
+  initialName?: string;
+};
+
+export default function PlayClient({ initialName = "" }: PlayClientProps) {
   const router = useRouter();
-  const params = useSearchParams();
-  const nameParam = params.get("name") || "";
   const [loading, setLoading] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [roundData, setRoundData] = useState<RoundPayload | null>(null);
   const [theme, setTheme] = useState(themes[0]);
   const [difficulty, setDifficulty] = useState(difficulties[0]);
   const [userLine, setUserLine] = useState("");
-  const [heroName, setHeroName] = useState(nameParam);
+  const [heroName, setHeroName] = useState(initialName);
   const [burstKey, setBurstKey] = useState(0);
 
   useEffect(() => {
