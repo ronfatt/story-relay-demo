@@ -3,7 +3,7 @@
 export const dynamic = "force-dynamic";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 
 type HistoryItem = {
   round: number;
@@ -21,6 +21,14 @@ type HistoryPayload = {
 };
 
 export default function ReplayPage() {
+  return (
+    <Suspense fallback={<main className="card">Loading...</main>}>
+      <ReplayPageInner />
+    </Suspense>
+  );
+}
+
+function ReplayPageInner() {
   const params = useSearchParams();
   const router = useRouter();
   const sessionId = params.get("sessionId");

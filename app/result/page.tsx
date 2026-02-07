@@ -3,7 +3,7 @@
 export const dynamic = "force-dynamic";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 
 type Score = {
   creativity: number;
@@ -26,6 +26,14 @@ type ResultPayload = {
 };
 
 export default function ResultPage() {
+  return (
+    <Suspense fallback={<main className="card">Loading...</main>}>
+      <ResultPageInner />
+    </Suspense>
+  );
+}
+
+function ResultPageInner() {
   const params = useSearchParams();
   const router = useRouter();
   const sessionId = params.get("sessionId");

@@ -2,7 +2,7 @@
 
 export const dynamic = "force-dynamic";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 const themes = ["Magic Forest", "Space School", "Ocean Quest", "Dino Valley"];
@@ -29,6 +29,14 @@ type RoundPayload = {
 };
 
 export default function PlayPage() {
+  return (
+    <Suspense fallback={<main className="card">Loading...</main>}>
+      <PlayPageInner />
+    </Suspense>
+  );
+}
+
+function PlayPageInner() {
   const router = useRouter();
   const params = useSearchParams();
   const nameParam = params.get("name") || "";
