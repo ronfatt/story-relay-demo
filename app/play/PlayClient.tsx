@@ -17,6 +17,44 @@ const themes = [
   "Desert Caravan"
 ];
 const difficulties = ["Beginner", "Intermediate", "Advanced"];
+const themeDescriptions: Record<Language, Record<string, string>> = {
+  en: {
+    "Magic Forest": "Whispering trees and glow trails.",
+    "Space School": "Robots, stars, and secret doors.",
+    "Ocean Quest": "Dolphins, shells, and sea caves.",
+    "Dino Valley": "Friendly giants and hidden paths.",
+    "Sky Castle": "Cloud bridges and sky bells.",
+    "Robot City": "Neon lights and helper bots.",
+    "Candy Kingdom": "Sweet streets and sparkle clues.",
+    "Jungle Rescue": "Drums, vines, and rescue calls.",
+    "Ice Mountain": "Crystal caves and snow clues.",
+    "Desert Caravan": "Golden dunes and oasis secrets."
+  },
+  zh: {
+    "Magic Forest": "会低语的树和发光小路。",
+    "Space School": "机器人、星星、秘密门。",
+    "Ocean Quest": "海豚、贝壳、海底洞。",
+    "Dino Valley": "友善巨兽和隐藏小路。",
+    "Sky Castle": "云桥与天空铃声。",
+    "Robot City": "霓虹灯与小助手。",
+    "Candy Kingdom": "甜甜街道与闪光线索。",
+    "Jungle Rescue": "鼓声、藤蔓与救援。",
+    "Ice Mountain": "水晶洞与雪中线索。",
+    "Desert Caravan": "金色沙丘与绿洲秘密。"
+  },
+  ms: {
+    "Magic Forest": "Pokok berbisik dan laluan bercahaya.",
+    "Space School": "Robot, bintang, dan pintu rahsia.",
+    "Ocean Quest": "Lumba-lumba, cangkerang, gua laut.",
+    "Dino Valley": "Gergasi mesra dan laluan tersembunyi.",
+    "Sky Castle": "Jambatan awan dan loceng langit.",
+    "Robot City": "Lampu neon dan bot pembantu.",
+    "Candy Kingdom": "Jalan manis dan petunjuk berkilau.",
+    "Jungle Rescue": "Gendang, pokok anggur, panggilan selamat.",
+    "Ice Mountain": "Gua kristal dan petunjuk salji.",
+    "Desert Caravan": "Gurun keemasan dan rahsia oasis."
+  }
+};
 
 type Choice = { id: string; text: string };
 
@@ -157,7 +195,9 @@ export default function PlayClient({
               >
                 <div className="theme-emoji">{themeEmoji(t)}</div>
                 <div className="theme-name">{t}</div>
-                <div className="theme-subtitle">Tap to explore</div>
+                <div className="theme-subtitle">
+                  {themeDescriptions[lang]?.[t] || "Tap to explore"}
+                </div>
               </button>
             ))}
           </div>
