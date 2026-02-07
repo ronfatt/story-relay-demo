@@ -52,6 +52,7 @@ export async function POST(req: Request) {
   if (choiceId === "A" || choiceId === "B" || choiceId === "C") {
     session.branchCounts[choiceId] += 1;
   }
+
   const nextRound = session.round + 1;
 
   session.round = nextRound;

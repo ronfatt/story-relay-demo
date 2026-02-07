@@ -5,7 +5,12 @@ export const dynamic = "force-dynamic";
 export default function ResultPage({
   searchParams
 }: {
-  searchParams?: { sessionId?: string };
+  searchParams?: { sessionId?: string; lang?: "en" | "zh" | "ms" };
 }) {
-  return <ResultClient sessionId={searchParams?.sessionId} />;
+  return (
+    <ResultClient
+      sessionId={searchParams?.sessionId}
+      lang={(searchParams?.lang as "en" | "zh" | "ms") ?? "en"}
+    />
+  );
 }

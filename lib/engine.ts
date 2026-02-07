@@ -1,3 +1,5 @@
+import type { Language } from "@/lib/i18n";
+
 export type Difficulty = "Beginner" | "Intermediate" | "Advanced";
 
 const openings: Record<string, string[]> = {
@@ -53,6 +55,48 @@ const openings: Record<string, string[]> = {
   ]
 };
 
+const openingTemplatesByLang: Record<Language, string[]> = {
+  en: [],
+  zh: [
+    "{hero} 来到了 {theme}。{location} 似乎藏着线索，{conflict} 需要被解决。",
+    "{hero} 走向 {location}，心里很 {mood}。一段新的冒险开始了。",
+    "{hero} 发现了 {conflict}，而 {location} 正在等待答案。"
+  ],
+  ms: [
+    "{hero} tiba di {theme}. {location} menyimpan petunjuk, dan {conflict} perlu diselesaikan.",
+    "{hero} bergerak ke {location} dengan hati yang {mood}. Pengembaraan bermula.",
+    "{hero} menemui {conflict}, dan {location} menanti jawapan."
+  ]
+};
+
+const themeLabelsByLang: Record<Language, Record<string, string>> = {
+  en: {},
+  zh: {
+    "Magic Forest": "魔法森林",
+    "Space School": "太空学校",
+    "Ocean Quest": "海洋探险",
+    "Dino Valley": "恐龙谷",
+    "Sky Castle": "天空城堡",
+    "Robot City": "机器人城市",
+    "Candy Kingdom": "糖果王国",
+    "Jungle Rescue": "丛林救援",
+    "Ice Mountain": "冰雪山脉",
+    "Desert Caravan": "沙漠商队"
+  },
+  ms: {
+    "Magic Forest": "Hutan Ajaib",
+    "Space School": "Sekolah Angkasa",
+    "Ocean Quest": "Misi Lautan",
+    "Dino Valley": "Lembah Dino",
+    "Sky Castle": "Istana Langit",
+    "Robot City": "Bandar Robot",
+    "Candy Kingdom": "Kerajaan Gula-gula",
+    "Jungle Rescue": "Misi Rimba",
+    "Ice Mountain": "Gunung Ais",
+    "Desert Caravan": "Kafilah Gurun"
+  }
+};
+
 const targetWordPools: Record<Difficulty, string[]> = {
   Beginner: ["brave", "glow", "soft", "help", "friend", "safe"],
   Intermediate: ["suddenly", "whisper", "curious", "path", "promise", "gentle"],
@@ -69,6 +113,30 @@ const choiceTemplates = [
   "Make a careful plan near the {place}.",
   "Share a kind promise with the {friend}."
 ];
+
+const choiceTemplatesByLang: Record<Language, string[]> = {
+  en: choiceTemplates,
+  zh: [
+    "跟随 {clue} 去 {place}。",
+    "请 {guide} 给出建议。",
+    "先躲一躲，观察 {sign}。",
+    "用 {tool} 解开一个小难题。",
+    "帮助 {friend}，获得线索。",
+    "绕个小路收集补给。",
+    "在 {place} 附近制定计划。",
+    "向 {friend} 许下一个善意的承诺。"
+  ],
+  ms: [
+    "Ikuti {clue} ke {place}.",
+    "Tanya {guide} untuk nasihat sebelum bergerak.",
+    "Bersembunyi seketika dan perhati {sign}.",
+    "Gunakan {tool} untuk selesaikan teka-teki kecil.",
+    "Bantu {friend} dan dapatkan petunjuk.",
+    "Ambil jalan kecil untuk kumpul bekalan.",
+    "Rancang dengan teliti di dekat {place}.",
+    "Buat janji baik dengan {friend}."
+  ]
+};
 
 const themeDetails: Record<string, Record<string, string[]>> = {
   "Magic Forest": {
@@ -170,6 +238,20 @@ const moodWords: Record<Difficulty, string[]> = {
   Beginner: ["happy", "curious", "brave", "calm"],
   Intermediate: ["hopeful", "focused", "excited", "steady"],
   Advanced: ["determined", "thoughtful", "eager", "confident"]
+};
+
+const moodWordsByLang: Record<Language, Record<Difficulty, string[]>> = {
+  en: moodWords,
+  zh: {
+    Beginner: ["开心", "好奇", "勇敢", "平静"],
+    Intermediate: ["充满希望", "专注", "兴奋", "稳重"],
+    Advanced: ["坚定", "深思", "渴望", "自信"]
+  },
+  ms: {
+    Beginner: ["gembira", "ingin tahu", "berani", "tenang"],
+    Intermediate: ["berharap", "fokus", "teruja", "steady"],
+    Advanced: ["bertekad", "berfikir", "bersemangat", "yakin"]
+  }
 };
 
 const conflictByTheme: Record<string, string[]> = {
@@ -304,25 +386,62 @@ const inventoryByTheme: Record<string, string[]> = {
   "Desert Caravan": ["oasis map", "sunstone", "water flask"]
 };
 
+const inventoryByThemeByLang: Record<Language, Record<string, string[]>> = {
+  en: inventoryByTheme,
+  zh: {
+    "Magic Forest": ["发光的叶子", "风之护符", "银色钥匙"],
+    "Space School": ["星际徽章", "重力通行证", "工具芯片"],
+    "Ocean Quest": ["珍珠碎片", "贝壳号角", "潮汐罗盘"],
+    "Dino Valley": ["叶子地图", "石头令牌", "雨之口哨"],
+    "Sky Castle": ["云之钥匙", "星光丝带", "风笛"],
+    "Robot City": ["能量电池", "信号芯片", "磁力环"],
+    "Candy Kingdom": ["糖针袋", "软糖钥匙", "糖星"],
+    "Jungle Rescue": ["探险绳", "救援口哨", "叶子徽章"],
+    "Ice Mountain": ["暖光灯", "冰晶碎片", "雪之护符"],
+    "Desert Caravan": ["绿洲地图", "日光石", "水壶"]
+  },
+  ms: {
+    "Magic Forest": ["daun bercahaya", "azimat angin", "kunci perak"],
+    "Space School": ["lencana bintang", "pas graviti", "cip alat"],
+    "Ocean Quest": ["serpihan mutiara", "tanduk cangkerang", "kompas pasang surut"],
+    "Dino Valley": ["peta daun", "token batu", "wisel hujan"],
+    "Sky Castle": ["kunci awan", "riben bintang", "seruling angin"],
+    "Robot City": ["sel kuasa", "cip isyarat", "cincin magnet"],
+    "Candy Kingdom": ["beg taburan gula", "kunci gula-gula", "bintang gula"],
+    "Jungle Rescue": ["tali jejak", "wisel penyelamat", "lencana daun"],
+    "Ice Mountain": ["lampu hangat", "serpihan ais", "azimat salji"],
+    "Desert Caravan": ["peta oasis", "batu matahari", "bekas air"]
+  }
+};
+
 function pick<T>(items: T[], round: number) {
   return items[round % items.length];
 }
 
-export function createOpening(theme: string, difficulty: Difficulty, heroName?: string) {
+export function createOpening(
+  theme: string,
+  difficulty: Difficulty,
+  heroName?: string,
+  lang: Language = "en"
+) {
   const hero = heroName && heroName.trim().length > 0
     ? heroName.trim()
     : pick(heroByTheme[theme] || heroByTheme["Magic Forest"], 0);
   const location = pick(themeDetails[theme]?.place || themeDetails["Magic Forest"].place, 1);
-  const mood = pick(moodWords[difficulty], 2);
+  const moodPool = moodWordsByLang[lang]?.[difficulty] || moodWords[difficulty];
+  const mood = pick(moodPool, 2);
   const conflict = pick(conflictByTheme[theme] || conflictByTheme["Magic Forest"], 3);
 
-  const templates = openings[theme] || openings["Magic Forest"];
+  const themeLabel = themeLabelsByLang[lang]?.[theme] || theme;
+  const templates =
+    lang === "en" ? openings[theme] || openings["Magic Forest"] : openingTemplatesByLang[lang];
   const template = templates[Math.floor(Math.random() * templates.length)];
   const opening = template
     .replace("{hero}", hero)
     .replace("{location}", location)
     .replace("{mood}", mood)
-    .replace("{conflict}", conflict);
+    .replace("{conflict}", conflict)
+    .replace("{theme}", themeLabel);
 
   return {
     opening: clampByDifficulty(opening, difficulty),
@@ -340,10 +459,12 @@ export function makeRound(
   hero?: string,
   location?: string,
   mood?: string,
-  conflict?: string
+  conflict?: string,
+  lang: Language = "en"
 ) {
   const pool = themeDetails[theme] || themeDetails["Magic Forest"];
-  const template = choiceTemplates[round % choiceTemplates.length];
+  const templateList = choiceTemplatesByLang[lang] || choiceTemplates;
+  const template = templateList[round % templateList.length];
 
   const choiceTexts = ["A", "B", "C"].map((label, index) => {
     const fill = (key: keyof typeof pool) => pick(pool[key], round + index + key.length);
@@ -359,8 +480,10 @@ export function makeRound(
 
   const targetWords = targetWordPools[difficulty].slice(0, 3);
 
+  const question = buildQuestion(lang, hero || "the hero", conflict || "the mystery");
+
   return {
-    question: `What should ${hero || "the hero"} do next to solve ${conflict || "the mystery"}?`,
+    question,
     choices: choiceTexts,
     targetWords,
     scene: {
@@ -372,6 +495,16 @@ export function makeRound(
   };
 }
 
+function buildQuestion(lang: Language, hero: string, conflict: string) {
+  if (lang === "zh") {
+    return `${hero} 接下来该怎么做，才能解决“${conflict}”？`;
+  }
+  if (lang === "ms") {
+    return `Apa langkah seterusnya ${hero} untuk selesaikan ${conflict}?`;
+  }
+  return `What should ${hero} do next to solve ${conflict}?`;
+}
+
 export function updateStory(
   story: string,
   choiceText: string,
@@ -379,11 +512,12 @@ export function updateStory(
   round: number,
   scene?: { hero: string; location: string; mood: string; conflict: string },
   theme?: string,
-  choiceId?: string
+  choiceId?: string,
+  lang: Language = "en"
 ) {
-  const narrative = narrateChoice(choiceText, round, scene, choiceId);
-  const transition = buildSceneTransition(round, scene);
-  const event = buildRandomEvent(round, theme);
+  const narrative = narrateChoice(choiceText, round, scene, choiceId, lang);
+  const transition = buildSceneTransition(round, scene, lang);
+  const event = buildRandomEvent(round, theme, lang);
   const additions = [
     `\n\n${transition} ${event} ${narrative}`,
     userLine && userLine.trim().length > 0 ? ` ${userLine.trim()}` : ""
@@ -405,15 +539,34 @@ function narrateChoice(
   choiceText: string,
   round: number,
   scene?: { hero: string; location: string; mood: string; conflict: string },
-  choiceId?: string
+  choiceId?: string,
+  lang: Language = "en"
 ) {
   const hero = scene?.hero || "The hero";
   const mood = scene?.mood || "brave";
   const beat = storyBeats[(round - 1) % storyBeats.length];
   const base = `${hero} decided to ${lowerFirst(choiceText)}`;
 
-  const consequence = consequenceLine(beat, scene, choiceId, round);
+  const consequence = consequenceLine(beat, scene, choiceId, round, lang);
 
+  if (lang === "zh") {
+    const styles = [
+      `${hero} 决定 ${lowerFirst(choiceText)}。${consequence}`,
+      `${hero} 心里很 ${mood}，于是 ${lowerFirst(choiceText)}。${consequence}`,
+      `下一步很清楚：${lowerFirst(choiceText)}。${consequence}`,
+      `${hero} 深吸一口气，${lowerFirst(choiceText)}。${consequence}`
+    ];
+    return styles[round % styles.length];
+  }
+  if (lang === "ms") {
+    const styles = [
+      `${hero} memilih untuk ${lowerFirst(choiceText)}. ${consequence}`,
+      `Dengan hati yang ${mood}, ${hero} memilih untuk ${lowerFirst(choiceText)}. ${consequence}`,
+      `Langkah seterusnya jelas: ${lowerFirst(choiceText)}. ${consequence}`,
+      `${hero} menarik nafas dan ${lowerFirst(choiceText)}. ${consequence}`
+    ];
+    return styles[round % styles.length];
+  }
   const styles = [
     `${base}. ${consequence}`,
     `With a ${mood} heart, ${base}. ${consequence}`,
@@ -430,14 +583,15 @@ function lowerFirst(text: string) {
 
 function buildSceneTransition(
   round: number,
-  scene?: { hero: string; location: string; mood: string; conflict: string }
+  scene?: { hero: string; location: string; mood: string; conflict: string },
+  lang: Language = "en"
 ) {
   const hero = scene?.hero || "The hero";
   const location = scene?.location || "a hidden place";
   const conflict = scene?.conflict || "a small mystery";
   const beat = storyBeats[(round - 1) % storyBeats.length];
 
-  const transitions: Record<string, string[]> = {
+  const transitionsEn: Record<string, string[]> = {
     setup: [
       `${hero} paused near the ${location} and looked around.`,
       `The air felt new near the ${location}.`,
@@ -490,11 +644,139 @@ function buildSceneTransition(
     ]
   };
 
-  return pick(transitions[beat], round);
+  if (lang === "zh") {
+    const transitionsZh: Record<string, string[]> = {
+      setup: [
+        `${hero} 在 ${location} 附近停下来四处看看。`,
+        `${location} 附近的空气很新鲜。`,
+        `${hero} 听得很仔细，冒险开始了。`
+      ],
+      first_clue: [
+        `${location} 旁出现了一个小线索。`,
+        `有东西闪了一下，提示下一步。`,
+        `一个轻轻的声音提醒去哪里找。`
+      ],
+      small_obstacle: [
+        `前方出现了小障碍。`,
+        `道路变窄，让选择更重要。`,
+        `一个小挑战让 ${hero} 想了想。`
+      ],
+      new_friend: [
+        `一个新朋友出现，带来好主意。`,
+        `有人愿意帮忙带路。`,
+        `友善的伙伴准备帮助。`
+      ],
+      twist: [
+        `突然，计划发生了小转折。`,
+        `${conflict} 变得更棘手了。`,
+        `线索指向了新方向。`
+      ],
+      rising_action: [
+        `冒险越来越精彩。`,
+        `${hero} 感到任务更紧要。`,
+        `下一步显得非常关键。`
+      ],
+      setback: [
+        `一个小挫折拖慢了进度。`,
+        `事情没有按计划进行。`,
+        `小失误让道路更难。`
+      ],
+      breakthrough: [
+        `突然出现了突破口。`,
+        `一个聪明的点子打开了新路。`,
+        `${hero} 发现了别人没看到的线索。`
+      ],
+      final_push: [
+        `最后的冲刺就在眼前。`,
+        `${hero} 几乎看到了答案。`,
+        `再做一个好选择就能解决。`
+      ],
+      resolution: [
+        `旅程准备迎来最终答案。`,
+        `一切都在走向清晰的结局。`,
+        `冒险马上就要揭晓。`
+      ]
+    };
+    return pick(transitionsZh[beat], round);
+  }
+
+  if (lang === "ms") {
+    const transitionsMs: Record<string, string[]> = {
+      setup: [
+        `${hero} berhenti dekat ${location} dan melihat sekeliling.`,
+        `Udara terasa baharu di sekitar ${location}.`,
+        `${hero} mendengar dengan teliti, pengembaraan bermula.`
+      ],
+      first_clue: [
+        `Petunjuk kecil muncul di ${location}.`,
+        `Sesuatu berkilau dan memberi arah seterusnya.`,
+        `Bunyi lembut memberi petanda ke mana hendak pergi.`
+      ],
+      small_obstacle: [
+        `Halangan kecil menghalang jalan.`,
+        `Laluan menjadi sempit dan pilihan penting.`,
+        `Cabaran kecil membuat ${hero} berfikir.`
+      ],
+      new_friend: [
+        `Rakan baharu muncul dengan idea baik.`,
+        `Seseorang yang baik hati menawarkan bantuan.`,
+        `Pembantu mesra bersedia membantu.`
+      ],
+      twist: [
+        `Tiba-tiba, rancangan berubah.`,
+        `${conflict} terasa lebih besar sekarang.`,
+        `Petunjuk menunjuk ke arah baharu.`
+      ],
+      rising_action: [
+        `Pengembaraan semakin mendebarkan.`,
+        `${hero} merasakan taruhannya meningkat.`,
+        `Langkah seterusnya terasa sangat penting.`
+      ],
+      setback: [
+        `Halangan kecil melambatkan kemajuan.`,
+        `Perkara tidak berjalan seperti dirancang.`,
+        `Kesilapan kecil menjadikan laluan lebih sukar.`
+      ],
+      breakthrough: [
+        `Kemudian muncul satu kejayaan kecil.`,
+        `Idea bijak membuka laluan baharu.`,
+        `${hero} melihat sesuatu yang orang lain terlepas.`
+      ],
+      final_push: [
+        `Pecutan terakhir semakin hampir.`,
+        `${hero} hampir nampak jawapannya.`,
+        `Satu pilihan bijak lagi boleh selesaikan semuanya.`
+      ],
+      resolution: [
+        `Perjalanan sudah sampai ke jawapan akhir.`,
+        `Semuanya menuju pengakhiran yang jelas.`,
+        `Pengembaraan hampir selesai.`
+      ]
+    };
+    return pick(transitionsMs[beat], round);
+  }
+
+  return pick(transitionsEn[beat], round);
 }
 
-function buildRandomEvent(round: number, theme?: string) {
+function buildRandomEvent(round: number, theme?: string, lang: Language = "en") {
   if (round % 3 !== 0) return "";
+  if (lang === "zh") {
+    const events = [
+      "一个小小的惊喜出现了。",
+      "空气里闪过一丝光。",
+      "远处传来一声提示。"
+    ];
+    return pick(events, round);
+  }
+  if (lang === "ms") {
+    const events = [
+      "Satu kejutan kecil muncul.",
+      "Cahaya kecil berkelip.",
+      "Bunyi lembut memberi petanda."
+    ];
+    return pick(events, round);
+  }
   const events = eventByTheme[theme || "Magic Forest"] || eventByTheme["Magic Forest"];
   return pick(events, round);
 }
@@ -503,7 +785,8 @@ function consequenceLine(
   beat: string,
   scene: { hero: string; location: string; mood: string; conflict: string } | undefined,
   choiceId: string | undefined,
-  round: number
+  round: number,
+  lang: Language = "en"
 ) {
   const hero = scene?.hero || "The hero";
   const location = scene?.location || "the place";
@@ -511,7 +794,7 @@ function consequenceLine(
   const mood = scene?.mood || "brave";
   const letter = choiceId || ["A", "B", "C"][round % 3];
 
-  const consequences: Record<string, string[]> = {
+  const consequencesEn: Record<string, string[]> = {
     setup: [
       `${hero} felt ${mood} and noticed a helpful detail.`,
       `The choice opened a path toward the ${location}.`,
@@ -564,11 +847,132 @@ function consequenceLine(
     ]
   };
 
-  return pick(consequences[beat], round + (letter.charCodeAt(0) % 3));
+  if (lang === "zh") {
+    const consequencesZh: Record<string, string[]> = {
+      setup: [
+        `${hero} 觉得很 ${mood}，注意到了一个细节。`,
+        `这个选择打开了通往 ${location} 的道路。`,
+        `一个小提示告诉如何解决 ${conflict}。`
+      ],
+      first_clue: [
+        `线索 ${letter} 露出了隐藏的标记。`,
+        `地面上出现了神秘符号。`,
+        `小路闪了一下。`
+      ],
+      small_obstacle: [
+        `这样避开了陷阱，但花了更多时间。`,
+        `道路很窄，${hero} 还是通过了。`,
+        `障碍带来了新的问题。`
+      ],
+      new_friend: [
+        `新朋友给出了快速的计划。`,
+        `伙伴答应帮助 ${hero}。`,
+        `他们一起更有信心。`
+      ],
+      twist: [
+        `转折揭示了新的目标。`,
+        `原来线索只对了一半。`,
+        `另一条路变得更重要。`
+      ],
+      rising_action: [
+        `任务变得更紧急了。`,
+        `${hero} 感到终点越来越近。`,
+        `每一步都更重要。`
+      ],
+      setback: [
+        `这让 ${conflict} 更难了一点。`,
+        `一个错误的转弯拖慢了速度。`,
+        `需要勇气继续前进。`
+      ],
+      breakthrough: [
+        `答案开始出现了。`,
+        `一个聪明的点子点亮了道路。`,
+        `线索终于对上了。`
+      ],
+      final_push: [
+        `${hero} 鼓起勇气准备最后一步。`,
+        `最后的线索指向前方。`,
+        `只剩最后一个选择了。`
+      ],
+      resolution: [
+        `一切终于串起来了。`,
+        `这个选择解决了 ${conflict} 的核心。`,
+        `${hero} 感到自豪又平静。`
+      ]
+    };
+    return pick(consequencesZh[beat], round + (letter.charCodeAt(0) % 3));
+  }
+
+  if (lang === "ms") {
+    const consequencesMs: Record<string, string[]> = {
+      setup: [
+        `${hero} berasa ${mood} dan nampak satu petunjuk penting.`,
+        `Pilihan itu membuka jalan ke ${location}.`,
+        `Tanda kecil menunjukkan cara selesaikan ${conflict}.`
+      ],
+      first_clue: [
+        `Petunjuk ${letter} mendedahkan tanda tersembunyi.`,
+        `Simbol rahsia muncul di tanah.`,
+        `Laluan berkilau seketika.`
+      ],
+      small_obstacle: [
+        `Ia mengelak perangkap tetapi ambil masa.`,
+        `Laluan sempit, namun ${hero} berjaya.`,
+        `Halangan mencipta soalan baharu.`
+      ],
+      new_friend: [
+        `Rakan baharu berkongsi pelan pantas.`,
+        `Rakan baharu berjanji membantu ${hero}.`,
+        `Bersama, mereka lebih yakin.`
+      ],
+      twist: [
+        `Twist mendedahkan sasaran baharu.`,
+        `Rupa-rupanya petunjuk itu separuh benar.`,
+        `Jalan lain tiba-tiba lebih penting.`
+      ],
+      rising_action: [
+        `Misi terasa semakin mendesak.`,
+        `${hero} rasa hampir ke penghujung.`,
+        `Setiap langkah kini lebih penting.`
+      ],
+      setback: [
+        `Ini menjadikan ${conflict} lebih sukar seketika.`,
+        `Belokan salah melambatkan pasukan.`,
+        `Perlu keberanian untuk teruskan.`
+      ],
+      breakthrough: [
+        `Penyelesaian mula muncul.`,
+        `Idea bijak menerangi jalan.`,
+        `Kepingan akhirnya sepadan.`
+      ],
+      final_push: [
+        `${hero} kumpul keberanian untuk langkah terakhir.`,
+        `Petunjuk akhir menunjuk ke hadapan.`,
+        `Tinggal satu pilihan untuk selesai.`
+      ],
+      resolution: [
+        `Semuanya bersambung akhirnya.`,
+        `Pilihan itu menyelesaikan ${conflict}.`,
+        `${hero} berasa bangga dan tenang.`
+      ]
+    };
+    return pick(consequencesMs[beat], round + (letter.charCodeAt(0) % 3));
+  }
+
+  return pick(consequencesEn[beat], round + (letter.charCodeAt(0) % 3));
 }
 
-export function inventoryReward(theme: string, round: number, choiceId: string) {
-  const items = inventoryByTheme[theme] || inventoryByTheme["Magic Forest"];
+export function inventoryReward(
+  theme: string,
+  round: number,
+  choiceId: string,
+  lang: Language = "en"
+) {
+  const items =
+    inventoryByThemeByLang[lang]?.[theme] ||
+    inventoryByThemeByLang[lang]?.["Magic Forest"] ||
+    inventoryByTheme[theme] ||
+    inventoryByTheme["Magic Forest"];
   if (round % 2 === 0 && choiceId === "A") return items[0];
   if (round % 3 === 0 && choiceId === "B") return items[1];
   if (round % 5 === 0 && choiceId === "C") return items[2];
@@ -584,9 +988,10 @@ export function dominantBranch(counts: { A: number; B: number; C: number }) {
 export function finalizeStoryWithBranch(
   story: string,
   theme: string,
-  branch: "A" | "B" | "C"
+  branch: "A" | "B" | "C",
+  lang: Language = "en"
 ) {
-  const endings: Record<string, Record<string, string>> = {
+  const endingsEn: Record<string, Record<string, string>> = {
     "Magic Forest": {
       A: "The fox revealed a hidden door, and the forest celebrated the brave choice.",
       B: "The owl guided the hero home, proving that asking for help is wise.",
@@ -609,16 +1014,86 @@ export function finalizeStoryWithBranch(
     }
   };
 
-  const endingText =
-    endings[theme]?.[branch] ||
-    "The hero solved the mystery with courage and kindness.";
+  const endingsZh: Record<string, Record<string, string>> = {
+    "Magic Forest": {
+      A: "狐狸打开了隐藏的门，森林为勇敢的选择欢呼。",
+      B: "猫头鹰带主角回家，证明求助是聪明的。",
+      C: "安静的计划成功了，森林重新闪亮。"
+    },
+    "Space School": {
+      A: "徽章在星际实验室找到，任务成功了。",
+      B: "队长夸奖了细心合作的团队。",
+      C: "意外的捷径拯救了今天。"
+    },
+    "Ocean Quest": {
+      A: "珍珠碎片点亮了灯塔，小镇欢呼。",
+      B: "海龟给出最后线索，大海又平静了。",
+      C: "隐藏的洋流带来安全的答案。"
+    },
+    "Dino Valley": {
+      A: "巨人收到了消息，发出感激的吼声。",
+      B: "智慧的向导为周到的计划点赞。",
+      C: "聪明的绕行让问题及时解决。"
+    }
+  };
 
-  const ending = `\n\nIn the end, ${endingText}`;
-  const title = `${theme}: The Final Spark`;
+  const endingsMs: Record<string, Record<string, string>> = {
+    "Magic Forest": {
+      A: "Rubah membuka pintu rahsia dan hutan meraikan pilihan berani.",
+      B: "Burung hantu memandu wira pulang, membuktikan meminta bantuan itu bijak.",
+      C: "Rancangan yang tenang berjaya, hutan kembali bercahaya."
+    },
+    "Space School": {
+      A: "Lencana ditemui di makmal bintang, misi berjaya.",
+      B: "Kapten memuji kerja berpasukan yang teliti.",
+      C: "Jalan pintas mengejutkan menyelamatkan hari."
+    },
+    "Ocean Quest": {
+      A: "Serpihan mutiara menyalakan rumah api dan bandar bersorak.",
+      B: "Penyu berkongsi petunjuk akhir, laut kembali tenang.",
+      C: "Arus tersembunyi membawa jawapan dengan selamat."
+    },
+    "Dino Valley": {
+      A: "Gergasi menerima pesan dan mengaum tanda terima kasih.",
+      B: "Pemandu bijak memuji pelan yang rapi.",
+      C: "Lencongan bijak menyelesaikan masalah tepat pada masanya."
+    }
+  };
+
+  const endingText =
+    (lang === "zh" ? endingsZh : lang === "ms" ? endingsMs : endingsEn)[theme]?.[branch] ||
+    (lang === "zh"
+      ? "主角用勇气和善意解决了谜题。"
+      : lang === "ms"
+      ? "Wira menyelesaikan misteri dengan berani dan baik hati."
+      : "The hero solved the mystery with courage and kindness.");
+
+  const ending =
+    lang === "zh"
+      ? `\n\n最后，${endingText}`
+      : lang === "ms"
+      ? `\n\nAkhirnya, ${endingText}`
+      : `\n\nIn the end, ${endingText}`;
+
+  const themeLabel = themeLabelsByLang[lang]?.[theme] || theme;
+  const title =
+    lang === "zh"
+      ? `${themeLabel}：最终火花`
+      : lang === "ms"
+      ? `${themeLabel}: Percikan Akhir`
+      : `${theme}: The Final Spark`;
+
+  const moral =
+    lang === "zh"
+      ? "勇敢、愿意求助，并守信用。"
+      : lang === "ms"
+      ? "Berani, minta bantuan, dan tepati janji."
+      : "Be brave, ask for help, and keep your promises.";
+
   return {
     title,
     fullStory: story + ending,
-    moral: "Be brave, ask for help, and keep your promises."
+    moral
   };
 }
 
@@ -657,7 +1132,43 @@ export function scoreStory(
   return { creativity, storyFlow, englishLevelFit, bonus, totalStars };
 }
 
-export function feedbackForScore(score: number) {
+export function feedbackForScore(score: number, lang: Language = "en") {
+  if (lang === "zh") {
+    if (score >= 15) {
+      return [
+        "太棒了！你的故事很连贯也很精彩。",
+        "下次可以加一些情感词，让故事更闪亮。"
+      ];
+    }
+    if (score >= 12) {
+      return [
+        "做得很好！你的故事有清晰的目标。",
+        "加一个小惊喜会更有创意。"
+      ];
+    }
+    return [
+      "不错的开始！你完成了冒险。",
+      "试着用目标词汇来拿更多星星。"
+    ];
+  }
+  if (lang === "ms") {
+    if (score >= 15) {
+      return [
+        "Hebat! Cerita kamu jelas dan sangat menarik.",
+        "Cuba tambah lebih banyak kata perasaan pada kali seterusnya."
+      ];
+    }
+    if (score >= 12) {
+      return [
+        "Bagus! Cerita kamu masuk akal dan ada matlamat jelas.",
+        "Tambah satu kejutan kecil untuk kreativiti."
+      ];
+    }
+    return [
+      "Permulaan yang baik! Kamu menamatkan pengembaraan.",
+      "Cuba guna kata sasaran untuk lebih bintang."
+    ];
+  }
   if (score >= 15) {
     return [
       "Wonderful job! Your story stayed on track and felt exciting.",
@@ -667,24 +1178,29 @@ export function feedbackForScore(score: number) {
   if (score >= 12) {
     return [
       "Nice work! Your story made sense and had a clear goal.",
-      "Add one more surprise moment to boost creativity." 
+      "Add one more surprise moment to boost creativity."
     ];
   }
   return [
     "Good start! You finished the adventure.",
-    "Try using the target words for extra stars." 
+    "Try using the target words for extra stars."
   ];
 }
 
-export function suggestedVocab(targetWords: string[]) {
+export function suggestedVocab(targetWords: string[], lang: Language = "en") {
   return targetWords.map((word) => ({
     word,
-    meaningEn: meaningForWord(word),
-    example: `The ${word} light guided the way.`
+    meaningEn: meaningForWord(word, lang),
+    example:
+      lang === "zh"
+        ? `“${word}” 的光指引了道路。`
+        : lang === "ms"
+        ? `Cahaya “${word}” membimbing jalan.`
+        : `The ${word} light guided the way.`
   }));
 }
 
-function meaningForWord(word: string) {
+function meaningForWord(word: string, lang: Language = "en") {
   const map: Record<string, string> = {
     brave: "showing courage",
     glow: "to shine with light",
@@ -705,5 +1221,47 @@ function meaningForWord(word: string) {
     explore: "to travel and discover",
     twist: "a surprising change"
   };
+  const zh: Record<string, string> = {
+    brave: "勇敢的",
+    glow: "发光",
+    soft: "柔软的",
+    help: "帮助",
+    friend: "朋友",
+    safe: "安全的",
+    suddenly: "突然地",
+    whisper: "低声说",
+    curious: "好奇的",
+    path: "小路",
+    promise: "承诺",
+    gentle: "温和的",
+    mysterious: "神秘的",
+    strategy: "策略",
+    resolve: "决心",
+    glimmer: "微光",
+    explore: "探索",
+    twist: "转折"
+  };
+  const ms: Record<string, string> = {
+    brave: "berani",
+    glow: "bercahaya",
+    soft: "lembut",
+    help: "membantu",
+    friend: "kawan",
+    safe: "selamat",
+    suddenly: "tiba-tiba",
+    whisper: "berbisik",
+    curious: "ingin tahu",
+    path: "laluan",
+    promise: "janji",
+    gentle: "lembut dan baik",
+    mysterious: "misteri",
+    strategy: "strategi",
+    resolve: "tekad",
+    glimmer: "kilauan kecil",
+    explore: "meneroka",
+    twist: "kejutan"
+  };
+  if (lang === "zh") return zh[word] || "";
+  if (lang === "ms") return ms[word] || "";
   return map[word] || "";
 }

@@ -2,9 +2,13 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { ui, type Language, LANG_LABELS } from "@/lib/i18n";
 
 export default function HomePage() {
   const [name, setName] = useState("");
+  const [lang, setLang] = useState<Language>("en");
+  const t = ui(lang);
+
   const themes = [
     { name: "Magic Forest", emoji: "✨", preview: "Glowing paths and secret doors." },
     { name: "Space School", emoji: "🚀", preview: "Solve star mysteries with robots." },
@@ -17,6 +21,7 @@ export default function HomePage() {
     { name: "Ice Mountain", emoji: "❄️", preview: "Crystal caves and chilly clues." },
     { name: "Desert Caravan", emoji: "🏜️", preview: "Golden dunes and oasis secrets." }
   ];
+
   const today = useMemo(() => {
     const pick = themes[Math.floor(Math.random() * themes.length)];
     const hooks = [
@@ -32,53 +37,67 @@ export default function HomePage() {
       <section className="card hero-card grid">
         <div className="hero-header">
           <div>
-            <div className="hero-kicker">StoryBah</div>
-            <h1>Interactive English Story Relay</h1>
-            <p>
-              Jump into a magical adventure! Pick a theme, make fun choices,
-              and earn shiny stars to unlock surprises.
-            </p>
+            <div className="hero-kicker">{t.heroKicker}</div>
+            <h1>{t.heroTitle}</h1>
+            <p>{t.heroSubtitle}</p>
           </div>
           <div className="hero-orb sparkle">🎲</div>
         </div>
         <div className="feature-grid">
           <div className="feature-card">
             <div className="feature-emoji">🧠</div>
-            <div className="feature-title">Three skill levels</div>
-            <div className="feature-text">Easy, medium, or big-kid brave.</div>
+            <div className="feature-title">{t.levelBeginner} / {t.levelIntermediate} / {t.levelAdvanced}</div>
+            <div className="feature-text">{t.levelHintBeginner}</div>
           </div>
           <div className="feature-card">
             <div className="feature-emoji">🧩</div>
-            <div className="feature-title">Make 10 choices</div>
-            <div className="feature-text">Your picks shape the adventure.</div>
+            <div className="feature-title">{t.how2}</div>
+            <div className="feature-text">{t.how3}</div>
           </div>
           <div className="feature-card">
             <div className="feature-emoji">⭐</div>
-            <div className="feature-title">Stars & surprises</div>
-            <div className="feature-text">Collect rewards each time you play.</div>
+            <div className="feature-title">{t.suggestedVocab}</div>
+            <div className="feature-text">{t.safeBadge}</div>
           </div>
         </div>
         <div className="grid">
-          <div className="section-title">Name Your Hero</div>
+          <div className="section-title">{t.nameYourHero}</div>
           <input
             className="input"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Type a hero name (optional)"
+            placeholder={t.heroPlaceholder}
           />
         </div>
+        <div className="grid">
+          <div className="section-title">{t.language}</div>
+          <div className="choice-grid">
+            {(["en", "zh", "ms"] as Language[]).map((code) => (
+              <button
+                key={code}
+                className={`theme-card ${lang === code ? "selected" : ""}`}
+                onClick={() => setLang(code)}
+                type="button"
+              >
+                <div className="theme-emoji">🌐</div>
+                <div className="theme-name">{LANG_LABELS[code]}</div>
+                <div className="theme-subtitle">{code.toUpperCase()}</div>
+              </button>
+            ))}
+          </div>
+        </div>
         <div className="hero-actions">
-          <Link className="button chest-button" href={`/play?name=${encodeURIComponent(name)}`}>
+          <Link className="button chest-button" href={`/play?name=${encodeURIComponent(name)}&lang=${lang}`}>
             <span className="chest">🧰</span>
-            Play the Adventure
+            {t.playButton}
             <span className="sparkles">✨✨</span>
           </Link>
-          <div className="badge">Safe, kid-friendly story play</div>
+          <div className="badge">{t.safeBadge}</div>
         </div>
       </section>
 
       <section className="card grid adventure-card">
-        <div className="section-title">Today’s Adventure</div>
+        <div className="section-title">{t.todayTitle}</div>
         <div className="adventure-row">
           <div className="adventure-emoji">{today.emoji}</div>
           <div>
@@ -90,15 +109,15 @@ export default function HomePage() {
             className="button secondary"
             href={`/play?name=${encodeURIComponent(name)}&theme=${encodeURIComponent(
               today.name
-            )}`}
+            )}&lang=${lang}`}
           >
-            Try This Story
+            {t.todayButton}
           </Link>
         </div>
       </section>
 
       <section className="card grid carousel-card">
-        <div className="section-title">Pick a World</div>
+        <div className="section-title">{t.pickWorld}</div>
         <div className="carousel">
           {themes.map((theme) => (
             <Link
@@ -106,34 +125,35 @@ export default function HomePage() {
               className="world-card"
               href={`/play?name=${encodeURIComponent(name)}&theme=${encodeURIComponent(
                 theme.name
-              )}`}
+              )}&lang=${lang}`}
             >
               <div className="world-emoji">{theme.emoji}</div>
               <div className="world-name">{theme.name}</div>
               <div className="world-preview">{theme.preview}</div>
-              <div className="world-cta">Play this world →</div>
+              <div className="world-cta">{t.playWorldCta}</div>
             </Link>
           ))}
         </div>
       </section>
+
       <section className="card grid how-card">
-        <h2>How to Play</h2>
+        <h2>{t.howTitle}</h2>
         <div className="step-grid">
           <div className="step-card">
             <div className="step-number">1</div>
-            <div className="step-text">Pick a world and a level.</div>
+            <div className="step-text">{t.how1}</div>
           </div>
           <div className="step-card">
             <div className="step-number">2</div>
-            <div className="step-text">Choose A/B/C to guide the story.</div>
+            <div className="step-text">{t.how2}</div>
           </div>
           <div className="step-card">
             <div className="step-number">3</div>
-            <div className="step-text">Add your own line for bonus stars.</div>
+            <div className="step-text">{t.how3}</div>
           </div>
           <div className="step-card">
             <div className="step-number">4</div>
-            <div className="step-text">Finish 10 rounds to see your story.</div>
+            <div className="step-text">{t.how4}</div>
           </div>
         </div>
       </section>

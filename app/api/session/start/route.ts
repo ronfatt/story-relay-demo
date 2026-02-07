@@ -10,8 +10,9 @@ export async function POST(req: Request) {
   const theme = body.theme ?? "Magic Forest";
   const difficulty = (body.difficulty ?? "Beginner") as Difficulty;
   const heroName = (body.heroName ?? "") as string;
+  const lang = (body.lang ?? "en") as "en" | "zh" | "ms";
 
-  const opening = createOpening(theme, difficulty, heroName);
+  const opening = createOpening(theme, difficulty, heroName, lang);
   const story = opening.opening;
   const round = 1;
   const sessionId = randomUUID();
@@ -25,13 +26,15 @@ export async function POST(req: Request) {
     opening.hero,
     opening.location,
     opening.mood,
-    opening.conflict
+    opening.conflict,
+    lang
   );
 
   createSession({
     id: sessionId,
     theme,
     difficulty,
+    lang,
     round,
     story,
     targetWords,

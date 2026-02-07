@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { ui, type Language, LANG_LABELS } from "@/lib/i18n";
 
 const themes = [
   "Magic Forest",
@@ -40,10 +41,16 @@ type RoundPayload = {
 type PlayClientProps = {
   initialName?: string;
   initialTheme?: string;
+  initialLang?: Language;
 };
 
-export default function PlayClient({ initialName = "", initialTheme }: PlayClientProps) {
+export default function PlayClient({
+  initialName = "",
+  initialTheme,
+  initialLang = "en"
+}: PlayClientProps) {
   const router = useRouter();
+  const [lang, setLang] = useState<Language>(initialLang);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -55,63 +62,91 @@ export default function PlayClient({ initialName = "", initialTheme }: PlayClien
   const [userLine, setUserLine] = useState("");
   const [heroName, setHeroName] = useState(initialName);
   const [burstKey, setBurstKey] = useState(0);
+  const t = ui(lang);
 
   useEffect(() => {
     setRoundData(null);
     setSessionId(null);
-  }, [theme, difficulty, heroName]);
+  }, [theme, difficulty, heroName, lang]);
 
   async function startSession() {
     setLoading(true);
     setError(null);
-    const res = await fetch("/api/session/start", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ theme, difficulty, heroName })
-    });
-    const data = await res.json();
-    if (!res.ok || data.error) {
-      setError(data.error || "Could not start the story. Please try again.");
+    try {
+      const res = await fetch("/api/session/start", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ theme, difficulty, heroName, lang })
+      });
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        setError(data.error || "Could not start the story. Please try again.");
+        setLoading(false);
+        return;
+      }
+      setSessionId(data.sessionId);
+      setRoundData(data);
       setLoading(false);
-      return;
+    } catch {
+      setError("Network error. Please try again.");
+      setLoading(false);
     }
-    setSessionId(data.sessionId);
-    setRoundData(data);
-    setLoading(false);
   }
 
   async function submitChoice(choiceId: string) {
     if (!sessionId || !roundData) return;
     setLoading(true);
     setError(null);
-    const res = await fetch("/api/session/advance", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ sessionId, choiceId, userLine })
-    });
-    const data = await res.json();
-    if (!res.ok || data.error) {
-      setError(data.error || "Something went wrong. Please try again.");
+    try {
+      const res = await fetch("/api/session/advance", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId, choiceId, userLine, lang })
+      });
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        setError(data.error || "Something went wrong. Please try again.");
+        setLoading(false);
+        return;
+      }
+      setUserLine("");
+      setBurstKey(Date.now());
+      if (data.done) {
+        router.push(`/result?sessionId=${sessionId}&lang=${lang}`);
+        return;
+      }
+      setRoundData(data);
       setLoading(false);
-      return;
+    } catch {
+      setError("Network error. Please try again.");
+      setLoading(false);
     }
-    setUserLine("");
-    setBurstKey(Date.now());
-    if (data.done) {
-      router.push(`/result?sessionId=${sessionId}`);
-      return;
-    }
-    setRoundData(data);
-    setLoading(false);
   }
 
   return (
     <main className="grid">
       <section className="card grid">
-        <h2>Let’s Start!</h2>
+        <h2>{t.letsStart}</h2>
         {error && <div className="error-banner">{error}</div>}
         <div className="grid">
-          <div className="section-title">Pick a World</div>
+          <div className="section-title">{t.language}</div>
+          <div className="choice-grid">
+            {(["en", "zh", "ms"] as Language[]).map((code) => (
+              <button
+                key={code}
+                className={`theme-card ${lang === code ? "selected" : ""}`}
+                onClick={() => setLang(code)}
+                type="button"
+              >
+                <div className="theme-emoji">🌐</div>
+                <div className="theme-name">{LANG_LABELS[code]}</div>
+                <div className="theme-subtitle">{code.toUpperCase()}</div>
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="grid">
+          <div className="section-title">{t.pickWorld}</div>
           <div className="choice-grid">
             {themes.map((t) => (
               <button
@@ -128,16 +163,16 @@ export default function PlayClient({ initialName = "", initialTheme }: PlayClien
           </div>
         </div>
         <div className="grid">
-          <div className="section-title">Hero Name</div>
+          <div className="section-title">{t.heroName}</div>
           <input
             className="input"
             value={heroName}
             onChange={(e) => setHeroName(e.target.value)}
-            placeholder="Type a hero name (optional)"
+            placeholder={t.heroPlaceholder}
           />
         </div>
         <div className="grid">
-          <div className="section-title">Pick a Level</div>
+          <div className="section-title">{t.pickLevel}</div>
           <div className="choice-grid">
             {difficulties.map((d) => (
               <button
@@ -147,14 +182,14 @@ export default function PlayClient({ initialName = "", initialTheme }: PlayClien
                 type="button"
               >
                 <div className="theme-emoji">{difficultyEmoji(d)}</div>
-                <div className="theme-name">{d}</div>
-                <div className="theme-subtitle">{difficultyHint(d)}</div>
+                <div className="theme-name">{difficultyLabel(d, t)}</div>
+                <div className="theme-subtitle">{difficultyHint(d, t)}</div>
               </button>
             ))}
           </div>
         </div>
         <button className="button" onClick={startSession} disabled={loading}>
-          {loading ? "Getting ready..." : "Let’s Play"}
+          {loading ? t.gettingReady : t.letPlay}
         </button>
       </section>
 
@@ -162,17 +197,17 @@ export default function PlayClient({ initialName = "", initialTheme }: PlayClien
         <section className="card grid play-card">
           <ConfettiBurst burstKey={burstKey} />
           <div className="badge">
-            Round {roundData.round} / {roundData.maxRounds ?? 10}
+            {t.round} {roundData.round} / {roundData.maxRounds ?? 10}
           </div>
           <div className="scene-card">
             <div className="scene-emoji">{themeEmoji(theme)}</div>
             <div>
               <div className="scene-title">{roundData.scene.hero}</div>
               <div className="scene-meta">
-                Location: {roundData.scene.location} · Mood: {roundData.scene.mood}
+                {t.location}: {roundData.scene.location} · {t.mood}: {roundData.scene.mood}
               </div>
               <div className="scene-meta">
-                Goal: Solve {roundData.scene.conflict}
+                {t.goal}: {roundData.scene.conflict}
               </div>
               {roundData.inventory && roundData.inventory.length > 0 && (
                 <div className="scene-meta">
@@ -205,7 +240,7 @@ export default function PlayClient({ initialName = "", initialTheme }: PlayClien
             ))}
           </div>
           <label>
-            Add your own line for bonus stars (optional)
+            {t.addLine}
             <input
               className="input"
               value={userLine}
@@ -214,7 +249,7 @@ export default function PlayClient({ initialName = "", initialTheme }: PlayClien
             />
           </label>
           <div>
-            Target words: {roundData.targetWords.join(", ")}
+            {t.targetWords}: {roundData.targetWords.join(", ")}
           </div>
         </section>
       )}
@@ -243,11 +278,18 @@ function difficultyEmoji(level: string) {
   return "⭐";
 }
 
-function difficultyHint(level: string) {
-  if (level === "Beginner") return "Short sentences, simple words.";
-  if (level === "Intermediate") return "More detail, longer sentences.";
-  if (level === "Advanced") return "Richer language and twists.";
+function difficultyHint(level: string, t: ReturnType<typeof ui>) {
+  if (level === "Beginner") return t.levelHintBeginner;
+  if (level === "Intermediate") return t.levelHintIntermediate;
+  if (level === "Advanced") return t.levelHintAdvanced;
   return "";
+}
+
+function difficultyLabel(level: string, t: ReturnType<typeof ui>) {
+  if (level === "Beginner") return t.levelBeginner;
+  if (level === "Intermediate") return t.levelIntermediate;
+  if (level === "Advanced") return t.levelAdvanced;
+  return level;
 }
 
 function avatarEmoji(theme: string) {

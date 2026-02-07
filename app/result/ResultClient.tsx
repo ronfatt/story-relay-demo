@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { ui, type Language } from "@/lib/i18n";
 
 type Score = {
   creativity: number;
@@ -25,22 +26,24 @@ type ResultPayload = {
 
 type ResultClientProps = {
   sessionId?: string;
+  lang?: Language;
 };
 
-export default function ResultClient({ sessionId }: ResultClientProps) {
+export default function ResultClient({ sessionId, lang = "en" }: ResultClientProps) {
   const router = useRouter();
   const [data, setData] = useState<ResultPayload | null>(null);
+  const t = ui(lang);
 
   useEffect(() => {
     if (!sessionId) return;
     fetch("/api/session/finalize", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ sessionId })
+      body: JSON.stringify({ sessionId, lang })
     })
       .then((res) => res.json())
       .then(setData);
-  }, [sessionId]);
+  }, [sessionId, lang]);
 
   if (!sessionId) {
     return (
@@ -63,23 +66,23 @@ export default function ResultClient({ sessionId }: ResultClientProps) {
       <section className="card grid">
         <h1>{data.title}</h1>
         <div className="story-block">{data.fullStory}</div>
-        <div><strong>Story Lesson:</strong> {data.moral}</div>
+        <div><strong>{t.storyLesson}:</strong> {data.moral}</div>
         <div className="grid">
-          <div className="badge">Creativity: {data.score.creativity} ⭐</div>
-          <div className="badge">Story Flow: {data.score.storyFlow} ⭐</div>
-          <div className="badge">English Fit: {data.score.englishLevelFit} ⭐</div>
-          <div className="badge">Bonus: {data.score.bonus} ⭐</div>
-          <div className="badge">Total: {data.score.totalStars} ⭐</div>
-          {data.branch && <div className="badge">Ending Path: {data.branch}</div>}
+          <div className="badge">{t.creativity}: {data.score.creativity} ⭐</div>
+          <div className="badge">{t.storyFlow}: {data.score.storyFlow} ⭐</div>
+          <div className="badge">{t.languageFit}: {data.score.englishLevelFit} ⭐</div>
+          <div className="badge">{t.bonusLabel}: {data.score.bonus} ⭐</div>
+          <div className="badge">{t.totalLabel}: {data.score.totalStars} ⭐</div>
+          {data.branch && <div className="badge">{t.endingPath}: {data.branch}</div>}
         </div>
         {data.inventory && data.inventory.length > 0 && (
           <div>
-            <strong>Inventory</strong>
+            <strong>{t.inventoryLabel}</strong>
             <div className="story-block">{data.inventory.join(", ")}</div>
           </div>
         )}
         <div>
-          <strong>Great Job!</strong>
+          <strong>{t.greatJob}</strong>
           <ul>
             {data.feedback.map((line) => (
               <li key={line}>{line}</li>
@@ -87,7 +90,7 @@ export default function ResultClient({ sessionId }: ResultClientProps) {
           </ul>
         </div>
         <div>
-          <strong>Suggested Vocabulary</strong>
+          <strong>{t.suggestedVocab}</strong>
           <ul>
             {data.suggestedVocab.map((item) => (
               <li key={item.word}>
@@ -97,12 +100,14 @@ export default function ResultClient({ sessionId }: ResultClientProps) {
           </ul>
         </div>
         <div className="grid">
-          <button className="button" onClick={() => router.push("/play")}>Play Again</button>
+          <button className="button" onClick={() => router.push(`/play?lang=${lang}`)}>
+            {t.playAgain}
+          </button>
           <button
             className="button secondary"
-            onClick={() => router.push(`/replay?sessionId=${sessionId}`)}
+            onClick={() => router.push(`/replay?sessionId=${sessionId}&lang=${lang}`)}
           >
-            View Story Replay
+            {t.viewReplay}
           </button>
         </div>
       </section>
