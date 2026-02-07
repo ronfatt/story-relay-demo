@@ -211,7 +211,7 @@ export default function PlayClient({
               </div>
               {roundData.inventory && roundData.inventory.length > 0 && (
                 <div className="scene-meta">
-                  Inventory: {roundData.inventory.join(", ")}
+                  {t.inventoryLabel}: {roundData.inventory.join(", ")}
                 </div>
               )}
             </div>

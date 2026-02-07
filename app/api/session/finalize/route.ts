@@ -19,6 +19,7 @@ export async function POST(req: Request) {
     id: string;
     theme: string;
     difficulty: Difficulty;
+    lang: "en" | "zh" | "ms";
     round: number;
     story: string;
     targetWords: string[];
@@ -41,7 +42,12 @@ export async function POST(req: Request) {
 
   const score = scoreStory(session.maxRounds, userLines, session.difficulty, targetWords);
   const branch = dominantBranch(session.branchCounts);
-  const finalStory = finalizeStoryWithBranch(session.story, session.theme, branch);
+  const finalStory = finalizeStoryWithBranch(
+    session.story,
+    session.theme,
+    branch,
+    session.lang
+  );
 
   return NextResponse.json({
     ...finalStory,
@@ -52,8 +58,8 @@ export async function POST(req: Request) {
       bonus: score.bonus,
       totalStars: score.totalStars
     },
-    feedback: feedbackForScore(score.totalStars),
-    suggestedVocab: suggestedVocab(targetWords),
+    feedback: feedbackForScore(score.totalStars, session.lang),
+    suggestedVocab: suggestedVocab(targetWords, session.lang),
     totalStarsEarned: score.totalStars,
     branch,
     inventory: session.inventory

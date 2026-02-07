@@ -10,6 +10,7 @@ export type Session = {
   id: string;
   theme: string;
   difficulty: "Beginner" | "Intermediate" | "Advanced";
+  lang: "en" | "zh" | "ms";
   round: number;
   story: string;
   targetWords: string[];

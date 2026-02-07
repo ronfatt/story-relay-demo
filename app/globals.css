@@ -356,6 +356,15 @@ body {
   color: #6b6b73;
 }
 
+.error-banner {
+  background: #ffe5e5;
+  border: 2px solid #ff8a8a;
+  color: #9b1c1c;
+  padding: 10px 12px;
+  border-radius: 14px;
+  font-size: 13px;
+}
+
 .play-card {
   position: relative;
   overflow: hidden;
