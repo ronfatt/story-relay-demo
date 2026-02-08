@@ -157,6 +157,20 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <section className="card grid adventure-card">
+        <div className="section-title">{t.myStories} / {t.learningRecords}</div>
+        <div className="adventure-row">
+          <div className="adventure-emoji">📚</div>
+          <div>
+            <div className="adventure-title">{t.viewRecords}</div>
+            <div className="adventure-text">{t.needLogin}</div>
+          </div>
+          <Link className="button secondary" href="/stories">
+            {t.viewRecords}
+          </Link>
+        </div>
+      </section>
     </main>
   );
 }

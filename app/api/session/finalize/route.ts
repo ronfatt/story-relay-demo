@@ -8,6 +8,9 @@ import {
   dominantBranch
 } from "@/lib/engine";
 import { getSession } from "@/lib/store";
+import db from "@/lib/db";
+import { getSession as getAuthSession, getUserById } from "@/lib/auth";
+import { randomUUID } from "crypto";
 
 export const runtime = "nodejs";
 
@@ -49,6 +52,39 @@ export async function POST(req: Request) {
     session.lang,
     session.difficulty
   );
+
+  const cookie = req.headers.get("cookie") || "";
+  const match = cookie.match(/sb_session=([^;]+)/);
+  if (match?.[1]) {
+    const authSession = getAuthSession(match[1]);
+    if (authSession && new Date(authSession.expires_at).getTime() > Date.now()) {
+      const user = getUserById(authSession.user_id);
+      if (user) {
+        const stmt = db.prepare(
+          `INSERT INTO stories
+           (id, user_id, theme, difficulty, lang, title, full_story, moral, total_stars, branch, hero, target_words, inventory, history, created_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+        );
+        stmt.run(
+          randomUUID(),
+          user.id,
+          session.theme,
+          session.difficulty,
+          session.lang,
+          finalStory.title,
+          finalStory.fullStory,
+          finalStory.moral,
+          score.totalStars,
+          branch,
+          session.hero,
+          JSON.stringify(session.targetWords || []),
+          JSON.stringify(session.inventory || []),
+          JSON.stringify(session.history || []),
+          new Date().toISOString()
+        );
+      }
+    }
+  }
 
   return NextResponse.json({
     ...finalStory,
