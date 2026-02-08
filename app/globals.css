@@ -41,6 +41,17 @@ body {
   letter-spacing: 0.5px;
 }
 
+.logo-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
 .tagline {
   font-size: 14px;
   color: #5b5b63;
@@ -83,6 +94,12 @@ body {
   color: var(--ink);
   border: 2px solid var(--line);
   box-shadow: 0 6px 0 #e6d7ff;
+}
+
+.button.small {
+  padding: 8px 14px;
+  font-size: 14px;
+  border-radius: 12px;
 }
 
 .button:hover {
