@@ -13,6 +13,9 @@ export const UI = {
     heroTitle: "Interactive English Story Adventure",
     heroSubtitle:
       "Jump into a magical adventure! Pick a theme, make fun choices, and earn shiny stars to unlock surprises.",
+    conceptTitle: "What Is StoryBah?",
+    conceptBody:
+      "StoryBah is a playful story relay for kids. Choose a world, make choices, and watch your story grow. Each round adds surprises, stars, and new paths to explore.",
     nameYourHero: "Name Your Hero",
     heroPlaceholder: "Type a hero name (optional)",
     playButton: "Play the Adventure",
@@ -55,7 +58,7 @@ export const UI = {
     learningRecords: "Learning Records",
     viewRecords: "View My Stories",
     needLogin: "Please log in to see your stories.",
-    emptyRecords: "No stories yet. Play a story to save it here."
+    emptyRecords: "No stories yet. Play a story to save it here.",
     replayTitle: "Story Replay",
     choice: "Choice",
     kidsLine: "Kid's line",
@@ -83,6 +86,9 @@ export const UI = {
     heroKicker: "StoryBah",
     heroTitle: "互动英文故事大冒险",
     heroSubtitle: "快来开启魔法冒险！选主题、做选择、拿星星，解锁惊喜！",
+    conceptTitle: "StoryBah 是什么？",
+    conceptBody:
+      "StoryBah 是给孩子的故事接力。选一个世界、做一个选择，故事就会继续长大。每一轮都有惊喜、星星和新的分支。",
     nameYourHero: "给主角起个名字",
     heroPlaceholder: "输入主角名字（可选）",
     playButton: "开始冒险",
@@ -125,7 +131,7 @@ export const UI = {
     learningRecords: "学习记录",
     viewRecords: "查看我的故事",
     needLogin: "请先登录再查看故事。",
-    emptyRecords: "还没有故事。先玩一局再回来。"
+    emptyRecords: "还没有故事。先玩一局再回来。",
     replayTitle: "故事回放",
     choice: "选择",
     kidsLine: "孩子的句子",
@@ -154,6 +160,9 @@ export const UI = {
     heroTitle: "Pengembaraan Cerita Interaktif",
     heroSubtitle:
       "Mulakan pengembaraan ajaib! Pilih tema, buat pilihan seronok, dan kumpul bintang untuk hadiah.",
+    conceptTitle: "Apa itu StoryBah?",
+    conceptBody:
+      "StoryBah ialah cerita relay untuk kanak-kanak. Pilih dunia, buat pilihan, dan cerita terus berkembang. Setiap pusingan ada kejutan, bintang, dan laluan baharu.",
     nameYourHero: "Namakan Wira",
     heroPlaceholder: "Taip nama wira (pilihan)",
     playButton: "Mula Pengembaraan",
@@ -196,7 +205,7 @@ export const UI = {
     learningRecords: "Rekod Pembelajaran",
     viewRecords: "Lihat Cerita Saya",
     needLogin: "Sila log masuk untuk lihat cerita.",
-    emptyRecords: "Belum ada cerita. Main dahulu."
+    emptyRecords: "Belum ada cerita. Main dahulu.",
     replayTitle: "Ulangan Cerita",
     choice: "Pilihan",
     kidsLine: "Ayat kanak-kanak",
