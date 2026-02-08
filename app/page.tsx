@@ -17,7 +17,7 @@ export default function HomePage() {
   const t = ui(lang);
 
   useEffect(() => {
-    fetch("/api/auth/me")
+    fetch("/api/auth/me", { credentials: "include", cache: "no-store" })
       .then((res) => res.json())
       .then((data) => setUser(data.user || null))
       .catch(() => setUser(null));
@@ -31,7 +31,8 @@ export default function HomePage() {
       const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password }),
+        credentials: "include"
       });
       const data = await res.json();
       setAuthLoading(false);

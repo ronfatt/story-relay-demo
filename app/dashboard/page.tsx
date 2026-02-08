@@ -34,7 +34,7 @@ export default function DashboardPage() {
   }, []);
 
   useEffect(() => {
-    fetch("/api/auth/me")
+    fetch("/api/auth/me", { credentials: "include", cache: "no-store" })
       .then((res) => res.json())
       .then((data) => setUser(data.user || null))
       .catch(() => setUser(null));

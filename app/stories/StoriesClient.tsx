@@ -21,7 +21,7 @@ export default function StoriesClient() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/api/stories")
+    fetch("/api/stories", { credentials: "include", cache: "no-store" })
       .then(async (res) => {
         if (!res.ok) {
           throw new Error("unauthorized");
