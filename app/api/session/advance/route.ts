@@ -1,7 +1,19 @@
 import { NextResponse } from "next/server";
-import { makeRound, updateStory, inventoryReward } from "@/lib/engine";
+import {
+  makeRound,
+  updateStory,
+  inventoryReward,
+  finalizeStoryWithBranch,
+  scoreStory,
+  feedbackForScore,
+  suggestedVocab,
+  dominantBranch
+} from "@/lib/engine";
 import { addRound, getSession, updateSession } from "@/lib/store";
 import { canUseAI, generateStoryRound, moderateText } from "@/lib/ai";
+import { initDb, sql } from "@/lib/db";
+import { getSession as getAuthSession, getUserById } from "@/lib/auth";
+import { randomUUID } from "crypto";
 
 export const runtime = "nodejs";
 
@@ -122,7 +134,82 @@ export async function POST(req: Request) {
   });
 
   if (nextRound > session.maxRounds) {
-    return NextResponse.json({ done: true });
+    const userLines = session.history.map((round) => round.userLine || "");
+    const score = scoreStory(session.maxRounds, userLines, session.difficulty, session.targetWords);
+    const branch = dominantBranch(session.branchCounts);
+    const finalStory = finalizeStoryWithBranch(
+      session.story,
+      session.theme,
+      branch,
+      session.lang,
+      session.difficulty
+    );
+    const feedback = feedbackForScore(score.totalStars, session.lang);
+    const vocab = suggestedVocab(session.targetWords, session.lang);
+
+    const cookie = req.headers.get("cookie") || "";
+    const match = cookie.match(/sb_session=([^;]+)/);
+    let storyId: string | null = null;
+    if (match?.[1]) {
+      const authSession = await getAuthSession(match[1]);
+      if (authSession && new Date(authSession.expires_at).getTime() > Date.now()) {
+        const user = await getUserById(authSession.user_id);
+        if (user) {
+          await initDb();
+          storyId = randomUUID();
+          await sql`
+            INSERT INTO stories
+            (id, user_id, theme, difficulty, lang, title, full_story, moral, total_stars, score_json, feedback_json, suggested_vocab_json, branch, hero, target_words, inventory, history, created_at)
+            VALUES (
+              ${storyId},
+              ${user.id},
+              ${session.theme},
+              ${session.difficulty},
+              ${session.lang},
+              ${finalStory.title},
+              ${finalStory.fullStory},
+              ${finalStory.moral},
+              ${score.totalStars},
+              ${JSON.stringify({
+                creativity: score.creativity,
+                storyFlow: score.storyFlow,
+                englishLevelFit: score.englishLevelFit,
+                bonus: score.bonus,
+                totalStars: score.totalStars
+              })},
+              ${JSON.stringify(feedback)},
+              ${JSON.stringify(vocab)},
+              ${branch},
+              ${session.hero},
+              ${JSON.stringify(session.targetWords || [])},
+              ${JSON.stringify(session.inventory || [])},
+              ${JSON.stringify(session.history || [])},
+              ${new Date().toISOString()}
+            )
+          `;
+        }
+      }
+    }
+
+    return NextResponse.json({
+      done: true,
+      storyId,
+      result: {
+        ...finalStory,
+        score: {
+          creativity: score.creativity,
+          storyFlow: score.storyFlow,
+          englishLevelFit: score.englishLevelFit,
+          bonus: score.bonus,
+          totalStars: score.totalStars
+        },
+        feedback,
+        suggestedVocab: vocab,
+        totalStarsEarned: score.totalStars,
+        branch,
+        inventory: session.inventory
+      }
+    });
   }
 
   return NextResponse.json({

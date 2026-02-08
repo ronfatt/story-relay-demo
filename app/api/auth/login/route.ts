@@ -8,19 +8,23 @@ export async function POST(req: Request) {
   const email = String(body.email || "").trim().toLowerCase();
   const password = String(body.password || "");
 
-  const user = getUserByEmail(email);
+  const user = await getUserByEmail(email);
   if (!user || !verifyPassword(password, user.password_hash)) {
     return NextResponse.json({ error: "Invalid email or password." }, { status: 401 });
   }
 
-  const session = createAuthSession(user.id);
+  const session = await createAuthSession(user.id);
   const res = NextResponse.json({ user: { id: user.id, email: user.email } });
+  const cookieDomain =
+    process.env.SESSION_COOKIE_DOMAIN ||
+    (process.env.NODE_ENV === "production" ? ".storybah.my" : undefined);
   res.cookies.set("sb_session", session.id, {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     path: "/",
-    maxAge: 60 * 60 * 24 * 7
+    maxAge: 60 * 60 * 24 * 7,
+    ...(cookieDomain ? { domain: cookieDomain } : {})
   });
   return res;
 }

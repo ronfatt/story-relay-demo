@@ -1,58 +1,69 @@
 import bcrypt from "bcryptjs";
 import crypto from "node:crypto";
-import db from "@/lib/db";
+import { initDb, sql } from "@/lib/db";
 
 export type User = { id: number; email: string; created_at: string };
 
-export function createUser(email: string, password: string) {
+export async function createUser(email: string, password: string) {
+  await initDb();
   const hashed = bcrypt.hashSync(password, 10);
   const now = new Date().toISOString();
-  const stmt = db.prepare(
-    "INSERT INTO users (email, password_hash, created_at) VALUES (?, ?, ?)"
-  );
-  const info = stmt.run(email, hashed, now);
-  return { id: Number(info.lastInsertRowid), email, created_at: now };
+  const result = await sql`
+    INSERT INTO users (email, password_hash, created_at)
+    VALUES (${email}, ${hashed}, ${now})
+    RETURNING id, email, created_at
+  `;
+  return result.rows[0] as User;
 }
 
-export function getUserByEmail(email: string) {
-  const stmt = db.prepare(
-    "SELECT id, email, password_hash, created_at FROM users WHERE email = ?"
-  );
-  return stmt.get(email) as
+export async function getUserByEmail(email: string) {
+  await initDb();
+  const result = await sql`
+    SELECT id, email, password_hash, created_at
+    FROM users WHERE email = ${email}
+  `;
+  return (result.rows[0] as
     | { id: number; email: string; password_hash: string; created_at: string }
-    | undefined;
+    | undefined);
 }
 
-export function getUserById(id: number) {
-  const stmt = db.prepare("SELECT id, email, created_at FROM users WHERE id = ?");
-  return stmt.get(id) as User | undefined;
+export async function getUserById(id: number) {
+  await initDb();
+  const result = await sql`
+    SELECT id, email, created_at
+    FROM users WHERE id = ${id}
+  `;
+  return result.rows[0] as User | undefined;
 }
 
 export function verifyPassword(password: string, hash: string) {
   return bcrypt.compareSync(password, hash);
 }
 
-export function createAuthSession(userId: number) {
+export async function createAuthSession(userId: number) {
+  await initDb();
   const id = crypto.randomUUID();
   const now = new Date();
   const expires = new Date(now.getTime() + 1000 * 60 * 60 * 24 * 7);
-  const stmt = db.prepare(
-    "INSERT INTO auth_sessions (id, user_id, created_at, expires_at) VALUES (?, ?, ?, ?)"
-  );
-  stmt.run(id, userId, now.toISOString(), expires.toISOString());
+  await sql`
+    INSERT INTO auth_sessions (id, user_id, created_at, expires_at)
+    VALUES (${id}, ${userId}, ${now.toISOString()}, ${expires.toISOString()})
+  `;
   return { id, expiresAt: expires.toISOString() };
 }
 
-export function getSession(sessionId: string) {
-  const stmt = db.prepare(
-    "SELECT id, user_id, expires_at FROM auth_sessions WHERE id = ?"
-  );
-  return stmt.get(sessionId) as
+export async function getSession(sessionId: string) {
+  await initDb();
+  const result = await sql`
+    SELECT id, user_id, expires_at
+    FROM auth_sessions WHERE id = ${sessionId}
+  `;
+  return (result.rows[0] as
     | { id: string; user_id: number; expires_at: string }
-    | undefined;
+    | undefined);
 }
 
-export function deleteSession(sessionId: string) {
-  const stmt = db.prepare("DELETE FROM auth_sessions WHERE id = ?");
-  stmt.run(sessionId);
+export async function deleteSession(sessionId: string) {
+  await initDb();
+  await sql`DELETE FROM auth_sessions WHERE id = ${sessionId}`;
 }

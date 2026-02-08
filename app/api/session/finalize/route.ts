@@ -8,7 +8,7 @@ import {
   dominantBranch
 } from "@/lib/engine";
 import { getSession } from "@/lib/store";
-import db from "@/lib/db";
+import { initDb, sql } from "@/lib/db";
 import { getSession as getAuthSession, getUserById } from "@/lib/auth";
 import { randomUUID } from "crypto";
 
@@ -52,36 +52,49 @@ export async function POST(req: Request) {
     session.lang,
     session.difficulty
   );
+  const feedback = feedbackForScore(score.totalStars, session.lang);
+  const vocab = suggestedVocab(targetWords, session.lang);
 
   const cookie = req.headers.get("cookie") || "";
   const match = cookie.match(/sb_session=([^;]+)/);
+  let storyId: string | null = null;
   if (match?.[1]) {
-    const authSession = getAuthSession(match[1]);
+  const authSession = await getAuthSession(match[1]);
     if (authSession && new Date(authSession.expires_at).getTime() > Date.now()) {
-      const user = getUserById(authSession.user_id);
+      const user = await getUserById(authSession.user_id);
       if (user) {
-        const stmt = db.prepare(
-          `INSERT INTO stories
-           (id, user_id, theme, difficulty, lang, title, full_story, moral, total_stars, branch, hero, target_words, inventory, history, created_at)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-        );
-        stmt.run(
-          randomUUID(),
-          user.id,
-          session.theme,
-          session.difficulty,
-          session.lang,
-          finalStory.title,
-          finalStory.fullStory,
-          finalStory.moral,
-          score.totalStars,
-          branch,
-          session.hero,
-          JSON.stringify(session.targetWords || []),
-          JSON.stringify(session.inventory || []),
-          JSON.stringify(session.history || []),
-          new Date().toISOString()
-        );
+        await initDb();
+        storyId = randomUUID();
+        await sql`
+          INSERT INTO stories
+          (id, user_id, theme, difficulty, lang, title, full_story, moral, total_stars, score_json, feedback_json, suggested_vocab_json, branch, hero, target_words, inventory, history, created_at)
+          VALUES (
+            ${storyId},
+            ${user.id},
+            ${session.theme},
+            ${session.difficulty},
+            ${session.lang},
+            ${finalStory.title},
+            ${finalStory.fullStory},
+            ${finalStory.moral},
+            ${score.totalStars},
+            ${JSON.stringify({
+              creativity: score.creativity,
+              storyFlow: score.storyFlow,
+              englishLevelFit: score.englishLevelFit,
+              bonus: score.bonus,
+              totalStars: score.totalStars
+            })},
+            ${JSON.stringify(feedback)},
+            ${JSON.stringify(vocab)},
+            ${branch},
+            ${session.hero},
+            ${JSON.stringify(session.targetWords || [])},
+            ${JSON.stringify(session.inventory || [])},
+            ${JSON.stringify(session.history || [])},
+            ${new Date().toISOString()}
+          )
+        `;
       }
     }
   }
@@ -95,10 +108,11 @@ export async function POST(req: Request) {
       bonus: score.bonus,
       totalStars: score.totalStars
     },
-    feedback: feedbackForScore(score.totalStars, session.lang),
-    suggestedVocab: suggestedVocab(targetWords, session.lang),
+    feedback,
+    suggestedVocab: vocab,
     totalStarsEarned: score.totalStars,
     branch,
-    inventory: session.inventory
+    inventory: session.inventory,
+    storyId
   });
 }

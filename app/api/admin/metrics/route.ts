@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import db from "@/lib/db";
+import { initDb, sql } from "@/lib/db";
 import { getSession, getUserById } from "@/lib/auth";
 
 export const runtime = "nodejs";
@@ -27,28 +27,29 @@ export async function GET(req: Request) {
   const match = cookie.match(/sb_session=([^;]+)/);
   if (!match?.[1]) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const session = getSession(match[1]);
+  const session = await getSession(match[1]);
   if (!session || new Date(session.expires_at).getTime() < Date.now()) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const user = getUserById(session.user_id);
+  const user = await getUserById(session.user_id);
   if (!user || user.email.toLowerCase() !== ADMIN_EMAIL) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
+  await initDb();
   const now = new Date();
   const todayStart = startOfTodayUTC(now);
   const weekStart = startOfWeekUTC(now);
   const monthStart = startOfMonthUTC(now);
 
-  const totalUsersRow = db.prepare("SELECT COUNT(*) as c FROM users").get() as { c: number };
-  const totalStoriesRow = db.prepare("SELECT COUNT(*) as c FROM stories").get() as { c: number };
+  const totalUsersRow = await sql`SELECT COUNT(*)::int as c FROM users`;
+  const totalStoriesRow = await sql`SELECT COUNT(*)::int as c FROM stories`;
 
-  const storiesRows = db
-    .prepare(
-      "SELECT user_id, created_at, lang, difficulty, total_stars, theme FROM stories WHERE created_at >= ?"
-    )
-    .all(monthStart.toISOString()) as Array<{
+  const storiesRowsResult = await sql`
+    SELECT user_id, created_at, lang, difficulty, total_stars, theme
+    FROM stories WHERE created_at >= ${monthStart.toISOString()}
+  `;
+  const storiesRows = storiesRowsResult.rows as Array<{
     user_id: number;
     created_at: string;
     lang: string;
@@ -121,8 +122,8 @@ export async function GET(req: Request) {
   const peakHour = peakHourEntry ? { hour: peakHourEntry.hour, count: peakHourEntry.count } : null;
 
   return NextResponse.json({
-    totalUsers: totalUsersRow.c,
-    totalStories: totalStoriesRow.c,
+    totalUsers: totalUsersRow.rows[0]?.c ?? 0,
+    totalStories: totalStoriesRow.rows[0]?.c ?? 0,
     today: { users: todayUsers.size, stories: todayStories },
     week: { users: weekUsers.size, stories: weekStories },
     month: { users: monthUsers.size, stories: monthStories },
