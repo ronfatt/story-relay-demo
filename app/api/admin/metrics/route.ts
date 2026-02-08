@@ -49,14 +49,14 @@ export async function GET(req: Request) {
     SELECT user_id, created_at, lang, difficulty, total_stars, theme
     FROM stories WHERE created_at >= ${monthStart.toISOString()}
   `;
-  const storiesRows = storiesRowsResult as Array<{
+  const storiesRows = storiesRowsResult.map((row) => row as {
     user_id: number;
     created_at: string;
     lang: string;
     difficulty: string;
     total_stars: number;
     theme: string;
-  }>;
+  });
 
   const dayBuckets: Record<string, number> = {};
   const hourBuckets: Record<string, number> = {};
