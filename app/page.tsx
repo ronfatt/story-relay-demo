@@ -26,22 +26,27 @@ export default function HomePage() {
   async function handleAuth() {
     setAuthError("");
     setAuthLoading(true);
-    const endpoint = authMode === "login" ? "/api/auth/login" : "/api/auth/register";
-    const res = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password })
-    });
-    const data = await res.json();
-    setAuthLoading(false);
-    if (!res.ok) {
-      setAuthError(data.error || "Auth failed.");
-      return;
+    try {
+      const endpoint = authMode === "login" ? "/api/auth/login" : "/api/auth/register";
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+      setAuthLoading(false);
+      if (!res.ok) {
+        setAuthError(data.error || "Auth failed.");
+        return;
+      }
+      setUser(data.user || null);
+      setEmail("");
+      setPassword("");
+      router.push("/dashboard");
+    } catch {
+      setAuthLoading(false);
+      setAuthError("Network error. Please try again.");
     }
-    setUser(data.user || null);
-    setEmail("");
-    setPassword("");
-    router.push("/dashboard");
   }
 
   return (

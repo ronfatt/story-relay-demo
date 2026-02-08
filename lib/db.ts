@@ -4,7 +4,9 @@ import path from "node:path";
 
 const dbPath =
   process.env.STORYBAH_DB_PATH ||
-  path.join(process.cwd(), "data", "storybah.db");
+  (process.env.VERCEL
+    ? path.join("/tmp", "storybah.db")
+    : path.join(process.cwd(), "data", "storybah.db"));
 
 fs.mkdirSync(path.dirname(dbPath), { recursive: true });
 
