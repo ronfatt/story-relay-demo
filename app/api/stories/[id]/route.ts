@@ -6,9 +6,9 @@ export const runtime = "nodejs";
 
 export async function GET(
   req: Request,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
-  const { id } = context.params;
+  const { id } = await context.params;
   const cookie = req.headers.get("cookie") || "";
   const match = cookie.match(/sb_session=([^;]+)/);
   if (!match?.[1]) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
