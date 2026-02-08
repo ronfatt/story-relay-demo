@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import db from "@/lib/db";
+import { initDb, sql } from "@/lib/db";
 import { getSession, getUserById } from "@/lib/auth";
 
 export const runtime = "nodejs";
@@ -13,19 +13,19 @@ export async function GET(
   const match = cookie.match(/sb_session=([^;]+)/);
   if (!match?.[1]) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const authSession = getSession(match[1]);
+  const authSession = await getSession(match[1]);
   if (!authSession || new Date(authSession.expires_at).getTime() < Date.now()) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const user = getUserById(authSession.user_id);
+  const user = await getUserById(authSession.user_id);
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const row = db
-    .prepare(
-      `SELECT id, theme, difficulty, lang, title, full_story, moral, total_stars, branch, hero, target_words, inventory, history, created_at
-       FROM stories WHERE id = ? AND user_id = ?`
-    )
-    .get(id, user.id);
+  await initDb();
+  const rowResult = await sql`
+    SELECT id, theme, difficulty, lang, title, full_story, moral, total_stars, score_json, feedback_json, suggested_vocab_json, branch, hero, target_words, inventory, history, created_at
+    FROM stories WHERE id = ${id} AND user_id = ${user.id}
+  `;
+  const row = rowResult.rows[0];
 
   if (!row) return NextResponse.json({ error: "Not found" }, { status: 404 });
   return NextResponse.json({ story: row });

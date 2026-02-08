@@ -150,7 +150,19 @@ export default function PlayClient({
       setUserLine("");
       setBurstKey(Date.now());
       if (data.done) {
-        router.push(`/result?sessionId=${sessionId}&lang=${lang}`);
+        const params = new URLSearchParams({ lang });
+        if (data.storyId) {
+          params.set("storyId", data.storyId);
+          if (data.result) {
+            sessionStorage.setItem(
+              `storybah:result:${data.storyId}`,
+              JSON.stringify(data.result)
+            );
+          }
+        } else {
+          params.set("sessionId", sessionId);
+        }
+        router.push(`/result?${params.toString()}`);
         return;
       }
       setRoundData(data);
