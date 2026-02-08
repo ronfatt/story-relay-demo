@@ -1,6 +1,17 @@
-import { sql } from "@vercel/postgres";
+import postgres from "postgres";
 
 let initialized = false;
+
+const connectionUrl =
+  process.env.DATABASE_URL ||
+  process.env.POSTGRES_URL ||
+  process.env.PRISMA_DATABASE_URL ||
+  "";
+
+const sql = postgres(connectionUrl, {
+  ssl: "require",
+  max: 5
+});
 
 export async function initDb() {
   if (initialized) return;
@@ -51,26 +62,6 @@ export async function initDb() {
   await sql`ALTER TABLE stories ADD COLUMN IF NOT EXISTS suggested_vocab_json TEXT;`;
 
   initialized = true;
-}
-
-const rawUrl =
-  process.env.DATABASE_URL ||
-  process.env.POSTGRES_URL ||
-  process.env.PRISMA_DATABASE_URL ||
-  "";
-
-let normalizedUrl = rawUrl.trim();
-if (
-  (normalizedUrl.startsWith('"') && normalizedUrl.endsWith('"')) ||
-  (normalizedUrl.startsWith("'") && normalizedUrl.endsWith("'"))
-) {
-  normalizedUrl = normalizedUrl.slice(1, -1);
-}
-if (normalizedUrl.startsWith("prisma+postgres://")) {
-  normalizedUrl = `postgres://${normalizedUrl.slice("prisma+postgres://".length)}`;
-}
-if (normalizedUrl) {
-  process.env.POSTGRES_URL = normalizedUrl;
 }
 
 export { sql };
