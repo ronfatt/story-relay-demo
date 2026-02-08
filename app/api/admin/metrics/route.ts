@@ -49,7 +49,7 @@ export async function GET(req: Request) {
     SELECT user_id, created_at, lang, difficulty, total_stars, theme
     FROM stories WHERE created_at >= ${monthStart.toISOString()}
   `;
-  const storiesRows = storiesRowsResult.rows as Array<{
+  const storiesRows = storiesRowsResult as Array<{
     user_id: number;
     created_at: string;
     lang: string;
@@ -122,8 +122,8 @@ export async function GET(req: Request) {
   const peakHour = peakHourEntry ? { hour: peakHourEntry.hour, count: peakHourEntry.count } : null;
 
   return NextResponse.json({
-    totalUsers: totalUsersRow.rows[0]?.c ?? 0,
-    totalStories: totalStoriesRow.rows[0]?.c ?? 0,
+    totalUsers: totalUsersRow[0]?.c ?? 0,
+    totalStories: totalStoriesRow[0]?.c ?? 0,
     today: { users: todayUsers.size, stories: todayStories },
     week: { users: weekUsers.size, stories: weekStories },
     month: { users: monthUsers.size, stories: monthStories },

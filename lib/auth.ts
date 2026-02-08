@@ -13,7 +13,7 @@ export async function createUser(email: string, password: string) {
     VALUES (${email}, ${hashed}, ${now})
     RETURNING id, email, created_at
   `;
-  return result.rows[0] as User;
+  return result[0] as User;
 }
 
 export async function getUserByEmail(email: string) {
@@ -22,7 +22,7 @@ export async function getUserByEmail(email: string) {
     SELECT id, email, password_hash, created_at
     FROM users WHERE email = ${email}
   `;
-  return (result.rows[0] as
+  return (result[0] as
     | { id: number; email: string; password_hash: string; created_at: string }
     | undefined);
 }
@@ -33,7 +33,7 @@ export async function getUserById(id: number) {
     SELECT id, email, created_at
     FROM users WHERE id = ${id}
   `;
-  return result.rows[0] as User | undefined;
+  return result[0] as User | undefined;
 }
 
 export function verifyPassword(password: string, hash: string) {
@@ -58,7 +58,7 @@ export async function getSession(sessionId: string) {
     SELECT id, user_id, expires_at
     FROM auth_sessions WHERE id = ${sessionId}
   `;
-  return (result.rows[0] as
+  return (result[0] as
     | { id: string; user_id: number; expires_at: string }
     | undefined);
 }

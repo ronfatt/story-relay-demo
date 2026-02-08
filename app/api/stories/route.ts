@@ -23,5 +23,5 @@ export async function GET(req: Request) {
     FROM stories WHERE user_id = ${user.id} ORDER BY created_at DESC
   `;
 
-  return NextResponse.json({ stories: rowsResult.rows });
+  return NextResponse.json({ stories: rowsResult });
 }

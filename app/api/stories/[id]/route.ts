@@ -25,7 +25,7 @@ export async function GET(
     SELECT id, theme, difficulty, lang, title, full_story, moral, total_stars, score_json, feedback_json, suggested_vocab_json, branch, hero, target_words, inventory, history, created_at
     FROM stories WHERE id = ${id} AND user_id = ${user.id}
   `;
-  const row = rowResult.rows[0];
+  const row = rowResult[0];
 
   if (!row) return NextResponse.json({ error: "Not found" }, { status: 404 });
   return NextResponse.json({ story: row });
