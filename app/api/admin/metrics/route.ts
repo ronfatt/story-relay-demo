@@ -46,7 +46,7 @@ export async function GET(req: Request) {
 
   const storiesRows = db
     .prepare(
-      "SELECT user_id, created_at, lang, difficulty, total_stars FROM stories WHERE created_at >= ?"
+      "SELECT user_id, created_at, lang, difficulty, total_stars, theme FROM stories WHERE created_at >= ?"
     )
     .all(monthStart.toISOString()) as Array<{
     user_id: number;
@@ -54,12 +54,14 @@ export async function GET(req: Request) {
     lang: string;
     difficulty: string;
     total_stars: number;
+    theme: string;
   }>;
 
   const dayBuckets: Record<string, number> = {};
   const hourBuckets: Record<string, number> = {};
   const langCounts: Record<string, number> = {};
   const difficultyCounts: Record<string, number> = {};
+  const themeCounts: Record<string, number> = {};
   let todayStories = 0;
   let weekStories = 0;
   let monthStories = storiesRows.length;
@@ -77,6 +79,7 @@ export async function GET(req: Request) {
 
     langCounts[row.lang] = (langCounts[row.lang] || 0) + 1;
     difficultyCounts[row.difficulty] = (difficultyCounts[row.difficulty] || 0) + 1;
+    themeCounts[row.theme] = (themeCounts[row.theme] || 0) + 1;
 
     monthUsers.add(row.user_id);
     if (created >= weekStart) {
@@ -111,6 +114,12 @@ export async function GET(req: Request) {
     hourly.push({ hour: key, count: hourBuckets[key] || 0 });
   }
 
+  const topThemeEntry = Object.entries(themeCounts).sort((a, b) => b[1] - a[1])[0];
+  const topTheme = topThemeEntry ? { name: topThemeEntry[0], count: topThemeEntry[1] } : null;
+
+  const peakHourEntry = hourly.slice().sort((a, b) => b.count - a.count)[0];
+  const peakHour = peakHourEntry ? { hour: peakHourEntry.hour, count: peakHourEntry.count } : null;
+
   return NextResponse.json({
     totalUsers: totalUsersRow.c,
     totalStories: totalStoriesRow.c,
@@ -119,6 +128,9 @@ export async function GET(req: Request) {
     month: { users: monthUsers.size, stories: monthStories },
     langCounts,
     difficultyCounts,
+    themeCounts,
+    topTheme,
+    peakHour,
     last7Days,
     last30Days,
     hourly

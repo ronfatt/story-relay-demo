@@ -12,6 +12,9 @@ type Metrics = {
   month: { users: number; stories: number };
   langCounts: Record<string, number>;
   difficultyCounts: Record<string, number>;
+  themeCounts: Record<string, number>;
+  topTheme: { name: string; count: number } | null;
+  peakHour: { hour: string; count: number } | null;
   last7Days: Array<{ date: string; count: number }>;
   last30Days: Array<{ date: string; count: number }>;
   hourly: Array<{ hour: string; count: number }>;
@@ -80,6 +83,24 @@ export default function AdminPage() {
             <p>Today / This Week / This Month</p>
           </div>
           <div className="hero-orb sparkle">📊</div>
+        </div>
+        <div className="summary-row">
+          <div className="summary-pill">
+            <div className="summary-title">Peak Hour (UTC)</div>
+            <div className="summary-value">
+              {metrics.peakHour ? `${metrics.peakHour.hour}:00` : "—"}
+            </div>
+            <div className="summary-sub">
+              {metrics.peakHour ? `${metrics.peakHour.count} stories` : "No data yet"}
+            </div>
+          </div>
+          <div className="summary-pill">
+            <div className="summary-title">Top Theme</div>
+            <div className="summary-value">{metrics.topTheme?.name || "—"}</div>
+            <div className="summary-sub">
+              {metrics.topTheme ? `${metrics.topTheme.count} plays` : "No data yet"}
+            </div>
+          </div>
         </div>
         <div className="stat-grid">
           <div className="stat-card">
@@ -177,6 +198,13 @@ export default function AdminPage() {
             <div key={key} className="stat-card">
               <div className="stat-label">{key}</div>
               <div className="stat-value">{value}</div>
+            </div>
+          ))}
+          {Object.entries(metrics.themeCounts || {}).map(([key, value]) => (
+            <div key={key} className="stat-card">
+              <div className="stat-label">Theme</div>
+              <div className="stat-value">{key}</div>
+              <div className="stat-label">{value} plays</div>
             </div>
           ))}
         </div>
