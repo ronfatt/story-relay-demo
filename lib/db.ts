@@ -53,4 +53,24 @@ export async function initDb() {
   initialized = true;
 }
 
+const rawUrl =
+  process.env.DATABASE_URL ||
+  process.env.POSTGRES_URL ||
+  process.env.PRISMA_DATABASE_URL ||
+  "";
+
+let normalizedUrl = rawUrl.trim();
+if (
+  (normalizedUrl.startsWith('"') && normalizedUrl.endsWith('"')) ||
+  (normalizedUrl.startsWith("'") && normalizedUrl.endsWith("'"))
+) {
+  normalizedUrl = normalizedUrl.slice(1, -1);
+}
+if (normalizedUrl.startsWith("prisma+postgres://")) {
+  normalizedUrl = `postgres://${normalizedUrl.slice("prisma+postgres://".length)}`;
+}
+if (normalizedUrl) {
+  process.env.POSTGRES_URL = normalizedUrl;
+}
+
 export { sql };
