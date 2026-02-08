@@ -1,11 +1,12 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
 import { ui, type Language, LANG_LABELS } from "@/lib/i18n";
 
 export default function HomePage() {
-  const [name, setName] = useState("");
+  const router = useRouter();
   const [lang, setLang] = useState<Language>("en");
   const [authMode, setAuthMode] = useState<"login" | "register">("login");
   const [email, setEmail] = useState("");
@@ -14,29 +15,6 @@ export default function HomePage() {
   const [authLoading, setAuthLoading] = useState(false);
   const [user, setUser] = useState<{ id: number; email: string } | null>(null);
   const t = ui(lang);
-
-  const themes = [
-    { name: "Magic Forest", emoji: "✨", preview: "Glowing paths and secret doors." },
-    { name: "Space School", emoji: "🚀", preview: "Solve star mysteries with robots." },
-    { name: "Ocean Quest", emoji: "🌊", preview: "Dive for pearls and sea clues." },
-    { name: "Dino Valley", emoji: "🦕", preview: "Brave trails and friendly giants." },
-    { name: "Sky Castle", emoji: "🏰", preview: "Cloud bridges and sky bells." },
-    { name: "Robot City", emoji: "🤖", preview: "Beep-boop clues and bright lights." },
-    { name: "Candy Kingdom", emoji: "🍭", preview: "Sweet paths and sparkle hints." },
-    { name: "Jungle Rescue", emoji: "🌿", preview: "Hidden trails and rescue calls." },
-    { name: "Ice Mountain", emoji: "❄️", preview: "Crystal caves and chilly clues." },
-    { name: "Desert Caravan", emoji: "🏜️", preview: "Golden dunes and oasis secrets." }
-  ];
-
-  const today = useMemo(() => {
-    const pick = themes[Math.floor(Math.random() * themes.length)];
-    const hooks = [
-      "A tiny clue is hiding nearby...",
-      "A friendly guide is waiting.",
-      "A surprise twist is coming!"
-    ];
-    return { ...pick, hook: hooks[Math.floor(Math.random() * hooks.length)] };
-  }, []);
 
   useEffect(() => {
     fetch("/api/auth/me")
@@ -63,11 +41,7 @@ export default function HomePage() {
     setUser(data.user || null);
     setEmail("");
     setPassword("");
-  }
-
-  async function handleLogout() {
-    await fetch("/api/auth/logout", { method: "POST" });
-    setUser(null);
+    router.push("/dashboard");
   }
 
   return (
@@ -81,6 +55,7 @@ export default function HomePage() {
           </div>
           <div className="hero-orb sparkle">🌈</div>
         </div>
+
         <div className="grid">
           <div className="section-title">{t.language}</div>
           <div className="choice-grid">
@@ -98,6 +73,7 @@ export default function HomePage() {
             ))}
           </div>
         </div>
+
         {user ? (
           <div className="adventure-row">
             <div className="adventure-emoji">✅</div>
@@ -105,12 +81,9 @@ export default function HomePage() {
               <div className="adventure-title">{user.email}</div>
               <div className="adventure-text">{t.learningRecords}</div>
             </div>
-            <Link className="button secondary" href="/stories">
+            <Link className="button secondary" href="/dashboard">
               {t.viewRecords}
             </Link>
-            <button className="button" onClick={handleLogout}>
-              {t.logoutButton}
-            </button>
           </div>
         ) : (
           <div className="grid">
@@ -155,146 +128,6 @@ export default function HomePage() {
             </div>
           </div>
         )}
-      </section>
-
-      <section className="card hero-card grid">
-        <div className="hero-header">
-          <div>
-            <div className="hero-kicker">{t.heroKicker}</div>
-            <h1>{t.heroTitle}</h1>
-            <p>{t.heroSubtitle}</p>
-          </div>
-          <div className="hero-orb sparkle">🎲</div>
-        </div>
-        <div className="feature-grid">
-          <div className="feature-card">
-            <div className="feature-emoji">🧠</div>
-            <div className="feature-title">{t.levelBeginner} / {t.levelIntermediate} / {t.levelAdvanced}</div>
-            <div className="feature-text">{t.levelHintBeginner}</div>
-          </div>
-          <div className="feature-card">
-            <div className="feature-emoji">🧩</div>
-            <div className="feature-title">{t.how2}</div>
-            <div className="feature-text">{t.how3}</div>
-          </div>
-          <div className="feature-card">
-            <div className="feature-emoji">⭐</div>
-            <div className="feature-title">{t.suggestedVocab}</div>
-            <div className="feature-text">{t.safeBadge}</div>
-          </div>
-        </div>
-        <div className="grid">
-          <div className="section-title">{t.nameYourHero}</div>
-          <input
-            className="input"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder={t.heroPlaceholder}
-          />
-        </div>
-        <div className="grid">
-          <div className="section-title">{t.language}</div>
-          <div className="choice-grid">
-            {(["en", "zh", "ms"] as Language[]).map((code) => (
-              <button
-                key={code}
-                className={`theme-card ${lang === code ? "selected" : ""}`}
-                onClick={() => setLang(code)}
-                type="button"
-              >
-                <div className="theme-emoji">🌐</div>
-                <div className="theme-name">{LANG_LABELS[code]}</div>
-                <div className="theme-subtitle">{code.toUpperCase()}</div>
-              </button>
-            ))}
-          </div>
-        </div>
-        <div className="hero-actions">
-          <Link className="button chest-button" href={`/play?name=${encodeURIComponent(name)}&lang=${lang}`}>
-            <span className="chest">🧰</span>
-            {t.playButton}
-            <span className="sparkles">✨✨</span>
-          </Link>
-          <div className="badge">{t.safeBadge}</div>
-        </div>
-      </section>
-
-      <section className="card grid adventure-card">
-        <div className="section-title">{t.todayTitle}</div>
-        <div className="adventure-row">
-          <div className="adventure-emoji">{today.emoji}</div>
-          <div>
-            <div className="adventure-title">{today.name}</div>
-            <div className="adventure-text">{today.preview}</div>
-            <div className="adventure-hook">{today.hook}</div>
-          </div>
-          <Link
-            className="button secondary"
-            href={`/play?name=${encodeURIComponent(name)}&theme=${encodeURIComponent(
-              today.name
-            )}&lang=${lang}`}
-          >
-            {t.todayButton}
-          </Link>
-        </div>
-      </section>
-
-      <section className="card grid carousel-card">
-        <div className="section-title">{t.pickWorld}</div>
-        <div className="carousel">
-          {themes.map((theme) => (
-            <Link
-              key={theme.name}
-              className="world-card"
-              href={`/play?name=${encodeURIComponent(name)}&theme=${encodeURIComponent(
-                theme.name
-              )}&lang=${lang}`}
-            >
-              <div className="world-emoji">{theme.emoji}</div>
-              <div className="world-name">{theme.name}</div>
-              <div className="world-preview">{theme.preview}</div>
-              <div className="world-cta">{t.playWorldCta}</div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      <section className="card grid how-card">
-        <h2>{t.howTitle}</h2>
-        <div className="step-grid">
-          <div className="step-card">
-            <div className="step-number">1</div>
-            <div className="step-text">{t.how1}</div>
-          </div>
-          <div className="step-card">
-            <div className="step-number">2</div>
-            <div className="step-text">{t.how2}</div>
-          </div>
-          <div className="step-card">
-            <div className="step-number">3</div>
-            <div className="step-text">{t.how3}</div>
-          </div>
-          <div className="step-card">
-            <div className="step-number">4</div>
-            <div className="step-text">{t.how4}</div>
-          </div>
-        </div>
-      </section>
-
-      <section className="card grid adventure-card">
-        <div className="section-title">{t.myStories} / {t.learningRecords}</div>
-        <div className="adventure-row">
-          <div className="adventure-emoji">📚</div>
-          <div>
-            <div className="adventure-title">{t.viewRecords}</div>
-            <div className="adventure-text">
-              {user ? t.learningRecords : t.needLogin}
-            </div>
-          </div>
-          <Link className="button secondary" href="/stories">
-            {t.viewRecords}
-          </Link>
-        </div>
       </section>
     </main>
   );
