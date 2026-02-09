@@ -132,6 +132,7 @@ export default function PlayClient({
   const [burstKey, setBurstKey] = useState(0);
   const [totalStars, setTotalStars] = useState(0);
   const t = ui(lang);
+  const bonusReady = userLine.trim().length > 0;
 
   useEffect(() => {
     setRoundData(null);
@@ -353,6 +354,9 @@ export default function PlayClient({
               placeholder="Example: Mia felt excited and brave!"
             />
           </label>
+          <div className={`bonus-hint ${bonusReady ? "ready" : ""}`}>
+            {bonusReady ? t.bonusReady : t.bonusTip}
+          </div>
           <div>
             {t.targetWords}: {roundData.targetWords.join(", ")}
           </div>
@@ -367,12 +371,19 @@ function themeEmoji(theme: string) {
   if (theme === "Space School") return "🚀";
   if (theme === "Ocean Quest") return "🌊";
   if (theme === "Dino Valley") return "🦕";
+  if (theme === "Fairy Circus") return "🎪";
+  if (theme === "Pirate Cove") return "🏴‍☠️";
   if (theme === "Sky Castle") return "🏰";
   if (theme === "Robot City") return "🤖";
   if (theme === "Candy Kingdom") return "🍭";
+  if (theme === "Toy Town") return "🧸";
+  if (theme === "Rainbow Ranch") return "🌈";
   if (theme === "Jungle Rescue") return "🌿";
   if (theme === "Ice Mountain") return "❄️";
   if (theme === "Desert Caravan") return "🏜️";
+  if (theme === "Marvel World") return "🦸";
+  if (theme === "DC World") return "🛡️";
+  if (theme === "Kpop Demon Hunter World") return "🎤";
   return "⭐";
 }
 

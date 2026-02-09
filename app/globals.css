@@ -297,6 +297,23 @@ body {
   font-size: 16px;
 }
 
+.bonus-hint {
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 2px dashed #c9b7ff;
+  background: #faf7ff;
+  color: #6a4bb5;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.bonus-hint.ready {
+  border-color: #45e1a0;
+  background: #ecfff6;
+  color: #1b7f5a;
+}
+
 .badge {
   display: inline-block;
   padding: 5px 12px;
