@@ -23,6 +23,16 @@ const openings: Record<string, string[]> = {
     "A baby triceratops nudged {hero}'s hand. The mission was to solve {conflict}, and the {location} could hold a clue.",
     "{hero} followed a trail of leaves and felt {mood}. The {location} appeared between tall rocks like a quiet secret."
   ],
+  "Fairy Circus": [
+    "{hero} found a ticket to the Fairy Circus. The {location} sparkled with lanterns, and {conflict} needed a kind solution.",
+    "A tiny drumbeat led {hero} to the {location}. The circus felt {mood}, and a fairy guide waved hello.",
+    "{hero} spotted {conflict} near the {location}. A rainbow ribbon floated by with a clue."
+  ],
+  "Pirate Cove": [
+    "{hero} stepped into Pirate Cove with a folded map. The {location} was marked with an X, and {conflict} needed a brave choice.",
+    "Seagulls circled as {hero} reached the {location}. The cove felt {mood}, and a friendly pirate tipped a hat.",
+    "{hero} noticed {conflict} near the {location}. A bottle bobbed with a secret note."
+  ],
   "Sky Castle": [
     "{hero} arrived at Sky Castle on a soft cloud bridge. The {location} shimmered above, and {conflict} had to be solved before sunset.",
     "A breeze carried {hero} to the {location}. The towers sang quietly, and {hero} felt {mood} and ready.",
@@ -38,6 +48,16 @@ const openings: Record<string, string[]> = {
     "A jelly bridge led {hero} to the {location}. The air felt {mood}, and gumdrop lanterns lit the way.",
     "{hero} discovered {conflict}. The {location} glowed like caramel and promised a clue."
   ],
+  "Toy Town": [
+    "{hero} arrived at Toy Town where gears clicked softly. The {location} blinked with a clue, and {conflict} needed a quick fix.",
+    "A toy train guided {hero} to the {location}. The town felt {mood}, and a teddy waved hello.",
+    "{hero} found {conflict} near the {location}. A wind-up key shimmered in the light."
+  ],
+  "Rainbow Ranch": [
+    "{hero} rode into Rainbow Ranch under a bright sky. The {location} shimmered with color, and {conflict} needed a gentle plan.",
+    "A friendly pony led {hero} to the {location}. The ranch felt {mood}, and a bell chimed softly.",
+    "{hero} noticed {conflict} near the {location}. A rainbow ribbon marked the path."
+  ],
   "Jungle Rescue": [
     "{hero} entered the jungle and heard drums in the trees. The {location} was hidden in the vines, and {conflict} needed help.",
     "A parrot guided {hero} to the {location}. The jungle felt {mood}, and a rescue plan began.",
@@ -52,6 +72,21 @@ const openings: Record<string, string[]> = {
     "{hero} joined a desert caravan under a golden sky. The {location} was far away, and {conflict} needed a brave choice.",
     "Warm winds guided {hero} toward the {location}. The sand felt {mood}, and camels hummed softly.",
     "{hero} noticed {conflict} near the {location}. A lantern flickered with a clue."
+  ],
+  "Marvel World": [
+    "{hero} stepped into Marvel World where the {location} flashed with signals. {conflict} needed a heroic plan.",
+    "A bright beacon led {hero} to the {location}. The city felt {mood}, and a hero squad stood ready.",
+    "{hero} found {conflict} near the {location}. A glowing emblem pointed the way."
+  ],
+  "DC World": [
+    "{hero} entered DC World as the {location} lit up. {conflict} needed a brave choice tonight.",
+    "A signal shined over the {location}. The streets felt {mood}, and a hero team watched the sky.",
+    "{hero} spotted {conflict} near the {location}. A cape fluttered with a clue."
+  ],
+  "Kpop Demon Hunter World": [
+    "{hero} arrived at Kpop Demon Hunter World. The {location} glowed like a stage, and {conflict} needed a careful plan.",
+    "A beat pulsed toward the {location}. The night felt {mood}, and a hunter crew tuned up.",
+    "{hero} noticed {conflict} near the {location}. A neon charm pointed the way."
   ]
 };
 
@@ -76,24 +111,38 @@ const themeLabelsByLang: Record<Language, Record<string, string>> = {
     "Space School": "太空学校",
     "Ocean Quest": "海洋探险",
     "Dino Valley": "恐龙谷",
+    "Fairy Circus": "仙子马戏团",
+    "Pirate Cove": "海盗小湾",
     "Sky Castle": "天空城堡",
     "Robot City": "机器人城市",
     "Candy Kingdom": "糖果王国",
+    "Toy Town": "玩具小镇",
+    "Rainbow Ranch": "彩虹牧场",
     "Jungle Rescue": "丛林救援",
     "Ice Mountain": "冰雪山脉",
-    "Desert Caravan": "沙漠商队"
+    "Desert Caravan": "沙漠商队",
+    "Marvel World": "漫威世界",
+    "DC World": "DC 世界",
+    "Kpop Demon Hunter World": "Kpop 猎魔世界"
   },
   ms: {
     "Magic Forest": "Hutan Ajaib",
     "Space School": "Sekolah Angkasa",
     "Ocean Quest": "Misi Lautan",
     "Dino Valley": "Lembah Dino",
+    "Fairy Circus": "Sarkas Pari-pari",
+    "Pirate Cove": "Teluk Lanun",
     "Sky Castle": "Istana Langit",
     "Robot City": "Bandar Robot",
     "Candy Kingdom": "Kerajaan Gula-gula",
+    "Toy Town": "Bandar Mainan",
+    "Rainbow Ranch": "Ranch Pelangi",
     "Jungle Rescue": "Misi Rimba",
     "Ice Mountain": "Gunung Ais",
-    "Desert Caravan": "Kafilah Gurun"
+    "Desert Caravan": "Kafilah Gurun",
+    "Marvel World": "Dunia Marvel",
+    "DC World": "Dunia DC",
+    "Kpop Demon Hunter World": "Dunia Pemburu Iblis Kpop"
   }
 };
 
@@ -157,6 +206,26 @@ const beginnerActionsByLang: Record<Language, Record<string, string[]>> = {
       "Drink water",
       "Sit by a rock"
     ],
+    "Fairy Circus": [
+      "Wave to a fairy",
+      "Look at a light",
+      "Pick a ribbon",
+      "Go to the tent",
+      "Run to the stage",
+      "Open a box",
+      "Drink water",
+      "Sit down"
+    ],
+    "Pirate Cove": [
+      "Look at the map",
+      "Wave to a pirate",
+      "Pick a shell",
+      "Go to the boat",
+      "Run to the dock",
+      "Open a chest",
+      "Drink water",
+      "Sit down"
+    ],
     "Sky Castle": [
       "Go to the bridge",
       "Look at a cloud",
@@ -187,6 +256,26 @@ const beginnerActionsByLang: Record<Language, Record<string, string[]>> = {
       "Drink water",
       "Sit down"
     ],
+    "Toy Town": [
+      "Look at a toy",
+      "Wave to a doll",
+      "Pick a key",
+      "Go to the shop",
+      "Run to the bell",
+      "Open a box",
+      "Drink water",
+      "Sit down"
+    ],
+    "Rainbow Ranch": [
+      "Look at a pony",
+      "Wave to a friend",
+      "Pick a flower",
+      "Go to the barn",
+      "Run to the gate",
+      "Open a door",
+      "Drink water",
+      "Sit down"
+    ],
     "Jungle Rescue": [
       "Look at a tree",
       "Go to the river",
@@ -214,6 +303,36 @@ const beginnerActionsByLang: Record<Language, Record<string, string[]>> = {
       "Wave to a camel",
       "Run to the gate",
       "Open the bag",
+      "Drink water",
+      "Sit down"
+    ],
+    "Marvel World": [
+      "Look at a badge",
+      "Wave to a hero",
+      "Pick a map",
+      "Go to the tower",
+      "Run to the gate",
+      "Open a door",
+      "Drink water",
+      "Sit down"
+    ],
+    "DC World": [
+      "Look at a light",
+      "Wave to a hero",
+      "Pick a note",
+      "Go to the roof",
+      "Run to the gate",
+      "Open a door",
+      "Drink water",
+      "Sit down"
+    ],
+    "Kpop Demon Hunter World": [
+      "Look at the stage",
+      "Wave to a singer",
+      "Pick a charm",
+      "Go to the hall",
+      "Run to the gate",
+      "Open a case",
       "Drink water",
       "Sit down"
     ]
@@ -325,36 +444,57 @@ const beginnerLocationsByLang: Record<Language, Record<string, string[]>> = {
     "Space School": ["a door", "a desk", "a star"],
     "Ocean Quest": ["the sea", "a shell", "a boat"],
     "Dino Valley": ["a hill", "a rock", "a leaf"],
+    "Fairy Circus": ["a tent", "a ribbon", "a light"],
+    "Pirate Cove": ["a boat", "a map", "a dock"],
     "Sky Castle": ["a bridge", "a cloud", "a tower"],
     "Robot City": ["a light", "a gate", "a robot"],
     "Candy Kingdom": ["a cake", "a sweet", "a road"],
+    "Toy Town": ["a toy", "a bell", "a shop"],
+    "Rainbow Ranch": ["a pony", "a barn", "a flower"],
     "Jungle Rescue": ["a tree", "a river", "a bird"],
     "Ice Mountain": ["the snow", "a cave", "a rock"],
-    "Desert Caravan": ["the sand", "a tent", "a camel"]
+    "Desert Caravan": ["the sand", "a tent", "a camel"],
+    "Marvel World": ["a tower", "a badge", "a door"],
+    "DC World": ["a light", "a roof", "a door"],
+    "Kpop Demon Hunter World": ["a stage", "a charm", "a hall"]
   },
   zh: {
     "Magic Forest": ["一棵树", "一个小湖", "一条路"],
     "Space School": ["一扇门", "一张桌", "一颗星"],
     "Ocean Quest": ["大海", "一个贝壳", "一条船"],
     "Dino Valley": ["一座小山", "一块石头", "一片叶子"],
+    "Fairy Circus": ["一座帐篷", "一条彩带", "一盏灯"],
+    "Pirate Cove": ["一条船", "一张地图", "一个码头"],
     "Sky Castle": ["一座桥", "一朵云", "一座塔"],
     "Robot City": ["一盏灯", "一扇门", "一个机器人"],
     "Candy Kingdom": ["一块蛋糕", "一颗糖", "一条路"],
+    "Toy Town": ["一个玩具", "一只铃", "一间小店"],
+    "Rainbow Ranch": ["一匹小马", "一个马厩", "一朵花"],
     "Jungle Rescue": ["一棵树", "一条河", "一只鸟"],
     "Ice Mountain": ["一片雪", "一个洞", "一块石头"],
-    "Desert Caravan": ["一片沙", "一座帐篷", "一只骆驼"]
+    "Desert Caravan": ["一片沙", "一座帐篷", "一只骆驼"],
+    "Marvel World": ["一座塔", "一个徽章", "一扇门"],
+    "DC World": ["一盏灯", "一座屋顶", "一扇门"],
+    "Kpop Demon Hunter World": ["一个舞台", "一个护符", "一间大厅"]
   },
   ms: {
     "Magic Forest": ["sebatang pokok", "sebuah kolam", "sebuah laluan"],
     "Space School": ["sebuah pintu", "sebuah meja", "sebuah bintang"],
     "Ocean Quest": ["laut", "sebuah cangkerang", "sebuah bot"],
     "Dino Valley": ["sebuah bukit", "sebuah batu", "sehelai daun"],
+    "Fairy Circus": ["sebuah khemah", "sehelai reben", "sebuah lampu"],
+    "Pirate Cove": ["sebuah bot", "sebuah peta", "sebuah jeti"],
     "Sky Castle": ["sebuah jambatan", "sebuah awan", "sebuah menara"],
     "Robot City": ["sebuah lampu", "sebuah pintu", "sebuah robot"],
     "Candy Kingdom": ["sebuah kek", "sebiji gula-gula", "sebuah jalan"],
+    "Toy Town": ["sebuah mainan", "sebuah loceng", "sebuah kedai"],
+    "Rainbow Ranch": ["seekor kuda poni", "sebuah kandang", "sekuntum bunga"],
     "Jungle Rescue": ["sebatang pokok", "sebuah sungai", "seekor burung"],
     "Ice Mountain": ["salji", "sebuah gua", "sebuah batu"],
-    "Desert Caravan": ["pasir", "sebuah khemah", "seekor unta"]
+    "Desert Caravan": ["pasir", "sebuah khemah", "seekor unta"],
+    "Marvel World": ["sebuah menara", "sebuah lencana", "sebuah pintu"],
+    "DC World": ["sebuah lampu", "sebuah bumbung", "sebuah pintu"],
+    "Kpop Demon Hunter World": ["sebuah pentas", "sebuah azimat", "sebuah dewan"]
   }
 };
 
@@ -364,12 +504,19 @@ const beginnerConflictsByLang: Record<Language, Record<string, string[]>> = {
     "Space School": ["the door is closed", "a light is off", "a key is missing"],
     "Ocean Quest": ["the boat is stuck", "a shell is lost", "the path is closed"],
     "Dino Valley": ["the bridge is down", "a map is lost", "a path is blocked"],
+    "Fairy Circus": ["the gate is closed", "a light is off", "a path is blocked"],
+    "Pirate Cove": ["the gate is closed", "a map is lost", "the path is blocked"],
     "Sky Castle": ["the gate is closed", "a bell is quiet", "a path is blocked"],
     "Robot City": ["the light is off", "the door is closed", "a part is missing"],
     "Candy Kingdom": ["the gate is closed", "a sweet is lost", "the path is blocked"],
+    "Toy Town": ["the gate is closed", "a key is missing", "the path is blocked"],
+    "Rainbow Ranch": ["the gate is closed", "a bell is quiet", "the path is blocked"],
     "Jungle Rescue": ["the bridge is down", "a friend is lost", "a path is blocked"],
     "Ice Mountain": ["the gate is closed", "a light is off", "a path is blocked"],
-    "Desert Caravan": ["the gate is closed", "a map is lost", "a path is blocked"]
+    "Desert Caravan": ["the gate is closed", "a map is lost", "a path is blocked"],
+    "Marvel World": ["the gate is closed", "a badge is lost", "the path is blocked"],
+    "DC World": ["the gate is closed", "a light is off", "a path is blocked"],
+    "Kpop Demon Hunter World": ["the gate is closed", "a charm is lost", "the path is blocked"]
   },
   zh: {
     "*": ["门关着", "路被挡住了", "灯不亮"]
@@ -385,12 +532,19 @@ const intermediateConflictsByLang: Record<Language, Record<string, string[]>> = 
     "Space School": ["a small door is locked", "a badge is missing", "a room is quiet"],
     "Ocean Quest": ["a tide gate is stuck", "a pearl is missing", "a path is hidden"],
     "Dino Valley": ["a bridge is shaky", "a map is missing", "a trail is faint"],
+    "Fairy Circus": ["a tent is closed", "a light is dim", "a ribbon is missing"],
+    "Pirate Cove": ["a map is missing", "a dock is quiet", "a trail is faint"],
     "Sky Castle": ["a sky gate is locked", "a bell is silent", "a bridge is faint"],
     "Robot City": ["a light is weak", "a door is locked", "a part is missing"],
     "Candy Kingdom": ["a gate is sticky", "a sweet is missing", "a bridge is weak"],
+    "Toy Town": ["a switch is stuck", "a key is missing", "a door is locked"],
+    "Rainbow Ranch": ["a gate is latched", "a bell is quiet", "a path is faint"],
     "Jungle Rescue": ["a trail is hidden", "a call is faint", "a bridge is down"],
     "Ice Mountain": ["a gate is frozen", "a path is slippery", "a light is dim"],
-    "Desert Caravan": ["a map is missing", "a path is unclear", "a gate is closed"]
+    "Desert Caravan": ["a map is missing", "a path is unclear", "a gate is closed"],
+    "Marvel World": ["a signal is weak", "a gate is locked", "a clue is missing"],
+    "DC World": ["a light is dim", "a gate is locked", "a clue is missing"],
+    "Kpop Demon Hunter World": ["a stage is quiet", "a charm is missing", "a path is faint"]
   },
   zh: {
     "*": ["一扇小门锁着", "小路不清楚", "线索不见了"]
@@ -468,6 +622,22 @@ const themeDetails: Record<string, Record<string, string[]>> = {
     tool: ["map", "flare", "snack pack"],
     friend: ["young dino", "lost runner", "forest goat"]
   },
+  "Fairy Circus": {
+    clue: ["glitter ribbon", "sparkle dust", "tiny ticket"],
+    place: ["big top tent", "lantern ring", "stage gate"],
+    guide: ["circus fairy", "bubble clown", "tiny owl"],
+    sign: ["soft drum", "twinkling light", "floating confetti"],
+    tool: ["star whistle", "glow wand", "music charm"],
+    friend: ["lost fairy", "tiny dancer", "glow rabbit"]
+  },
+  "Pirate Cove": {
+    clue: ["rusty compass", "inked map", "shell token"],
+    place: ["hidden dock", "ship deck", "cave gate"],
+    guide: ["kind captain", "parrot scout", "dock guide"],
+    sign: ["sea breeze", "lantern glow", "splashing oar"],
+    tool: ["rope", "spyglass", "map case"],
+    friend: ["lost sailor", "deck cat", "sea pup"]
+  },
   "Sky Castle": {
     clue: ["silver feather", "rainbow ribbon", "cloud swirl"],
     place: ["sun tower", "sky bridge", "wind garden"],
@@ -492,6 +662,22 @@ const themeDetails: Record<string, Record<string, string[]>> = {
     tool: ["candy compass", "gumdrop key", "sprinkle pouch"],
     friend: ["cookie pup", "gummy fox", "caramel kid"]
   },
+  "Toy Town": {
+    clue: ["wind-up key", "painted star", "tiny bell"],
+    place: ["toy shop", "gear bridge", "clock lane"],
+    guide: ["teddy guide", "toy conductor", "robot pup"],
+    sign: ["clicking gears", "soft chime", "glow sticker"],
+    tool: ["toy wrench", "music box", "spinner key"],
+    friend: ["lost doll", "tiny train", "plush bear"]
+  },
+  "Rainbow Ranch": {
+    clue: ["ribbon trail", "rainbow tag", "sparkle hoofprint"],
+    place: ["stable gate", "meadow path", "barn door"],
+    guide: ["pony guide", "rancher", "color bird"],
+    sign: ["soft neigh", "bell chime", "glowing grass"],
+    tool: ["brush", "ranch bell", "color map"],
+    friend: ["little pony", "barn cat", "farm pup"]
+  },
   "Jungle Rescue": {
     clue: ["parrot feather", "vine mark", "river ripple"],
     place: ["canopy hut", "waterfall cave", "sunlit clearing"],
@@ -515,6 +701,30 @@ const themeDetails: Record<string, Record<string, string[]>> = {
     sign: ["wind song", "lantern glow", "footprint trail"],
     tool: ["water pouch", "sand compass", "shade cloth"],
     friend: ["lost traveler", "little lizard", "desert pup"]
+  },
+  "Marvel World": {
+    clue: ["hero badge", "signal flare", "energy trail"],
+    place: ["tower gate", "city plaza", "training hall"],
+    guide: ["hero mentor", "tech helper", "swift scout"],
+    sign: ["alert light", "echoing steps", "glowing emblem"],
+    tool: ["shield", "grappler", "power band"],
+    friend: ["rookie hero", "rescue bot", "city kid"]
+  },
+  "DC World": {
+    clue: ["signal beam", "city crest", "shadow trail"],
+    place: ["rooftop", "city gate", "hero hub"],
+    guide: ["night guardian", "quick scout", "wise ally"],
+    sign: ["batlight", "wind rush", "quiet alarm"],
+    tool: ["cloak", "tracker", "utility band"],
+    friend: ["young hero", "city pup", "helper bird"]
+  },
+  "Kpop Demon Hunter World": {
+    clue: ["neon charm", "stage light", "beat trail"],
+    place: ["concert hall", "training room", "stage gate"],
+    guide: ["lead singer", "dance coach", "sound tech"],
+    sign: ["bass pulse", "glow stick", "shadow ripple"],
+    tool: ["mic charm", "light baton", "rhythm map"],
+    friend: ["rookie idol", "stage pup", "dance buddy"]
   }
 };
 

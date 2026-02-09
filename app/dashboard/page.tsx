@@ -17,12 +17,19 @@ export default function DashboardPage() {
     { name: "Space School", emoji: "🚀", preview: "Solve star mysteries with robots.", unlock: 0 },
     { name: "Ocean Quest", emoji: "🌊", preview: "Dive for pearls and sea clues.", unlock: 0 },
     { name: "Dino Valley", emoji: "🦕", preview: "Brave trails and friendly giants.", unlock: 0 },
+    { name: "Fairy Circus", emoji: "🎪", preview: "Tiny wings and a twinkling big top.", unlock: 0 },
+    { name: "Pirate Cove", emoji: "🏴‍☠️", preview: "Treasure maps and gentle waves.", unlock: 0 },
     { name: "Sky Castle", emoji: "🏰", preview: "Cloud bridges and sky bells.", unlock: 50 },
     { name: "Robot City", emoji: "🤖", preview: "Beep-boop clues and bright lights.", unlock: 50 },
     { name: "Candy Kingdom", emoji: "🍭", preview: "Sweet paths and sparkle hints.", unlock: 50 },
+    { name: "Toy Town", emoji: "🧸", preview: "Playful toys and secret switches.", unlock: 50 },
+    { name: "Rainbow Ranch", emoji: "🌈", preview: "Colorful stables and kind ponies.", unlock: 50 },
     { name: "Jungle Rescue", emoji: "🌿", preview: "Hidden trails and rescue calls.", unlock: 80 },
     { name: "Ice Mountain", emoji: "❄️", preview: "Crystal caves and chilly clues.", unlock: 80 },
-    { name: "Desert Caravan", emoji: "🏜️", preview: "Golden dunes and oasis secrets.", unlock: 120 }
+    { name: "Desert Caravan", emoji: "🏜️", preview: "Golden dunes and oasis secrets.", unlock: 120 },
+    { name: "Marvel World", emoji: "🦸", preview: "Hero masks and mission alarms.", unlock: 120 },
+    { name: "DC World", emoji: "🛡️", preview: "City lights and brave signals.", unlock: 120 },
+    { name: "Kpop Demon Hunter World", emoji: "🎤", preview: "Bright stages and hidden shadows.", unlock: 120 }
   ];
 
   const today = useMemo(() => {

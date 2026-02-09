@@ -9,12 +9,19 @@ const themes = [
   { name: "Space School", unlock: 0 },
   { name: "Ocean Quest", unlock: 0 },
   { name: "Dino Valley", unlock: 0 },
+  { name: "Fairy Circus", unlock: 0 },
+  { name: "Pirate Cove", unlock: 0 },
   { name: "Sky Castle", unlock: 50 },
   { name: "Robot City", unlock: 50 },
   { name: "Candy Kingdom", unlock: 50 },
+  { name: "Toy Town", unlock: 50 },
+  { name: "Rainbow Ranch", unlock: 50 },
   { name: "Jungle Rescue", unlock: 80 },
   { name: "Ice Mountain", unlock: 80 },
-  { name: "Desert Caravan", unlock: 120 }
+  { name: "Desert Caravan", unlock: 120 },
+  { name: "Marvel World", unlock: 120 },
+  { name: "DC World", unlock: 120 },
+  { name: "Kpop Demon Hunter World", unlock: 120 }
 ];
 const difficulties = ["Beginner", "Intermediate", "Advanced"];
 const themeDescriptions: Record<Language, Record<string, string>> = {
@@ -23,36 +30,57 @@ const themeDescriptions: Record<Language, Record<string, string>> = {
     "Space School": "Robots, stars, and secret doors.",
     "Ocean Quest": "Dolphins, shells, and sea caves.",
     "Dino Valley": "Friendly giants and hidden paths.",
+    "Fairy Circus": "Tiny wings and a twinkling big top.",
+    "Pirate Cove": "Treasure maps and gentle waves.",
     "Sky Castle": "Cloud bridges and sky bells.",
     "Robot City": "Neon lights and helper bots.",
     "Candy Kingdom": "Sweet streets and sparkle clues.",
+    "Toy Town": "Playful toys and secret switches.",
+    "Rainbow Ranch": "Colorful stables and kind ponies.",
     "Jungle Rescue": "Drums, vines, and rescue calls.",
     "Ice Mountain": "Crystal caves and snow clues.",
-    "Desert Caravan": "Golden dunes and oasis secrets."
+    "Desert Caravan": "Golden dunes and oasis secrets.",
+    "Marvel World": "Hero masks and mission alarms.",
+    "DC World": "City lights and brave signals.",
+    "Kpop Demon Hunter World": "Bright stages and hidden shadows."
   },
   zh: {
     "Magic Forest": "会低语的树和发光小路。",
     "Space School": "机器人、星星、秘密门。",
     "Ocean Quest": "海豚、贝壳、海底洞。",
     "Dino Valley": "友善巨兽和隐藏小路。",
+    "Fairy Circus": "小翅膀与闪亮帐篷。",
+    "Pirate Cove": "宝藏地图与轻浪。",
     "Sky Castle": "云桥与天空铃声。",
     "Robot City": "霓虹灯与小助手。",
     "Candy Kingdom": "甜甜街道与闪光线索。",
+    "Toy Town": "玩具城与秘密机关。",
+    "Rainbow Ranch": "彩虹牧场与可爱小马。",
     "Jungle Rescue": "鼓声、藤蔓与救援。",
     "Ice Mountain": "水晶洞与雪中线索。",
-    "Desert Caravan": "金色沙丘与绿洲秘密。"
+    "Desert Caravan": "金色沙丘与绿洲秘密。",
+    "Marvel World": "英雄面具与任务警报。",
+    "DC World": "城市灯光与勇敢信号。",
+    "Kpop Demon Hunter World": "闪亮舞台与隐藏影子。"
   },
   ms: {
     "Magic Forest": "Pokok berbisik dan laluan bercahaya.",
     "Space School": "Robot, bintang, dan pintu rahsia.",
     "Ocean Quest": "Lumba-lumba, cangkerang, gua laut.",
     "Dino Valley": "Gergasi mesra dan laluan tersembunyi.",
+    "Fairy Circus": "Sayap kecil dan khemah berkilau.",
+    "Pirate Cove": "Peta harta dan ombak lembut.",
     "Sky Castle": "Jambatan awan dan loceng langit.",
     "Robot City": "Lampu neon dan bot pembantu.",
     "Candy Kingdom": "Jalan manis dan petunjuk berkilau.",
+    "Toy Town": "Mainan comel dan suis rahsia.",
+    "Rainbow Ranch": "Ladang pelangi dan kuda poni comel.",
     "Jungle Rescue": "Gendang, pokok anggur, panggilan selamat.",
     "Ice Mountain": "Gua kristal dan petunjuk salji.",
-    "Desert Caravan": "Gurun keemasan dan rahsia oasis."
+    "Desert Caravan": "Gurun keemasan dan rahsia oasis.",
+    "Marvel World": "Topeng wira dan amaran misi.",
+    "DC World": "Lampu kota dan isyarat berani.",
+    "Kpop Demon Hunter World": "Pentas cerah dan bayang tersembunyi."
   }
 };
 
