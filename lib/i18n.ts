@@ -243,7 +243,7 @@ export const UI = {
     unlockNext: "Buka pada",
     locked: "Terkunci",
     bonusEndingTitle: "Pengakhiran Rahsia",
-    bonusEndingBody: "Pintu rahsia terbuka kerana bintang anda!"
+    bonusEndingBody: "Pintu rahsia terbuka kerana bintang anda!",
     playWorldCta: "Main dunia ini →",
     levelBeginner: "Pemula",
     levelIntermediate: "Pertengahan",
