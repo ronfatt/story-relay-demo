@@ -343,6 +343,47 @@ body {
   white-space: pre-wrap;
 }
 
+.share-panel {
+  border-radius: 16px;
+  padding: 14px 16px;
+  border: 2px solid #f4d7ff;
+  background: linear-gradient(135deg, #fff8ff, #f3f1ff);
+  display: grid;
+  gap: 8px;
+}
+
+.share-text {
+  font-weight: 700;
+  color: #4e2d74;
+}
+
+.share-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.share-status {
+  font-size: 12px;
+  font-weight: 700;
+  color: #1b7f5a;
+}
+
+.share-status.error {
+  color: #d04444;
+}
+
+.share-link {
+  font-size: 12px;
+  word-break: break-all;
+  color: #5b4c7a;
+  background: #fff;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px dashed #d9c7ff;
+}
+
 .story-animate {
   animation: storyPop 0.45s ease;
 }

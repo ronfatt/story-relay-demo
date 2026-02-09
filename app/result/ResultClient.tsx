@@ -33,6 +33,9 @@ type ResultClientProps = {
 export default function ResultClient({ sessionId, storyId, lang = "en" }: ResultClientProps) {
   const router = useRouter();
   const [data, setData] = useState<ResultPayload | null>(null);
+  const [shareUrl, setShareUrl] = useState<string | null>(null);
+  const [shareReady, setShareReady] = useState(false);
+  const [shareError, setShareError] = useState<string | null>(null);
   const t = ui(lang);
 
   useEffect(() => {
@@ -70,6 +73,11 @@ export default function ResultClient({ sessionId, storyId, lang = "en" }: Result
             branch: story.branch,
             inventory
           });
+          if (typeof window !== "undefined") {
+            setShareUrl(
+              `${window.location.origin}/result?storyId=${storyId}&lang=${lang}&public=1`
+            );
+          }
         });
       return;
     }
@@ -80,8 +88,45 @@ export default function ResultClient({ sessionId, storyId, lang = "en" }: Result
       body: JSON.stringify({ sessionId, lang })
     })
       .then((res) => res.json())
-      .then(setData);
+      .then((payload) => {
+        setData(payload);
+        if (payload?.storyId && typeof window !== "undefined") {
+          setShareUrl(
+            `${window.location.origin}/result?storyId=${payload.storyId}&lang=${lang}&public=1`
+          );
+        }
+      });
   }, [sessionId, storyId, lang, t.greatJob]);
+
+  async function handleShare() {
+    if (!shareUrl) return;
+    const shareText = t.shareText;
+    const shareTitle = t.shareTitle;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: shareTitle, text: shareText, url: shareUrl });
+      } else if (navigator.clipboard) {
+        await navigator.clipboard.writeText(shareUrl);
+        setShareReady(true);
+        setTimeout(() => setShareReady(false), 2000);
+      }
+    } catch (error) {
+      console.error("share_failed", error);
+      setShareError(t.shareFail);
+    }
+  }
+
+  async function handleCopy() {
+    if (!shareUrl || !navigator.clipboard) return;
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setShareReady(true);
+      setTimeout(() => setShareReady(false), 2000);
+    } catch (error) {
+      console.error("copy_failed", error);
+      setShareError(t.shareFail);
+    }
+  }
 
   if (!sessionId && !storyId) {
     return (
@@ -113,6 +158,22 @@ export default function ResultClient({ sessionId, storyId, lang = "en" }: Result
         <h1>{data.title}</h1>
         <div className="story-block">{data.fullStory}</div>
         <div><strong>{t.storyLesson}:</strong> {data.moral}</div>
+        {shareUrl && (
+          <div className="share-panel">
+            <div className="share-text">{t.shareHint}</div>
+            <div className="share-actions">
+              <button className="button" onClick={handleShare}>
+                {t.shareButton}
+              </button>
+              <button className="button secondary" onClick={handleCopy}>
+                {t.copyLink}
+              </button>
+              {shareReady && <span className="share-status">{t.linkCopied}</span>}
+              {shareError && <span className="share-status error">{shareError}</span>}
+            </div>
+            <div className="share-link">{shareUrl}</div>
+          </div>
+        )}
         <div className="grid">
           <div className="badge">{t.creativity}: {data.score.creativity} ⭐</div>
           <div className="badge">{t.storyFlow}: {data.score.storyFlow} ⭐</div>

@@ -89,7 +89,14 @@ export const UI = {
     levelAdvanced: "Advanced",
     levelHintBeginner: "Short sentences, simple words.",
     levelHintIntermediate: "More detail, longer sentences.",
-    levelHintAdvanced: "Richer language and twists."
+    levelHintAdvanced: "Richer language and twists.",
+    shareHint: "Share your story to invite friends to StoryBah.",
+    shareButton: "Share Story",
+    copyLink: "Copy Link",
+    linkCopied: "Link copied!",
+    shareTitle: "My StoryBah Story",
+    shareText: "I made a StoryBah adventure. Come play with me!",
+    shareFail: "Sharing failed. Try copy link."
   },
   zh: {
     appName: "StoryBah",
@@ -172,7 +179,14 @@ export const UI = {
     levelAdvanced: "高级",
     levelHintBeginner: "短句、简单词。",
     levelHintIntermediate: "更丰富、句子更长。",
-    levelHintAdvanced: "语言更丰富、有转折。"
+    levelHintAdvanced: "语言更丰富、有转折。",
+    shareHint: "分享你的故事，邀请朋友加入 StoryBah。",
+    shareButton: "分享故事",
+    copyLink: "复制链接",
+    linkCopied: "已复制链接！",
+    shareTitle: "我的 StoryBah 故事",
+    shareText: "我做了一个 StoryBah 冒险故事，快来一起玩！",
+    shareFail: "分享失败，请复制链接。"
   },
   ms: {
     appName: "StoryBah",
@@ -256,7 +270,14 @@ export const UI = {
     levelAdvanced: "Lanjutan",
     levelHintBeginner: "Ayat pendek, kata mudah.",
     levelHintIntermediate: "Lebih detail, ayat lebih panjang.",
-    levelHintAdvanced: "Bahasa lebih kaya, ada twist."
+    levelHintAdvanced: "Bahasa lebih kaya, ada twist.",
+    shareHint: "Kongsi cerita anda untuk ajak kawan ke StoryBah.",
+    shareButton: "Kongsi Cerita",
+    copyLink: "Salin Pautan",
+    linkCopied: "Pautan disalin!",
+    shareTitle: "Cerita StoryBah Saya",
+    shareText: "Saya buat pengembaraan StoryBah. Jom main bersama!",
+    shareFail: "Gagal kongsi. Cuba salin pautan."
   }
 } as const;
 
