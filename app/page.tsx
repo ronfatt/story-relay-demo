@@ -13,7 +13,9 @@ export default function HomePage() {
   const [password, setPassword] = useState("");
   const [authError, setAuthError] = useState("");
   const [authLoading, setAuthLoading] = useState(false);
-  const [user, setUser] = useState<{ id: number; email: string } | null>(null);
+  const [user, setUser] = useState<{ id: number; email: string; total_stars: number } | null>(
+    null
+  );
   const t = ui(lang);
 
   useEffect(() => {
@@ -85,7 +87,9 @@ export default function HomePage() {
             <div className="adventure-emoji">✅</div>
             <div>
               <div className="adventure-title">{user.email}</div>
-              <div className="adventure-text">{t.learningRecords}</div>
+              <div className="adventure-text">
+                {t.totalStarsWallet}: {user.total_stars} ⭐
+              </div>
             </div>
             <Link className="button secondary" href="/dashboard">
               {t.viewRecords}

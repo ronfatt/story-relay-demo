@@ -1,13 +1,14 @@
 import { NextResponse } from "next/server";
 import { deleteSession } from "@/lib/auth";
+import { getCookieValue } from "@/lib/cookies";
 
 export const runtime = "nodejs";
 
 export async function POST(req: Request) {
   const cookie = req.headers.get("cookie") || "";
-  const match = cookie.match(/sb_session=([^;]+)/);
-  if (match?.[1]) {
-    await deleteSession(match[1]);
+  const sessionId = getCookieValue(cookie, "sb_session");
+  if (sessionId) {
+    await deleteSession(sessionId);
   }
   const res = NextResponse.json({ ok: true });
   const cookieDomain =

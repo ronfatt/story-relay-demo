@@ -7,20 +7,22 @@ import { ui, type Language, LANG_LABELS } from "@/lib/i18n";
 export default function DashboardPage() {
   const [name, setName] = useState("");
   const [lang, setLang] = useState<Language>("en");
-  const [user, setUser] = useState<{ id: number; email: string } | null>(null);
+  const [user, setUser] = useState<{ id: number; email: string; total_stars: number } | null>(
+    null
+  );
   const t = ui(lang);
 
   const themes = [
-    { name: "Magic Forest", emoji: "✨", preview: "Glowing paths and secret doors." },
-    { name: "Space School", emoji: "🚀", preview: "Solve star mysteries with robots." },
-    { name: "Ocean Quest", emoji: "🌊", preview: "Dive for pearls and sea clues." },
-    { name: "Dino Valley", emoji: "🦕", preview: "Brave trails and friendly giants." },
-    { name: "Sky Castle", emoji: "🏰", preview: "Cloud bridges and sky bells." },
-    { name: "Robot City", emoji: "🤖", preview: "Beep-boop clues and bright lights." },
-    { name: "Candy Kingdom", emoji: "🍭", preview: "Sweet paths and sparkle hints." },
-    { name: "Jungle Rescue", emoji: "🌿", preview: "Hidden trails and rescue calls." },
-    { name: "Ice Mountain", emoji: "❄️", preview: "Crystal caves and chilly clues." },
-    { name: "Desert Caravan", emoji: "🏜️", preview: "Golden dunes and oasis secrets." }
+    { name: "Magic Forest", emoji: "✨", preview: "Glowing paths and secret doors.", unlock: 0 },
+    { name: "Space School", emoji: "🚀", preview: "Solve star mysteries with robots.", unlock: 0 },
+    { name: "Ocean Quest", emoji: "🌊", preview: "Dive for pearls and sea clues.", unlock: 0 },
+    { name: "Dino Valley", emoji: "🦕", preview: "Brave trails and friendly giants.", unlock: 0 },
+    { name: "Sky Castle", emoji: "🏰", preview: "Cloud bridges and sky bells.", unlock: 50 },
+    { name: "Robot City", emoji: "🤖", preview: "Beep-boop clues and bright lights.", unlock: 50 },
+    { name: "Candy Kingdom", emoji: "🍭", preview: "Sweet paths and sparkle hints.", unlock: 50 },
+    { name: "Jungle Rescue", emoji: "🌿", preview: "Hidden trails and rescue calls.", unlock: 80 },
+    { name: "Ice Mountain", emoji: "❄️", preview: "Crystal caves and chilly clues.", unlock: 80 },
+    { name: "Desert Caravan", emoji: "🏜️", preview: "Golden dunes and oasis secrets.", unlock: 120 }
   ];
 
   const today = useMemo(() => {
@@ -123,7 +125,9 @@ export default function DashboardPage() {
             {t.playButton}
             <span className="sparkles">✨✨</span>
           </Link>
-          <div className="badge">{t.safeBadge}</div>
+          <div className="badge">
+            {t.totalStarsWallet}: {user.total_stars} ⭐
+          </div>
         </div>
       </section>
 
@@ -150,20 +154,30 @@ export default function DashboardPage() {
       <section className="card grid carousel-card">
         <div className="section-title">{t.pickWorld}</div>
         <div className="carousel">
-          {themes.map((theme) => (
+          {themes.map((theme) => {
+            const locked = user.total_stars < theme.unlock;
+            return (
             <Link
               key={theme.name}
-              className="world-card"
+              className={`world-card ${locked ? "locked" : ""}`}
               href={`/play?name=${encodeURIComponent(name)}&theme=${encodeURIComponent(
                 theme.name
               )}&lang=${lang}`}
+              onClick={(e) => {
+                if (locked) e.preventDefault();
+              }}
             >
               <div className="world-emoji">{theme.emoji}</div>
               <div className="world-name">{theme.name}</div>
               <div className="world-preview">{theme.preview}</div>
               <div className="world-cta">{t.playWorldCta}</div>
+              {locked && (
+                <div className="theme-lock">
+                  {t.locked} · {t.unlockNext} {theme.unlock} ⭐
+                </div>
+              )}
             </Link>
-          ))}
+          )})}
         </div>
       </section>
 

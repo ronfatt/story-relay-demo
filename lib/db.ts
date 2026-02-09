@@ -21,6 +21,7 @@ export async function initDb() {
       id SERIAL PRIMARY KEY,
       email TEXT UNIQUE NOT NULL,
       password_hash TEXT NOT NULL,
+      total_stars INTEGER NOT NULL DEFAULT 0,
       created_at TIMESTAMP NOT NULL
     );
   `;
@@ -60,6 +61,7 @@ export async function initDb() {
   await sql`ALTER TABLE stories ADD COLUMN IF NOT EXISTS score_json TEXT;`;
   await sql`ALTER TABLE stories ADD COLUMN IF NOT EXISTS feedback_json TEXT;`;
   await sql`ALTER TABLE stories ADD COLUMN IF NOT EXISTS suggested_vocab_json TEXT;`;
+  await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS total_stars INTEGER DEFAULT 0;`;
 
   initialized = true;
 }

@@ -15,7 +15,9 @@ export async function POST(req: Request) {
     }
 
     const session = await createAuthSession(user.id);
-    const res = NextResponse.json({ user: { id: user.id, email: user.email } });
+    const res = NextResponse.json({
+      user: { id: user.id, email: user.email, total_stars: user.total_stars }
+    });
     const cookieDomain =
       process.env.SESSION_COOKIE_DOMAIN ||
       (process.env.NODE_ENV === "production" ? ".storybah.my" : undefined);

@@ -2,16 +2,16 @@ import bcrypt from "bcryptjs";
 import crypto from "node:crypto";
 import { initDb, sql } from "@/lib/db";
 
-export type User = { id: number; email: string; created_at: string };
+export type User = { id: number; email: string; total_stars: number; created_at: string };
 
 export async function createUser(email: string, password: string) {
   await initDb();
   const hashed = bcrypt.hashSync(password, 10);
   const now = new Date().toISOString();
   const result = await sql`
-    INSERT INTO users (email, password_hash, created_at)
-    VALUES (${email}, ${hashed}, ${now})
-    RETURNING id, email, created_at
+    INSERT INTO users (email, password_hash, total_stars, created_at)
+    VALUES (${email}, ${hashed}, 0, ${now})
+    RETURNING id, email, total_stars, created_at
   `;
   return result[0] as User;
 }
@@ -19,7 +19,7 @@ export async function createUser(email: string, password: string) {
 export async function getUserByEmail(email: string) {
   await initDb();
   const result = await sql`
-    SELECT id, email, password_hash, created_at
+    SELECT id, email, password_hash, total_stars, created_at
     FROM users WHERE email = ${email}
   `;
   return (result[0] as
@@ -30,7 +30,7 @@ export async function getUserByEmail(email: string) {
 export async function getUserById(id: number) {
   await initDb();
   const result = await sql`
-    SELECT id, email, created_at
+    SELECT id, email, total_stars, created_at
     FROM users WHERE id = ${id}
   `;
   return result[0] as User | undefined;

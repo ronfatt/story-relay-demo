@@ -24,7 +24,9 @@ export async function POST(req: Request) {
     const user = await createUser(email, password);
     const session = await createAuthSession(user.id);
 
-    const res = NextResponse.json({ user: { id: user.id, email: user.email } });
+    const res = NextResponse.json({
+      user: { id: user.id, email: user.email, total_stars: user.total_stars }
+    });
     const cookieDomain =
       process.env.SESSION_COOKIE_DOMAIN ||
       (process.env.NODE_ENV === "production" ? ".storybah.my" : undefined);
@@ -35,6 +37,13 @@ export async function POST(req: Request) {
       path: "/",
       maxAge: 60 * 60 * 24 * 7,
       ...(cookieDomain ? { domain: cookieDomain } : {})
+    });
+    res.cookies.set("sb_session", session.id, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7
     });
     return res;
   } catch (error) {

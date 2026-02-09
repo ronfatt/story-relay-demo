@@ -5,16 +5,16 @@ import { useRouter } from "next/navigation";
 import { ui, type Language, LANG_LABELS } from "@/lib/i18n";
 
 const themes = [
-  "Magic Forest",
-  "Space School",
-  "Ocean Quest",
-  "Dino Valley",
-  "Sky Castle",
-  "Robot City",
-  "Candy Kingdom",
-  "Jungle Rescue",
-  "Ice Mountain",
-  "Desert Caravan"
+  { name: "Magic Forest", unlock: 0 },
+  { name: "Space School", unlock: 0 },
+  { name: "Ocean Quest", unlock: 0 },
+  { name: "Dino Valley", unlock: 0 },
+  { name: "Sky Castle", unlock: 50 },
+  { name: "Robot City", unlock: 50 },
+  { name: "Candy Kingdom", unlock: 50 },
+  { name: "Jungle Rescue", unlock: 80 },
+  { name: "Ice Mountain", unlock: 80 },
+  { name: "Desert Caravan", unlock: 120 }
 ];
 const difficulties = ["Beginner", "Intermediate", "Advanced"];
 const themeDescriptions: Record<Language, Record<string, string>> = {
@@ -94,18 +94,28 @@ export default function PlayClient({
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [roundData, setRoundData] = useState<RoundPayload | null>(null);
   const [theme, setTheme] = useState(
-    initialTheme && themes.includes(initialTheme) ? initialTheme : themes[0]
+    initialTheme && themes.some((t) => t.name === initialTheme)
+      ? initialTheme
+      : themes[0].name
   );
   const [difficulty, setDifficulty] = useState(difficulties[0]);
   const [userLine, setUserLine] = useState("");
   const [heroName, setHeroName] = useState(initialName);
   const [burstKey, setBurstKey] = useState(0);
+  const [totalStars, setTotalStars] = useState(0);
   const t = ui(lang);
 
   useEffect(() => {
     setRoundData(null);
     setSessionId(null);
   }, [theme, difficulty, heroName, lang]);
+
+  useEffect(() => {
+    fetch("/api/auth/me", { credentials: "include", cache: "no-store" })
+      .then((res) => res.json())
+      .then((data) => setTotalStars(data?.user?.total_stars ?? 0))
+      .catch(() => setTotalStars(0));
+  }, []);
 
   async function startSession() {
     setLoading(true);
@@ -198,20 +208,30 @@ export default function PlayClient({
         <div className="grid">
           <div className="section-title">{t.pickWorld}</div>
           <div className="choice-grid">
-            {themes.map((t) => (
+            {themes.map((item) => {
+              const locked = totalStars < item.unlock;
+              return (
               <button
-                key={t}
-                className={`theme-card ${theme === t ? "selected" : ""}`}
-                onClick={() => setTheme(t)}
+                key={item.name}
+                className={`theme-card ${theme === item.name ? "selected" : ""} ${
+                  locked ? "locked" : ""
+                }`}
+                onClick={() => !locked && setTheme(item.name)}
                 type="button"
+                disabled={locked}
               >
-                <div className="theme-emoji">{themeEmoji(t)}</div>
-                <div className="theme-name">{t}</div>
+                <div className="theme-emoji">{themeEmoji(item.name)}</div>
+                <div className="theme-name">{item.name}</div>
                 <div className="theme-subtitle">
-                  {themeDescriptions[lang]?.[t] || "Tap to explore"}
+                  {themeDescriptions[lang]?.[item.name] || "Tap to explore"}
                 </div>
+                {locked && (
+                  <div className="theme-lock">
+                    {t.locked} · {t.unlockNext} {item.unlock} ⭐
+                  </div>
+                )}
               </button>
-            ))}
+            )})}
           </div>
         </div>
         <div className="grid">

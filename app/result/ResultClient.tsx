@@ -127,6 +127,11 @@ export default function ResultClient({ sessionId, storyId, lang = "en" }: Result
             <div className="story-block">{data.inventory.join(", ")}</div>
           </div>
         )}
+        {data.totalStarsEarned >= 14 && (
+          <div className="badge">
+            {t.bonusEndingTitle}: {t.bonusEndingBody}
+          </div>
+        )}
         <div>
           <strong>{t.greatJob}</strong>
           <ul>

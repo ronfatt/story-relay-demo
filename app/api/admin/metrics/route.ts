@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { initDb, sql } from "@/lib/db";
 import { getSession, getUserById } from "@/lib/auth";
+import { getCookieValue } from "@/lib/cookies";
 
 export const runtime = "nodejs";
 
@@ -24,10 +25,10 @@ function startOfMonthUTC(now: Date) {
 
 export async function GET(req: Request) {
   const cookie = req.headers.get("cookie") || "";
-  const match = cookie.match(/sb_session=([^;]+)/);
-  if (!match?.[1]) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const sessionId = getCookieValue(cookie, "sb_session");
+  if (!sessionId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const session = await getSession(match[1]);
+  const session = await getSession(sessionId);
   if (!session || new Date(session.expires_at).getTime() < Date.now()) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }

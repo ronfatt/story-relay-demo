@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { initDb, sql } from "@/lib/db";
 import { getSession, getUserById } from "@/lib/auth";
+import { getCookieValue } from "@/lib/cookies";
 
 export const runtime = "nodejs";
 
@@ -10,10 +11,10 @@ export async function GET(
 ) {
   const { id } = await context.params;
   const cookie = req.headers.get("cookie") || "";
-  const match = cookie.match(/sb_session=([^;]+)/);
-  if (!match?.[1]) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const sessionId = getCookieValue(cookie, "sb_session");
+  if (!sessionId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const authSession = await getSession(match[1]);
+  const authSession = await getSession(sessionId);
   if (!authSession || new Date(authSession.expires_at).getTime() < Date.now()) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }

@@ -11,6 +11,7 @@ import { getSession } from "@/lib/store";
 import { initDb, sql } from "@/lib/db";
 import { getSession as getAuthSession, getUserById } from "@/lib/auth";
 import { randomUUID } from "crypto";
+import { getCookieValue } from "@/lib/cookies";
 
 export const runtime = "nodejs";
 
@@ -56,10 +57,10 @@ export async function POST(req: Request) {
   const vocab = suggestedVocab(targetWords, session.lang);
 
   const cookie = req.headers.get("cookie") || "";
-  const match = cookie.match(/sb_session=([^;]+)/);
+  const sessionIdCookie = getCookieValue(cookie, "sb_session");
   let storyId: string | null = null;
-  if (match?.[1]) {
-  const authSession = await getAuthSession(match[1]);
+  if (sessionIdCookie) {
+    const authSession = await getAuthSession(sessionIdCookie);
     if (authSession && new Date(authSession.expires_at).getTime() > Date.now()) {
       const user = await getUserById(authSession.user_id);
       if (user) {
@@ -94,6 +95,11 @@ export async function POST(req: Request) {
             ${JSON.stringify(session.history || [])},
             ${new Date().toISOString()}
           )
+        `;
+        await sql`
+          UPDATE users
+          SET total_stars = total_stars + ${score.totalStars}
+          WHERE id = ${user.id}
         `;
       }
     }
