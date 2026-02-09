@@ -203,7 +203,7 @@ export const UI = {
     gettingReady: "Sedang sedia...",
     addLine: "Tambah ayat sendiri (pilihan, bonus bintang)",
     bonusTip: "Tip: tambah satu ayat untuk +1 bintang di akhir.",
-    bonusReady: "Bonus sedia! Anda akan dapat +1 di akhir."
+    bonusReady: "Bonus sedia! Anda akan dapat +1 di akhir.",
     targetWords: "Kosa kata sasaran",
     round: "Pusingan",
     location: "Lokasi",
