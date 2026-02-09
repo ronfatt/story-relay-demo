@@ -21,6 +21,23 @@ export async function POST(req: Request) {
     const cookieDomain =
       process.env.SESSION_COOKIE_DOMAIN ||
       (process.env.NODE_ENV === "production" ? ".storybah.my" : undefined);
+    res.cookies.set("sb_session", "", {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      maxAge: 0
+    });
+    if (cookieDomain) {
+      res.cookies.set("sb_session", "", {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+        path: "/",
+        maxAge: 0,
+        domain: cookieDomain
+      });
+    }
     res.cookies.set("sb_session", session.id, {
       httpOnly: true,
       sameSite: "lax",

@@ -23,7 +23,13 @@ export async function getUserByEmail(email: string) {
     FROM users WHERE email = ${email}
   `;
   return (result[0] as
-    | { id: number; email: string; password_hash: string; created_at: string }
+    | {
+        id: number;
+        email: string;
+        password_hash: string;
+        total_stars: number;
+        created_at: string;
+      }
     | undefined);
 }
 
