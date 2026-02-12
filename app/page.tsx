@@ -17,6 +17,26 @@ export default function HomePage() {
     null
   );
   const t = ui(lang);
+  const languageCards: Record<
+    Language,
+    { icon: string; title: string; description: string }
+  > = {
+    en: {
+      icon: "ABC",
+      title: t.langCardEnTitle,
+      description: t.langCardEnDesc
+    },
+    ms: {
+      icon: "BM",
+      title: t.langCardMsTitle,
+      description: t.langCardMsDesc
+    },
+    zh: {
+      icon: "文",
+      title: t.langCardZhTitle,
+      description: t.langCardZhDesc
+    }
+  };
 
   useEffect(() => {
     fetch("/api/auth/me", { credentials: "include", cache: "no-store" })
@@ -53,35 +73,69 @@ export default function HomePage() {
   }
 
   return (
-    <main className="grid">
-      <section className="card hero-card grid">
+    <main className="grid onboarding-page">
+      <section className="card hero-card onboarding-hero">
+        <div className="hero-kicker">{t.heroKicker}</div>
+        <h1 className="challenge-title">{t.challengeTitle}</h1>
+        <p className="challenge-subtitle">
+          <span>{t.challengeSubtitleLine1}</span>
+          <span>{t.challengeSubtitleLine2}</span>
+        </p>
+        <div className="challenge-badge sparkle">🔥 {t.challengeBadge}</div>
+      </section>
+
+      <section className="card onboarding-language-card">
         <div className="hero-header">
           <div>
-            <div className="hero-kicker">{t.heroKicker}</div>
-            <h1>{t.conceptTitle}</h1>
+            <h2>{t.chooseStoryLanguage}</h2>
             <p>{t.conceptBody}</p>
           </div>
-          <div className="hero-orb sparkle">🌈</div>
+          <div className="hero-orb sparkle">⭐</div>
         </div>
+        <div className="choice-grid language-grid">
+          {(["en", "ms", "zh"] as Language[]).map((code) => (
+            <button
+              key={code}
+              className={`theme-card language-choice ${lang === code ? "selected" : ""}`}
+              onClick={() => setLang(code)}
+              type="button"
+            >
+              <div className="language-card-top">
+                <div className="language-icon">{languageCards[code].icon}</div>
+                {lang === code && <div className="language-check">✓</div>}
+              </div>
+              <div className="theme-name">{LANG_LABELS[code]}</div>
+              <div className="language-title">{languageCards[code].title}</div>
+              <div className="language-description">{languageCards[code].description}</div>
+            </button>
+          ))}
+        </div>
+      </section>
 
-        <div className="grid">
-          <div className="section-title">{t.language}</div>
-          <div className="choice-grid">
-            {(["en", "zh", "ms"] as Language[]).map((code) => (
-              <button
-                key={code}
-                className={`theme-card ${lang === code ? "selected" : ""}`}
-                onClick={() => setLang(code)}
-                type="button"
-              >
-                <div className="theme-emoji">🌐</div>
-                <div className="theme-name">{LANG_LABELS[code]}</div>
-                <div className="theme-subtitle">{code.toUpperCase()}</div>
-              </button>
-            ))}
+      <section className="card growth-card">
+        <h2>✨ {t.growthTitle}</h2>
+        <div className="feature-grid growth-grid">
+          <div className="feature-card growth-mini-card">
+            <div className="feature-emoji">🧠</div>
+            <div className="feature-title">{t.growthCreativity}</div>
+          </div>
+          <div className="feature-card growth-mini-card">
+            <div className="feature-emoji">📚</div>
+            <div className="feature-title">{t.growthVocabulary}</div>
+          </div>
+          <div className="feature-card growth-mini-card">
+            <div className="feature-emoji">✍️</div>
+            <div className="feature-title">{t.growthWriting}</div>
+          </div>
+          <div className="feature-card growth-mini-card">
+            <div className="feature-emoji">🧩</div>
+            <div className="feature-title">{t.growthStructure}</div>
           </div>
         </div>
+      </section>
 
+      <section className="card auth-cover-card">
+        <h2>🚀 {t.startJourney}</h2>
         {user ? (
           <div className="adventure-row">
             <div className="adventure-emoji">✅</div>
@@ -97,9 +151,6 @@ export default function HomePage() {
           </div>
         ) : (
           <div className="grid">
-            <div className="section-title">
-              {authMode === "login" ? t.loginTitle : t.registerTitle}
-            </div>
             {authError && <div className="error-banner">{authError}</div>}
             <label>
               {t.emailLabel}
@@ -119,23 +170,22 @@ export default function HomePage() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </label>
-            <div className="hero-actions">
-              <button className="button" onClick={handleAuth} disabled={authLoading}>
+            <div className="auth-main-action">
+              <button className="button cta-primary" onClick={handleAuth} disabled={authLoading}>
                 {authLoading
                   ? t.gettingReady
                   : authMode === "login"
-                  ? t.loginButton
-                  : t.registerButton}
-              </button>
-              <button
-                className="button secondary"
-                onClick={() =>
-                  setAuthMode(authMode === "login" ? "register" : "login")
-                }
-              >
-                {authMode === "login" ? t.noAccount : t.haveAccount}
+                    ? t.loginButton
+                    : t.startCreatingNow}
               </button>
             </div>
+            <button
+              className="text-switch-link"
+              onClick={() => setAuthMode(authMode === "login" ? "register" : "login")}
+              type="button"
+            >
+              {authMode === "login" ? t.noAccount : t.haveAccount}
+            </button>
           </div>
         )}
       </section>

@@ -1,10 +1,10 @@
 :root {
-  --bg: #f7f0ff;
-  --ink: #1a1530;
-  --accent: #ff6b6b;
+  --bg: #edf4ff;
+  --ink: #241e46;
+  --accent: #ff8c42;
   --accent-2: #5f7bff;
-  --accent-3: #ffd93d;
-  --paper: #fff7fb;
+  --accent-3: #5ac8fa;
+  --paper: #fff9fe;
   --line: #ecd9ff;
   --pop: #44e1a0;
 }
@@ -15,9 +15,24 @@
 
 body {
   margin: 0;
-  font-family: "Trebuchet MS", "Comic Sans MS", "Arial Rounded MT Bold", sans-serif;
+  font-family: "Nunito", "Poppins", "Trebuchet MS", "Arial Rounded MT Bold", sans-serif;
   color: var(--ink);
-  background: radial-gradient(circle at 10% 10%, #fff, var(--bg));
+  background: linear-gradient(155deg, #e8f4ff 0%, #f2e8ff 100%);
+  min-height: 100vh;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.2;
+  background-image:
+    radial-gradient(circle at 12% 18%, #fff7b8 0 8px, transparent 8px),
+    radial-gradient(circle at 84% 22%, #ffe0f7 0 10px, transparent 10px),
+    radial-gradient(circle at 20% 75%, #dff2ff 0 12px, transparent 12px),
+    radial-gradient(circle at 70% 82%, #fff3cf 0 9px, transparent 9px);
 }
 
 .page {
@@ -106,6 +121,11 @@ body {
 
 .button:hover {
   transform: translateY(-2px) scale(1.01);
+}
+
+.button:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
 }
 
 .choice {
@@ -291,10 +311,18 @@ body {
 
 .input {
   width: 100%;
-  padding: 10px;
-  border-radius: 14px;
+  padding: 12px 14px;
+  border-radius: 16px;
   border: 2px solid var(--line);
   font-size: 16px;
+  background: rgba(255, 255, 255, 0.92);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #6c63ff;
+  box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.2);
 }
 
 .bonus-hint {
@@ -637,6 +665,152 @@ body {
   gap: 12px;
   flex-wrap: wrap;
   align-items: center;
+}
+
+.onboarding-page {
+  gap: 20px;
+}
+
+.onboarding-hero {
+  text-align: center;
+  background: linear-gradient(135deg, #f2f8ff, #f7ebff);
+}
+
+.challenge-title {
+  margin: 0;
+  font-size: clamp(30px, 4vw, 46px);
+  line-height: 1.1;
+}
+
+.challenge-subtitle {
+  margin: 0;
+  display: grid;
+  gap: 4px;
+  color: #5d5980;
+  font-weight: 700;
+}
+
+.challenge-badge {
+  justify-self: center;
+  background: linear-gradient(120deg, #ffe3c8, #fff8d9);
+  border: 2px solid #ffd6ad;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.onboarding-language-card {
+  background: linear-gradient(120deg, #fff9ff, #f5fbff);
+}
+
+.onboarding-language-card h2,
+.growth-card h2,
+.auth-cover-card h2 {
+  margin: 0;
+}
+
+.language-grid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.language-choice {
+  border-radius: 20px;
+  box-shadow: 0 8px 0 #e8ddff;
+}
+
+.language-choice:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 10px 0 #e8ddff;
+  border-color: #6c63ff;
+}
+
+.language-choice.selected {
+  border-color: #5ac8fa;
+  box-shadow: 0 0 0 4px rgba(90, 200, 250, 0.28), 0 10px 0 #d8f0ff;
+}
+
+.language-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.language-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #fff6d9, #ffe4ce);
+  font-weight: 800;
+  color: #5a467f;
+  border: 2px solid #ffdcb4;
+}
+
+.language-check {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  background: #44e1a0;
+  color: #0a5d3d;
+  font-weight: 900;
+  display: grid;
+  place-items: center;
+}
+
+.language-title {
+  font-size: 13px;
+  color: #494472;
+  font-weight: 700;
+}
+
+.language-description {
+  font-size: 13px;
+  color: #6f6b91;
+}
+
+.growth-card {
+  background: linear-gradient(125deg, #eefcff, #fff7fd);
+}
+
+.growth-grid {
+  margin-top: 8px;
+}
+
+.growth-mini-card {
+  border-radius: 18px;
+  background: linear-gradient(120deg, #ffffff, #f9f3ff);
+  box-shadow: 0 8px 0 #eee3ff;
+}
+
+.auth-cover-card {
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.92), rgba(250, 244, 255, 0.92));
+}
+
+.auth-main-action {
+  margin-top: 4px;
+}
+
+.cta-primary {
+  width: 100%;
+  background: linear-gradient(120deg, #ff8c42, #ffb347);
+  box-shadow: 0 7px 0 #e56d26;
+}
+
+.cta-primary:hover {
+  transform: translateY(-2px) scale(1.005);
+}
+
+.text-switch-link {
+  border: none;
+  background: transparent;
+  color: #6b6f8f;
+  text-decoration: underline;
+  font-weight: 700;
+  justify-self: start;
+  padding: 4px 0;
+  cursor: pointer;
 }
 
 .chest-button {
