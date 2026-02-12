@@ -1469,6 +1469,7 @@ body:has(.neon-theme) .button.ghost.small {
   color: var(--text-1);
   padding: 0;
   border-radius: 0;
+  gap: 20px;
 }
 
 .dashboard-neon .sectionCard {
@@ -1480,6 +1481,7 @@ body:has(.neon-theme) .button.ghost.small {
   -webkit-backdrop-filter: blur(14px);
   position: relative;
   overflow: hidden;
+  padding: 22px;
 }
 
 .dashboard-neon .sectionCard::before {
@@ -1493,7 +1495,7 @@ body:has(.neon-theme) .button.ghost.small {
 }
 
 .dashboard-neon .heroTitle {
-  font-size: 52px;
+  font-size: clamp(42px, 6vw, 56px);
   line-height: 1.05;
   letter-spacing: -0.5px;
   font-weight: 800;
@@ -1508,8 +1510,9 @@ body:has(.neon-theme) .button.ghost.small {
 }
 
 .dashboard-neon .heroSub {
-  color: var(--text-2);
-  font-size: 16px;
+  color: rgba(255, 255, 255, 0.87);
+  font-size: 18px;
+  font-weight: 650;
 }
 
 .dashboard-neon .heroIcon {
@@ -1523,7 +1526,9 @@ body:has(.neon-theme) .button.ghost.small {
 
 .dashboard-neon .section-title {
   color: var(--text-1);
-  font-size: 28px;
+  font-size: 30px;
+  font-weight: 800;
+  text-shadow: 0 0 10px rgba(108, 75, 255, 0.25);
 }
 
 .dashboard-neon .theme-name {
@@ -1537,6 +1542,16 @@ body:has(.neon-theme) .button.ghost.small {
 .dashboard-neon .adventure-text,
 .dashboard-neon .step-text {
   color: var(--text-2);
+}
+
+.dashboard-neon .feature-card {
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.dashboard-neon .feature-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 216, 77, 0.55);
+  box-shadow: 0 0 14px rgba(255, 216, 77, 0.22);
 }
 
 .dashboard-neon .pathCard,
@@ -1554,6 +1569,7 @@ body:has(.neon-theme) .button.ghost.small {
 .dashboard-neon .worldCard {
   transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
   position: relative;
+  overflow: hidden;
 }
 
 .dashboard-neon .worldCard::after {
@@ -1567,10 +1583,33 @@ body:has(.neon-theme) .button.ghost.small {
   opacity: 0.75;
 }
 
+.dashboard-neon .worldCard.world-tier-50::after {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 216, 77, 0),
+    rgba(255, 216, 77, 0.85),
+    rgba(255, 216, 77, 0)
+  );
+}
+
+.dashboard-neon .worldCard.world-tier-120::after {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 46, 136, 0),
+    rgba(255, 46, 136, 0.85),
+    rgba(255, 46, 136, 0)
+  );
+}
+
 .dashboard-neon .worldCard:hover {
   transform: translateY(-4px) scale(1.02);
   border-color: rgba(62, 232, 255, 0.55);
   box-shadow: 0 0 20px rgba(62, 232, 255, 0.18), 0 16px 40px rgba(0, 0, 0, 0.45);
+}
+
+.dashboard-neon .worldCard.locked {
+  opacity: 0.65;
+  filter: grayscale(0.2);
 }
 
 .dashboard-neon .worldEnter {
@@ -1593,6 +1632,29 @@ body:has(.neon-theme) .button.ghost.small {
 .dashboard-neon .pathCard.selected {
   border-color: rgba(34, 255, 170, 0.6);
   box-shadow: 0 0 18px rgba(34, 255, 170, 0.2), 0 0 40px rgba(34, 255, 170, 0.1);
+}
+
+.dashboard-neon .pathCard {
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.dashboard-neon .pathCard:hover {
+  transform: translateY(-4px);
+}
+
+.dashboard-neon .pathCard.path-beginner.selected {
+  border-color: rgba(34, 255, 170, 0.65);
+  box-shadow: 0 0 20px rgba(34, 255, 170, 0.28), 0 0 40px rgba(34, 255, 170, 0.16);
+}
+
+.dashboard-neon .pathCard.path-explorer.selected {
+  border-color: rgba(62, 232, 255, 0.65);
+  box-shadow: 0 0 20px rgba(62, 232, 255, 0.28), 0 0 40px rgba(62, 232, 255, 0.16);
+}
+
+.dashboard-neon .pathCard.path-creator.selected {
+  border-color: rgba(255, 46, 136, 0.7);
+  box-shadow: 0 0 22px rgba(255, 46, 136, 0.28), 0 0 44px rgba(255, 46, 136, 0.16);
 }
 
 .pathDotWrap {
@@ -1648,6 +1710,29 @@ body:has(.neon-theme) .button.ghost.small {
   box-shadow: 0 0 18px rgba(62, 232, 255, 0.22);
 }
 
+.dashboard-neon .langCard {
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.dashboard-neon .langCard:hover {
+  transform: translateY(-4px);
+}
+
+.dashboard-neon .langCard.lang-en.selected {
+  border-color: rgba(62, 232, 255, 0.72);
+  box-shadow: 0 0 20px rgba(62, 232, 255, 0.25);
+}
+
+.dashboard-neon .langCard.lang-zh.selected {
+  border-color: rgba(255, 46, 136, 0.72);
+  box-shadow: 0 0 20px rgba(255, 46, 136, 0.25);
+}
+
+.dashboard-neon .langCard.lang-ms.selected {
+  border-color: rgba(34, 255, 170, 0.72);
+  box-shadow: 0 0 20px rgba(34, 255, 170, 0.24);
+}
+
 .dashboard-neon .btnPrimary {
   width: 100%;
   max-width: 420px;
@@ -1665,6 +1750,43 @@ body:has(.neon-theme) .button.ghost.small {
 .dashboard-neon .btnPrimary:hover {
   transform: translateY(-2px) scale(1.02);
   box-shadow: 0 0 26px rgba(255, 46, 136, 0.45), 0 0 44px rgba(108, 75, 255, 0.3), 0 18px 50px rgba(0, 0, 0, 0.55);
+}
+
+.dashboard-neon .centered-play-action {
+  justify-items: center;
+  text-align: center;
+}
+
+.dashboard-neon .giant-play-button {
+  font-size: 24px;
+  padding: 20px 40px;
+  letter-spacing: 0.3px;
+}
+
+.dashboard-neon .giant-play-button .chest,
+.dashboard-neon .giant-play-button .sparkles {
+  filter: drop-shadow(0 0 10px rgba(255, 216, 77, 0.4));
+}
+
+.dashboard-neon .stars-badge,
+.dashboard-neon .level-badge {
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(108, 75, 255, 0.38);
+  color: var(--text-1);
+  border-radius: 999px;
+  padding: 10px 14px;
+}
+
+.dashboard-neon .level-badge {
+  border-color: rgba(255, 216, 77, 0.45);
+  box-shadow: 0 0 14px rgba(255, 216, 77, 0.2);
+}
+
+.dashboard-neon .mission-callout {
+  background: linear-gradient(90deg, rgba(255, 46, 136, 0.16), rgba(108, 75, 255, 0.18));
+  border: 1px solid rgba(255, 46, 136, 0.45);
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 0 10px rgba(255, 46, 136, 0.3);
 }
 
 .dashboard-neon .growPill {
@@ -1703,6 +1825,26 @@ body:has(.neon-theme) .button.ghost.small {
 .dashboard-neon .growth-preview-note,
 .dashboard-neon .theme-lock {
   color: var(--text-3);
+}
+
+.dashboard-neon .adventure-title {
+  color: var(--text-1);
+}
+
+.dashboard-neon .adventure-card .button.secondary {
+  background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 0 18px rgba(62, 232, 255, 0.24), 0 10px 24px rgba(0, 0, 0, 0.35);
+}
+
+.dashboard-neon .adventure-card .button.secondary:hover {
+  box-shadow: 0 0 24px rgba(62, 232, 255, 0.34), 0 14px 28px rgba(0, 0, 0, 0.42);
+}
+
+.dashboard-neon .world-name,
+.dashboard-neon .feature-title {
+  font-size: 20px;
+  font-weight: 800;
 }
 
 @keyframes particleDrift {

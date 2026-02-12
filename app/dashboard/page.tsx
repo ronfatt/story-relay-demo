@@ -76,7 +76,7 @@ export default function DashboardPage() {
           <div>
             <div className="hero-kicker">{t.heroKicker}</div>
             <h1 className="dash-hero-title heroTitle">
-              Interactive English Story <span>Adventure</span>
+              <span>{t.heroTitle}</span>
             </h1>
             <p className="heroSub">{t.heroSubtitle}</p>
           </div>
@@ -104,14 +104,14 @@ export default function DashboardPage() {
       </section>
 
       <section className="card sectionCard grid carousel-card">
-        <div className="section-title">{t.pickWorld}</div>
+        <div className="section-title">🪐 {t.pickWorld}</div>
         <div className="carousel">
           {themes.map((theme) => {
             const locked = user.total_stars < theme.unlock;
             return (
             <Link
               key={theme.name}
-              className={`world-card worldCard ${locked ? "locked" : ""}`}
+              className={`world-card worldCard world-tier-${theme.unlock} ${locked ? "locked" : ""}`}
               href={`/play?name=${encodeURIComponent(name)}&theme=${encodeURIComponent(
                 theme.name
               )}&lang=${lang}`}
@@ -134,12 +134,12 @@ export default function DashboardPage() {
       </section>
 
       <section className="card sectionCard grid play-setup-card">
-        <div className="section-title">{t.learningPathTitle}</div>
+        <div className="section-title">🌟 {t.learningPathTitle}</div>
         <div className="choice-grid">
           {(["beginner", "explorer", "creator"] as const).map((level) => (
             <button
               key={level}
-              className={`theme-card pathCard ${pathLevel === level ? "selected" : ""}`}
+              className={`theme-card pathCard path-${level} ${pathLevel === level ? "selected" : ""}`}
               onClick={() => setPathLevel(level)}
               type="button"
             >
@@ -172,7 +172,7 @@ export default function DashboardPage() {
         </div>
 
         <div className="grid">
-          <div className="section-title">{t.nameYourHero}</div>
+          <div className="section-title">🦸 {t.nameYourHero}</div>
           <input
             className="input hero-name-input"
             value={name}
@@ -182,12 +182,12 @@ export default function DashboardPage() {
         </div>
 
         <div className="grid">
-          <div className="section-title">{t.language}</div>
+          <div className="section-title">🌍 {t.language}</div>
           <div className="choice-grid">
             {(["en", "zh", "ms"] as Language[]).map((code) => (
               <button
                 key={code}
-                className={`theme-card langCard ${lang === code ? "selected" : ""}`}
+                className={`theme-card langCard lang-${code} ${lang === code ? "selected" : ""}`}
                 onClick={() => setLang(code)}
                 type="button"
               >
@@ -219,7 +219,7 @@ export default function DashboardPage() {
       </section>
 
       <section className="card sectionCard grid growth-preview-card">
-        <div className="section-title">📊 {t.growthPreviewTitle}</div>
+        <div className="section-title">✨ {t.unlockSkillsTitle} · 📊 {t.growthPreviewTitle}</div>
         <div className="growth-preview-grid">
           <div className="growth-preview-item growPill">
             <span>Creativity</span>
