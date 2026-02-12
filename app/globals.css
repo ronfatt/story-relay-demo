@@ -1365,3 +1365,269 @@ body:has(.neon-theme) .button.ghost.small {
     grid-template-columns: 1fr;
   }
 }
+
+/* Dashboard Neon 2.0 */
+.dashboard-neon {
+  --bg-0: #0b0620;
+  --bg-1: #1a103d;
+  --bg-2: #2e1a6f;
+  --neon-pink: #ff2e88;
+  --neon-purple: #6c4bff;
+  --neon-blue: #3ee8ff;
+  --neon-green: #22ffaa;
+  --neon-yellow: #ffd84d;
+  --text-1: rgba(255, 255, 255, 0.92);
+  --text-2: rgba(255, 255, 255, 0.78);
+  --text-3: rgba(255, 255, 255, 0.62);
+  --glass: rgba(255, 255, 255, 0.08);
+  --glass-2: rgba(255, 255, 255, 0.12);
+  --stroke: rgba(108, 75, 255, 0.35);
+  --shadow: 0 16px 50px rgba(0, 0, 0, 0.45);
+  --r-xl: 28px;
+  --r-lg: 22px;
+  --r-md: 18px;
+  --gap: 18px;
+  min-height: 100vh;
+  background:
+    radial-gradient(900px 600px at 82% 18%, rgba(255, 46, 136, 0.22), transparent 55%),
+    radial-gradient(800px 520px at 18% 82%, rgba(62, 232, 255, 0.18), transparent 55%),
+    radial-gradient(700px 520px at 60% 60%, rgba(108, 75, 255, 0.14), transparent 60%),
+    linear-gradient(180deg, var(--bg-1) 0%, var(--bg-0) 65%, var(--bg-2) 140%);
+  color: var(--text-1);
+  padding: 8px;
+  border-radius: var(--r-xl);
+}
+
+.dashboard-neon .sectionCard {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.06));
+  border: 1px solid var(--stroke);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-neon .sectionCard::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: var(--r-xl);
+  pointer-events: none;
+  background: radial-gradient(600px 220px at 30% 0%, rgba(62, 232, 255, 0.2), transparent 60%);
+  opacity: 0.7;
+}
+
+.dashboard-neon .heroTitle {
+  font-size: 52px;
+  line-height: 1.05;
+  letter-spacing: -0.5px;
+  font-weight: 800;
+}
+
+.dashboard-neon .heroTitle span {
+  background: linear-gradient(90deg, var(--neon-pink), var(--neon-purple), var(--neon-blue));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 10px rgba(255, 46, 136, 0.45), 0 0 22px rgba(108, 75, 255, 0.35);
+}
+
+.dashboard-neon .heroSub {
+  color: var(--text-2);
+  font-size: 16px;
+}
+
+.dashboard-neon .heroIcon {
+  width: 86px;
+  height: 86px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(62, 232, 255, 0.35);
+  box-shadow: 0 0 18px rgba(62, 232, 255, 0.18);
+}
+
+.dashboard-neon .section-title {
+  color: var(--text-1);
+  font-size: 28px;
+}
+
+.dashboard-neon .theme-name {
+  color: var(--text-1);
+  font-size: 18px;
+}
+
+.dashboard-neon .theme-subtitle,
+.dashboard-neon .feature-text,
+.dashboard-neon .world-preview,
+.dashboard-neon .adventure-text,
+.dashboard-neon .step-text {
+  color: var(--text-2);
+}
+
+.dashboard-neon .pathCard,
+.dashboard-neon .worldCard,
+.dashboard-neon .langCard,
+.dashboard-neon .aiTip,
+.dashboard-neon .growPill,
+.dashboard-neon .solid-step,
+.dashboard-neon .feature-card {
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  border-radius: var(--r-lg);
+}
+
+.dashboard-neon .worldCard {
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  position: relative;
+}
+
+.dashboard-neon .worldCard::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 5px;
+  background: linear-gradient(90deg, rgba(62, 232, 255, 0), rgba(62, 232, 255, 0.8), rgba(62, 232, 255, 0));
+  opacity: 0.75;
+}
+
+.dashboard-neon .worldCard:hover {
+  transform: translateY(-4px) scale(1.02);
+  border-color: rgba(62, 232, 255, 0.55);
+  box-shadow: 0 0 20px rgba(62, 232, 255, 0.18), 0 16px 40px rgba(0, 0, 0, 0.45);
+}
+
+.dashboard-neon .worldEnter {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(62, 232, 255, 0.1);
+  border: 1px solid rgba(62, 232, 255, 0.4);
+  color: var(--text-1);
+  text-decoration: none;
+}
+
+.dashboard-neon .worldEnter:hover {
+  box-shadow: 0 0 14px rgba(62, 232, 255, 0.22);
+}
+
+.dashboard-neon .pathCard.selected {
+  border-color: rgba(34, 255, 170, 0.6);
+  box-shadow: 0 0 18px rgba(34, 255, 170, 0.2), 0 0 40px rgba(34, 255, 170, 0.1);
+}
+
+.pathDotWrap {
+  display: flex;
+  align-items: center;
+}
+
+.pathDot {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  box-shadow: 0 0 12px currentColor;
+}
+
+.pathDot.beginner { color: var(--neon-green); background: var(--neon-green); }
+.pathDot.explorer { color: var(--neon-blue); background: var(--neon-blue); }
+.pathDot.creator { color: var(--neon-pink); background: var(--neon-pink); }
+
+.dashboard-neon .path-meta {
+  color: var(--text-2);
+}
+
+.dashboard-neon .aiTip {
+  border-color: rgba(62, 232, 255, 0.25);
+  color: var(--text-2);
+}
+
+.dashboard-neon .aiTip:hover {
+  border-color: rgba(62, 232, 255, 0.45);
+  box-shadow: 0 0 12px rgba(62, 232, 255, 0.12);
+}
+
+.dashboard-neon .input {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(108, 75, 255, 0.28);
+  color: var(--text-1);
+  border-radius: 16px;
+  padding: 14px 16px;
+}
+
+.dashboard-neon .input::placeholder {
+  color: var(--text-3);
+}
+
+.dashboard-neon .input:focus {
+  outline: none;
+  border-color: rgba(62, 232, 255, 0.55);
+  box-shadow: 0 0 14px rgba(62, 232, 255, 0.18);
+}
+
+.dashboard-neon .langCard.selected {
+  border-color: rgba(62, 232, 255, 0.65);
+  box-shadow: 0 0 18px rgba(62, 232, 255, 0.22);
+}
+
+.dashboard-neon .btnPrimary {
+  width: 100%;
+  max-width: 420px;
+  background: linear-gradient(90deg, var(--neon-pink), var(--neon-purple));
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #fff;
+  font-weight: 800;
+  font-size: 18px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  box-shadow: 0 0 18px rgba(255, 46, 136, 0.35), 0 0 36px rgba(108, 75, 255, 0.22), 0 16px 40px rgba(0, 0, 0, 0.45);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.dashboard-neon .btnPrimary:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 0 26px rgba(255, 46, 136, 0.45), 0 0 44px rgba(108, 75, 255, 0.3), 0 18px 50px rgba(0, 0, 0, 0.55);
+}
+
+.dashboard-neon .growPill {
+  border: 1px solid rgba(108, 75, 255, 0.28);
+  border-radius: 999px;
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-2);
+}
+
+.dashboard-neon .growStars {
+  color: var(--neon-yellow);
+  text-shadow: 0 0 10px rgba(255, 216, 77, 0.35);
+}
+
+.dashboard-neon .how-card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.06));
+}
+
+.dashboard-neon .stepNum {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: rgba(62, 232, 255, 0.12);
+  border: 1px solid rgba(62, 232, 255, 0.4);
+  box-shadow: 0 0 14px rgba(62, 232, 255, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-1);
+  font-weight: 800;
+}
+
+.dashboard-neon .pdf-teaser,
+.dashboard-neon .growth-preview-note,
+.dashboard-neon .theme-lock {
+  color: var(--text-3);
+}

@@ -70,17 +70,17 @@ export default function DashboardPage() {
   }
 
   return (
-    <main className="grid">
-      <section className="card hero-card grid">
+    <main className="grid dashboard-neon">
+      <section className="card sectionCard hero-card grid">
         <div className="hero-header">
           <div>
             <div className="hero-kicker">{t.heroKicker}</div>
-            <h1 className="dash-hero-title">
+            <h1 className="dash-hero-title heroTitle">
               Interactive English Story <span>Adventure</span>
             </h1>
-            <p>{t.heroSubtitle}</p>
+            <p className="heroSub">{t.heroSubtitle}</p>
           </div>
-          <div className="hero-orb sparkle">🎲</div>
+          <div className="hero-orb heroIcon sparkle">🎲</div>
         </div>
         <div className="feature-grid">
           <div className="feature-card dash-info-card info-a">
@@ -103,7 +103,7 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      <section className="card grid carousel-card">
+      <section className="card sectionCard grid carousel-card">
         <div className="section-title">{t.pickWorld}</div>
         <div className="carousel">
           {themes.map((theme) => {
@@ -111,7 +111,7 @@ export default function DashboardPage() {
             return (
             <Link
               key={theme.name}
-              className={`world-card ${locked ? "locked" : ""}`}
+              className={`world-card worldCard ${locked ? "locked" : ""}`}
               href={`/play?name=${encodeURIComponent(name)}&theme=${encodeURIComponent(
                 theme.name
               )}&lang=${lang}`}
@@ -122,7 +122,7 @@ export default function DashboardPage() {
               <div className="world-emoji">{theme.emoji}</div>
               <div className="world-name">{theme.name}</div>
               <div className="world-preview">{theme.preview}</div>
-              <div className="world-cta">{t.enterThisWorld}</div>
+              <div className="world-cta worldEnter">{t.enterThisWorld}</div>
               {locked && (
                 <div className="theme-lock">
                   {t.locked} · {t.unlockNext} {theme.unlock} ⭐
@@ -133,18 +133,18 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      <section className="card grid play-setup-card">
+      <section className="card sectionCard grid play-setup-card">
         <div className="section-title">{t.learningPathTitle}</div>
         <div className="choice-grid">
           {(["beginner", "explorer", "creator"] as const).map((level) => (
             <button
               key={level}
-              className={`theme-card ${pathLevel === level ? "selected" : ""}`}
+              className={`theme-card pathCard ${pathLevel === level ? "selected" : ""}`}
               onClick={() => setPathLevel(level)}
               type="button"
             >
-              <div className="theme-emoji">
-                {level === "beginner" ? "🟢" : level === "explorer" ? "🔵" : "🟣"}
+              <div className="theme-emoji pathDotWrap">
+                <span className={`pathDot ${level}`}></span>
               </div>
               <div className="theme-name">
                 {level === "beginner"
@@ -162,12 +162,12 @@ export default function DashboardPage() {
           ))}
         </div>
 
-        <div className="ai-coach-preview">
+        <div className="ai-coach-preview sectionCard">
           <div className="section-title">🤖 {t.aiCoachTitle}</div>
           <div className="coach-prompts">
-            <div className="coach-prompt">{t.aiCoachPrompt1}</div>
-            <div className="coach-prompt">{t.aiCoachPrompt2}</div>
-            <div className="coach-prompt">{t.aiCoachPrompt3}</div>
+            <div className="coach-prompt aiTip">{t.aiCoachPrompt1}</div>
+            <div className="coach-prompt aiTip">{t.aiCoachPrompt2}</div>
+            <div className="coach-prompt aiTip">{t.aiCoachPrompt3}</div>
           </div>
         </div>
 
@@ -187,7 +187,7 @@ export default function DashboardPage() {
             {(["en", "zh", "ms"] as Language[]).map((code) => (
               <button
                 key={code}
-                className={`theme-card ${lang === code ? "selected" : ""}`}
+                className={`theme-card langCard ${lang === code ? "selected" : ""}`}
                 onClick={() => setLang(code)}
                 type="button"
               >
@@ -203,7 +203,7 @@ export default function DashboardPage() {
 
         <div className="hero-actions centered-play-action">
           <Link
-            className="button chest-button giant-play-button"
+            className="button chest-button giant-play-button btnPrimary"
             href={`/play?name=${encodeURIComponent(name)}&lang=${lang}&difficulty=${pathDifficultyMap[pathLevel]}`}
           >
             <span className="chest">🧰</span>
@@ -218,42 +218,54 @@ export default function DashboardPage() {
         <div className="pdf-teaser">📘 {t.pdfTeaser}</div>
       </section>
 
-      <section className="card grid growth-preview-card">
+      <section className="card sectionCard grid growth-preview-card">
         <div className="section-title">📊 {t.growthPreviewTitle}</div>
         <div className="growth-preview-grid">
-          <div className="growth-preview-item">Creativity ⭐⭐⭐⭐</div>
-          <div className="growth-preview-item">Vocabulary ⭐⭐⭐</div>
-          <div className="growth-preview-item">Story Flow ⭐⭐</div>
-          <div className="growth-preview-item">Grammar ⭐⭐</div>
+          <div className="growth-preview-item growPill">
+            <span>Creativity</span>
+            <span className="growStars">⭐⭐⭐⭐</span>
+          </div>
+          <div className="growth-preview-item growPill">
+            <span>Vocabulary</span>
+            <span className="growStars">⭐⭐⭐</span>
+          </div>
+          <div className="growth-preview-item growPill">
+            <span>Story Flow</span>
+            <span className="growStars">⭐⭐</span>
+          </div>
+          <div className="growth-preview-item growPill">
+            <span>Grammar</span>
+            <span className="growStars">⭐⭐</span>
+          </div>
         </div>
         <div className="growth-preview-note">{t.growthPreviewUpdated}</div>
       </section>
 
-      <section className="card grid how-card">
+      <section className="card sectionCard grid how-card">
         <details className="how-collapse">
           <summary className="how-summary">{t.howTitle}</summary>
           <div className="step-grid">
             <div className="step-card solid-step">
-              <div className="step-number">1</div>
+              <div className="step-number stepNum">1</div>
               <div className="step-text">{t.how1}</div>
             </div>
             <div className="step-card solid-step">
-              <div className="step-number">2</div>
+              <div className="step-number stepNum">2</div>
               <div className="step-text">{t.how2}</div>
             </div>
             <div className="step-card solid-step">
-              <div className="step-number">3</div>
+              <div className="step-number stepNum">3</div>
               <div className="step-text">{t.how3}</div>
             </div>
             <div className="step-card solid-step">
-              <div className="step-number">4</div>
+              <div className="step-number stepNum">4</div>
               <div className="step-text">{t.how4}</div>
             </div>
           </div>
         </details>
       </section>
 
-      <section className="card grid adventure-card">
+      <section className="card sectionCard grid adventure-card">
         <div className="section-title">{t.myStories} / {t.learningRecords}</div>
         <div className="adventure-row">
           <div className="adventure-emoji">📚</div>
