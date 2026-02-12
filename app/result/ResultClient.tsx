@@ -130,7 +130,7 @@ export default function ResultClient({ sessionId, storyId, lang = "en" }: Result
 
   if (!sessionId && !storyId) {
     return (
-      <main className="card">
+      <main className="card storyCard">
         <p>{t.noStoryFound}</p>
         <div className="grid">
           <button className="button" onClick={() => router.push(`/dashboard?lang=${lang}`)}>
@@ -146,7 +146,7 @@ export default function ResultClient({ sessionId, storyId, lang = "en" }: Result
 
   if (!data) {
     return (
-      <main className="card">
+      <main className="card storyCard">
         <p>{t.loadingStory}</p>
       </main>
     );
@@ -154,9 +154,9 @@ export default function ResultClient({ sessionId, storyId, lang = "en" }: Result
 
   return (
     <main className="grid">
-      <section className="card grid">
+      <section className="card storyCard grid">
         <h1>{data.title}</h1>
-        <div className="story-block">{data.fullStory}</div>
+        <div className="story-block storyContent">{data.fullStory}</div>
         <div><strong>{t.storyLesson}:</strong> {data.moral}</div>
         {shareUrl && (
           <div className="share-panel">
@@ -171,7 +171,7 @@ export default function ResultClient({ sessionId, storyId, lang = "en" }: Result
               {shareReady && <span className="share-status">{t.linkCopied}</span>}
               {shareError && <span className="share-status error">{shareError}</span>}
             </div>
-            <div className="share-link">{shareUrl}</div>
+            <div className="share-link storyContent">{shareUrl}</div>
           </div>
         )}
         <div className="grid">
@@ -185,7 +185,7 @@ export default function ResultClient({ sessionId, storyId, lang = "en" }: Result
         {data.inventory && data.inventory.length > 0 && (
           <div>
             <strong>{t.inventoryLabel}</strong>
-            <div className="story-block">{data.inventory.join(", ")}</div>
+            <div className="story-block storyContent">{data.inventory.join(", ")}</div>
           </div>
         )}
         {data.totalStarsEarned >= 14 && (

@@ -453,6 +453,49 @@ body {
   white-space: pre-wrap;
 }
 
+.storyCard {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.05));
+  border: 1px solid rgba(108, 75, 255, 0.35);
+  color: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.storyCard h1,
+.storyCard h2,
+.storyCard h3,
+.storyCard strong,
+.storyCard li,
+.storyCard p {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.storyCard .badge {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(108, 75, 255, 0.35);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.storyCard .share-panel {
+  border-color: rgba(255, 46, 136, 0.32);
+  background: linear-gradient(135deg, rgba(255, 46, 136, 0.1), rgba(108, 75, 255, 0.1));
+}
+
+.storyCard .share-text {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.storyContent {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.storyCard .story-block,
+.storyCard .share-link {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(108, 75, 255, 0.35);
+}
+
 .share-panel {
   border-radius: 16px;
   padding: 14px 16px;
