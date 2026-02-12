@@ -214,16 +214,16 @@ export default function PlayClient({
 
   return (
     <main className="grid">
-      <section className="card grid">
+      <section className="card grid setupCard">
         <h2>{t.letsStart}</h2>
         {error && <div className="error-banner">{error}</div>}
         <div className="grid">
-          <div className="section-title">{t.language}</div>
+          <div className="section-title sectionTitle">{t.language}</div>
           <div className="choice-grid">
             {(["en", "zh", "ms"] as Language[]).map((code) => (
               <button
                 key={code}
-                className={`theme-card ${lang === code ? "selected" : ""}`}
+                className={`theme-card optionCard langOption ${lang === code ? "selected" : ""}`}
                 onClick={() => setLang(code)}
                 type="button"
               >
@@ -235,19 +235,18 @@ export default function PlayClient({
           </div>
         </div>
         <div className="grid">
-          <div className="section-title">{t.pickWorld}</div>
+          <div className="section-title sectionTitle">{t.pickWorld}</div>
           <div className="choice-grid">
             {themes.map((item) => {
               const locked = totalStars < item.unlock;
               return (
               <button
                 key={item.name}
-                className={`theme-card ${theme === item.name ? "selected" : ""} ${
+                className={`theme-card optionCard worldCard ${theme === item.name ? "selected" : ""} ${
                   locked ? "locked" : ""
                 }`}
                 onClick={() => !locked && setTheme(item.name)}
                 type="button"
-                disabled={locked}
               >
                 <div className="theme-emoji">{themeEmoji(item.name)}</div>
                 <div className="theme-name">{item.name}</div>
@@ -255,7 +254,7 @@ export default function PlayClient({
                   {themeDescriptions[lang]?.[item.name] || "Tap to explore"}
                 </div>
                 {locked && (
-                  <div className="theme-lock">
+                  <div className="theme-lock unlockPill">
                     {t.locked} · {t.unlockNext} {item.unlock} ⭐
                   </div>
                 )}
@@ -264,7 +263,7 @@ export default function PlayClient({
           </div>
         </div>
         <div className="grid">
-          <div className="section-title">{t.heroName}</div>
+          <div className="section-title sectionTitle">{t.heroName}</div>
           <input
             className="input"
             value={heroName}
@@ -273,12 +272,14 @@ export default function PlayClient({
           />
         </div>
         <div className="grid">
-          <div className="section-title">{t.pickLevel}</div>
+          <div className="section-title sectionTitle">{t.pickLevel}</div>
           <div className="choice-grid">
             {difficulties.map((d) => (
               <button
                 key={d}
-                className={`theme-card ${difficulty === d ? "selected" : ""}`}
+                className={`theme-card optionCard levelCard ${d.toLowerCase()} ${
+                  difficulty === d ? "selected" : ""
+                }`}
                 onClick={() => setDifficulty(d)}
                 type="button"
               >
@@ -289,8 +290,8 @@ export default function PlayClient({
             ))}
           </div>
         </div>
-        <button className="button" onClick={startSession} disabled={loading}>
-          {loading ? t.gettingReady : t.letPlay}
+        <button className="button btnPrimary" onClick={startSession} disabled={loading}>
+          {loading ? t.gettingReady : lang === "zh" ? "开始任务" : lang === "ms" ? "Mula Misi" : "Start Mission"}
         </button>
       </section>
 

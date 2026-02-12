@@ -407,6 +407,161 @@ body {
   box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.2);
 }
 
+.setupCard {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.06));
+  border: 1px solid rgba(108, 75, 255, 0.35);
+  border-radius: 28px;
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.setupCard h2,
+.setupCard .theme-name {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.setupCard .theme-subtitle {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.setupCard .sectionTitle {
+  font-size: 18px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.92);
+  letter-spacing: 0.2px;
+}
+
+.setupCard .sectionTitle::before {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  margin-right: 10px;
+  background: #3ee8ff;
+  box-shadow: 0 0 12px rgba(62, 232, 255, 0.35);
+}
+
+.setupCard .optionCard {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(108, 75, 255, 0.25);
+  border-radius: 18px;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.setupCard .optionCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(62, 232, 255, 0.45);
+  box-shadow: 0 0 14px rgba(62, 232, 255, 0.14);
+}
+
+.setupCard .optionCard.selected {
+  border-color: rgba(62, 232, 255, 0.7);
+  box-shadow: 0 0 18px rgba(62, 232, 255, 0.22), 0 0 36px rgba(108, 75, 255, 0.12);
+}
+
+.setupCard .optionCard:not(.selected) {
+  opacity: 0.85;
+}
+
+.setupCard .worldCard {
+  position: relative;
+  overflow: hidden;
+}
+
+.setupCard .worldCard::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, rgba(62, 232, 255, 0.9), transparent);
+  opacity: 0.65;
+}
+
+.setupCard .worldCard.locked {
+  opacity: 0.55;
+  filter: grayscale(0.2);
+}
+
+.setupCard .worldCard.locked::before {
+  content: "LOCKED";
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(255, 46, 136, 0.12);
+  border: 1px solid rgba(255, 46, 136, 0.3);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.setupCard .unlockPill {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  width: fit-content;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 216, 77, 0.1);
+  border: 1px solid rgba(255, 216, 77, 0.35);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.setupCard .input {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(108, 75, 255, 0.25);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.setupCard .input::placeholder {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.setupCard .input:focus {
+  outline: none;
+  border-color: rgba(62, 232, 255, 0.55);
+  box-shadow: 0 0 14px rgba(62, 232, 255, 0.18);
+}
+
+.setupCard .levelCard.beginner.selected {
+  border-color: rgba(34, 255, 170, 0.7);
+  box-shadow: 0 0 18px rgba(34, 255, 170, 0.2);
+}
+
+.setupCard .levelCard.intermediate.selected {
+  border-color: rgba(255, 216, 77, 0.7);
+  box-shadow: 0 0 18px rgba(255, 216, 77, 0.18);
+}
+
+.setupCard .levelCard.advanced.selected {
+  border-color: rgba(255, 46, 136, 0.65);
+  box-shadow: 0 0 18px rgba(255, 46, 136, 0.18);
+}
+
+.setupCard .btnPrimary {
+  width: 100%;
+  background: linear-gradient(90deg, #ff2e88, #6c4bff);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #fff;
+  font-weight: 900;
+  font-size: 18px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  box-shadow: 0 0 18px rgba(255, 46, 136, 0.35), 0 0 36px rgba(108, 75, 255, 0.22);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.setupCard .btnPrimary:hover {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 0 26px rgba(255, 46, 136, 0.45), 0 0 44px rgba(108, 75, 255, 0.3);
+}
+
 .bonus-hint {
   margin-top: 8px;
   padding: 8px 12px;
