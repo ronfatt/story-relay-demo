@@ -7,13 +7,16 @@ import { ui, type Language, LANG_LABELS } from "@/lib/i18n";
 export default function DashboardPage() {
   const [name, setName] = useState("");
   const [lang, setLang] = useState<Language>("en");
-  const [difficulty, setDifficulty] = useState<"Beginner" | "Intermediate" | "Advanced">(
-    "Beginner"
-  );
+  const [pathLevel, setPathLevel] = useState<"beginner" | "explorer" | "creator">("beginner");
   const [user, setUser] = useState<{ id: number; email: string; total_stars: number } | null>(
     null
   );
   const t = ui(lang);
+  const pathDifficultyMap: Record<"beginner" | "explorer" | "creator", "Beginner" | "Intermediate" | "Advanced"> = {
+    beginner: "Beginner",
+    explorer: "Intermediate",
+    creator: "Advanced"
+  };
   const levelBadge = useMemo(() => {
     if (!user) return t.explorerLevel;
     if (user.total_stars >= 120) return "🌟 Master Story Hero";
@@ -131,34 +134,41 @@ export default function DashboardPage() {
       </section>
 
       <section className="card grid play-setup-card">
-        <div className="section-title">{t.pickLevel}</div>
+        <div className="section-title">{t.learningPathTitle}</div>
         <div className="choice-grid">
-          {(["Beginner", "Intermediate", "Advanced"] as const).map((level) => (
+          {(["beginner", "explorer", "creator"] as const).map((level) => (
             <button
               key={level}
-              className={`theme-card ${difficulty === level ? "selected" : ""}`}
-              onClick={() => setDifficulty(level)}
+              className={`theme-card ${pathLevel === level ? "selected" : ""}`}
+              onClick={() => setPathLevel(level)}
               type="button"
             >
               <div className="theme-emoji">
-                {level === "Beginner" ? "🌱" : level === "Intermediate" ? "⚡" : "🦉"}
+                {level === "beginner" ? "🟢" : level === "explorer" ? "🔵" : "🟣"}
               </div>
               <div className="theme-name">
-                {level === "Beginner"
+                {level === "beginner"
                   ? t.levelBeginner
-                  : level === "Intermediate"
-                    ? t.levelIntermediate
-                    : t.levelAdvanced}
+                  : level === "explorer"
+                    ? t.learningPathExplorer
+                    : t.learningPathCreator}
               </div>
-              <div className="theme-subtitle">
-                {level === "Beginner"
-                  ? t.levelHintBeginner
-                  : level === "Intermediate"
-                    ? t.levelHintIntermediate
-                    : t.levelHintAdvanced}
+              <div className="path-meta">
+                <div>{level === "beginner" ? t.learningPathBeginnerAge : level === "explorer" ? t.learningPathExplorerAge : t.learningPathCreatorAge}</div>
+                <div>{level === "beginner" ? t.learningPathBeginnerFocus : level === "explorer" ? t.learningPathExplorerFocus : t.learningPathCreatorFocus}</div>
+                <div>{level === "beginner" ? t.learningPathBeginnerIncludes : level === "explorer" ? t.learningPathExplorerIncludes : t.learningPathCreatorIncludes}</div>
               </div>
             </button>
           ))}
+        </div>
+
+        <div className="ai-coach-preview">
+          <div className="section-title">🤖 {t.aiCoachTitle}</div>
+          <div className="coach-prompts">
+            <div className="coach-prompt">{t.aiCoachPrompt1}</div>
+            <div className="coach-prompt">{t.aiCoachPrompt2}</div>
+            <div className="coach-prompt">{t.aiCoachPrompt3}</div>
+          </div>
         </div>
 
         <div className="grid">
@@ -194,7 +204,7 @@ export default function DashboardPage() {
         <div className="hero-actions centered-play-action">
           <Link
             className="button chest-button giant-play-button"
-            href={`/play?name=${encodeURIComponent(name)}&lang=${lang}&difficulty=${difficulty}`}
+            href={`/play?name=${encodeURIComponent(name)}&lang=${lang}&difficulty=${pathDifficultyMap[pathLevel]}`}
           >
             <span className="chest">🧰</span>
             {t.playButton}
@@ -205,6 +215,18 @@ export default function DashboardPage() {
           </div>
           <div className="badge level-badge">{levelBadge}</div>
         </div>
+        <div className="pdf-teaser">📘 {t.pdfTeaser}</div>
+      </section>
+
+      <section className="card grid growth-preview-card">
+        <div className="section-title">📊 {t.growthPreviewTitle}</div>
+        <div className="growth-preview-grid">
+          <div className="growth-preview-item">Creativity ⭐⭐⭐⭐</div>
+          <div className="growth-preview-item">Vocabulary ⭐⭐⭐</div>
+          <div className="growth-preview-item">Story Flow ⭐⭐</div>
+          <div className="growth-preview-item">Grammar ⭐⭐</div>
+        </div>
+        <div className="growth-preview-note">{t.growthPreviewUpdated}</div>
       </section>
 
       <section className="card grid how-card">
