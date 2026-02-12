@@ -73,10 +73,13 @@ export default function HomePage() {
   }
 
   return (
-    <main className="grid onboarding-page">
+    <main className="grid onboarding-page neon-theme">
       <section className="card hero-card onboarding-hero">
         <div className="hero-kicker">{t.heroKicker}</div>
-        <h1 className="challenge-title">{t.challengeTitle}</h1>
+        <h1 className="challenge-title">
+          <span>{t.challengeTitleLine1}</span>
+          <span>⚡ {t.challengeTitleLine2} ⚡</span>
+        </h1>
         <p className="challenge-subtitle">
           <span>{t.challengeSubtitleLine1}</span>
           <span>{t.challengeSubtitleLine2}</span>
@@ -96,7 +99,7 @@ export default function HomePage() {
           {(["en", "ms", "zh"] as Language[]).map((code) => (
             <button
               key={code}
-              className={`theme-card language-choice ${lang === code ? "selected" : ""}`}
+              className={`theme-card language-choice language-${code} ${lang === code ? "selected" : ""}`}
               onClick={() => setLang(code)}
               type="button"
             >
@@ -113,7 +116,7 @@ export default function HomePage() {
       </section>
 
       <section className="card growth-card">
-        <h2>✨ {t.growthTitle}</h2>
+        <h2>✨ {t.unlockSkillsTitle}</h2>
         <div className="feature-grid growth-grid">
           <div className="feature-card growth-mini-card">
             <div className="feature-emoji">🧠</div>

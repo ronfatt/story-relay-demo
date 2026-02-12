@@ -669,45 +669,89 @@ body::before {
 
 .onboarding-page {
   gap: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+body:has(.neon-theme) {
+  background: linear-gradient(155deg, #1a103d 0%, #2e1a6f 48%, #4b2ac3 100%);
+  color: #f5f7ff;
+}
+
+body:has(.neon-theme) .header {
+  border-bottom-color: rgba(108, 75, 255, 0.5);
+}
+
+body:has(.neon-theme) .tagline,
+body:has(.neon-theme) .logo-link {
+  color: #f5f7ff;
+}
+
+body:has(.neon-theme) .button.ghost.small {
+  background: rgba(255, 255, 255, 0.1);
+  color: #f5f7ff;
+  border-color: rgba(108, 75, 255, 0.8);
+  box-shadow: 0 6px 0 rgba(53, 30, 130, 0.8);
+}
+
+.neon-theme .card {
+  background: rgba(16, 11, 48, 0.86);
+  border-color: rgba(108, 75, 255, 0.6);
+  box-shadow: 0 10px 0 rgba(40, 22, 100, 0.7);
 }
 
 .onboarding-hero {
   text-align: center;
-  background: linear-gradient(135deg, #f2f8ff, #f7ebff);
+  background: linear-gradient(135deg, rgba(47, 28, 119, 0.92), rgba(26, 16, 61, 0.92));
 }
 
 .challenge-title {
   margin: 0;
   font-size: clamp(30px, 4vw, 46px);
   line-height: 1.1;
+  display: grid;
+  gap: 2px;
+  background: linear-gradient(90deg, #8d7bff, #ff6ec7, #3ee8ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  background-size: 200% 200%;
+  animation: neonFlow 5s ease infinite;
 }
 
 .challenge-subtitle {
   margin: 0;
   display: grid;
   gap: 4px;
-  color: #5d5980;
+  color: #dad8ff;
   font-weight: 700;
 }
 
 .challenge-badge {
   justify-self: center;
-  background: linear-gradient(120deg, #ffe3c8, #fff8d9);
-  border: 2px solid #ffd6ad;
+  background: rgba(255, 216, 77, 0.16);
+  border: 2px solid rgba(255, 216, 77, 0.58);
   border-radius: 999px;
   padding: 8px 14px;
   font-size: 13px;
   font-weight: 800;
+  color: #ffea9e;
+  box-shadow: 0 0 20px rgba(255, 216, 77, 0.22);
 }
 
 .onboarding-language-card {
-  background: linear-gradient(120deg, #fff9ff, #f5fbff);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .onboarding-language-card h2,
 .growth-card h2,
 .auth-cover-card h2 {
   margin: 0;
+  color: #f5f7ff;
+}
+
+.onboarding-language-card p {
+  color: #dedbff;
 }
 
 .language-grid {
@@ -716,18 +760,36 @@ body::before {
 
 .language-choice {
   border-radius: 20px;
-  box-shadow: 0 8px 0 #e8ddff;
+  box-shadow: 0 8px 0 rgba(28, 16, 78, 0.7);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.22);
 }
 
 .language-choice:hover {
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 10px 0 #e8ddff;
-  border-color: #6c63ff;
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 12px 0 rgba(23, 13, 68, 0.8);
+}
+
+.language-choice.language-en:hover,
+.language-choice.language-en.selected {
+  border-color: #3ee8ff;
+  box-shadow: 0 0 0 4px rgba(62, 232, 255, 0.25), 0 12px 0 rgba(23, 13, 68, 0.8);
+}
+
+.language-choice.language-ms:hover,
+.language-choice.language-ms.selected {
+  border-color: #44e1a0;
+  box-shadow: 0 0 0 4px rgba(68, 225, 160, 0.25), 0 12px 0 rgba(23, 13, 68, 0.8);
+}
+
+.language-choice.language-zh:hover,
+.language-choice.language-zh.selected {
+  border-color: #ff6ec7;
+  box-shadow: 0 0 0 4px rgba(255, 110, 199, 0.25), 0 12px 0 rgba(23, 13, 68, 0.8);
 }
 
 .language-choice.selected {
-  border-color: #5ac8fa;
-  box-shadow: 0 0 0 4px rgba(90, 200, 250, 0.28), 0 10px 0 #d8f0ff;
+  animation: neonShake 0.25s ease;
 }
 
 .language-card-top {
@@ -742,7 +804,7 @@ body::before {
   border-radius: 14px;
   display: grid;
   place-items: center;
-  background: linear-gradient(135deg, #fff6d9, #ffe4ce);
+  background: linear-gradient(135deg, rgba(255, 216, 77, 0.94), rgba(255, 140, 66, 0.92));
   font-weight: 800;
   color: #5a467f;
   border: 2px solid #ffdcb4;
@@ -761,17 +823,17 @@ body::before {
 
 .language-title {
   font-size: 13px;
-  color: #494472;
+  color: #f3f1ff;
   font-weight: 700;
 }
 
 .language-description {
   font-size: 13px;
-  color: #6f6b91;
+  color: #cbcbfa;
 }
 
 .growth-card {
-  background: linear-gradient(125deg, #eefcff, #fff7fd);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .growth-grid {
@@ -780,12 +842,23 @@ body::before {
 
 .growth-mini-card {
   border-radius: 18px;
-  background: linear-gradient(120deg, #ffffff, #f9f3ff);
-  box-shadow: 0 8px 0 #eee3ff;
+  background: rgba(245, 247, 255, 0.14);
+  border-color: rgba(108, 75, 255, 0.5);
+  box-shadow: 0 0 18px rgba(108, 75, 255, 0.24), 0 8px 0 rgba(34, 19, 92, 0.8);
+}
+
+.growth-mini-card .feature-title {
+  color: #f5f7ff;
+}
+
+.growth-mini-card .feature-emoji {
+  animation: glowFloat 2.2s ease-in-out infinite;
 }
 
 .auth-cover-card {
-  background: linear-gradient(120deg, rgba(255, 255, 255, 0.92), rgba(250, 244, 255, 0.92));
+  background: linear-gradient(120deg, rgba(245, 247, 255, 0.95), rgba(241, 234, 255, 0.95));
+  border-color: rgba(108, 75, 255, 0.6);
+  color: #241e46;
 }
 
 .auth-main-action {
@@ -794,12 +867,14 @@ body::before {
 
 .cta-primary {
   width: 100%;
-  background: linear-gradient(120deg, #ff8c42, #ffb347);
-  box-shadow: 0 7px 0 #e56d26;
+  background: linear-gradient(120deg, #ff2e88, #ff6ec7);
+  box-shadow: 0 7px 0 #d9166e, 0 0 18px rgba(255, 46, 136, 0.35);
+  animation: pulseGlow 1.8s ease-in-out infinite;
 }
 
 .cta-primary:hover {
-  transform: translateY(-2px) scale(1.005);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 0 #d9166e, 0 0 24px rgba(255, 46, 136, 0.6);
 }
 
 .text-switch-link {
@@ -811,6 +886,31 @@ body::before {
   justify-self: start;
   padding: 4px 0;
   cursor: pointer;
+}
+
+@keyframes pulseGlow {
+  0% { box-shadow: 0 7px 0 #d9166e, 0 0 14px rgba(255, 46, 136, 0.3); }
+  50% { box-shadow: 0 7px 0 #d9166e, 0 0 22px rgba(255, 46, 136, 0.58); }
+  100% { box-shadow: 0 7px 0 #d9166e, 0 0 14px rgba(255, 46, 136, 0.3); }
+}
+
+@keyframes neonFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes neonShake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  50% { transform: translateX(2px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes glowFloat {
+  0% { transform: translateY(0); text-shadow: 0 0 0 rgba(255,255,255,0); }
+  50% { transform: translateY(-2px); text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+  100% { transform: translateY(0); text-shadow: 0 0 0 rgba(255,255,255,0); }
 }
 
 .chest-button {
