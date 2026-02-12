@@ -296,7 +296,7 @@ export default function PlayClient({
       </section>
 
       {roundData && (
-        <section className="card grid play-card">
+        <section className="card grid play-card playPanel">
           <ConfettiBurst burstKey={burstKey} />
           {roundData.maxRounds && roundData.round >= roundData.maxRounds && (
             <div className="last-round-banner">
@@ -306,15 +306,19 @@ export default function PlayClient({
           <div className="badge">
             {t.round} {roundData.round} / {roundData.maxRounds ?? 10}
           </div>
-          <div className="scene-card">
-            <div className="scene-emoji">{themeEmoji(theme)}</div>
-            <div>
-              <div className="scene-title">{roundData.scene.hero}</div>
+          <div className="scene-card missionMeta">
+            <div className="scene-emoji metaIcon">{themeEmoji(theme)}</div>
+            <div className="metaLines">
+              <div className="scene-title value">{roundData.scene.hero}</div>
               <div className="scene-meta">
-                {t.location}: {roundData.scene.location} · {t.mood}: {roundData.scene.mood}
+                <span className="label">{t.location}:</span>{" "}
+                <span className="value">{roundData.scene.location}</span>{" "}
+                <span className="label">· {t.mood}:</span>{" "}
+                <span className="value">{roundData.scene.mood}</span>
               </div>
               <div className="scene-meta">
-                {t.goal}: {roundData.scene.conflict}
+                <span className="label">{t.goal}:</span>{" "}
+                <span className="value">{roundData.scene.conflict}</span>
               </div>
               {roundData.inventory && roundData.inventory.length > 0 && (
                 <div className="scene-meta">
@@ -327,7 +331,7 @@ export default function PlayClient({
               <div className="avatar-name">{roundData.scene.hero}</div>
             </div>
           </div>
-          <div className="story-block story-animate" key={roundData.round}>
+          <div className="story-block story-animate storyTextBox" key={roundData.round}>
             {roundData.storySoFar}
           </div>
           <div>
@@ -337,25 +341,25 @@ export default function PlayClient({
             {roundData.choices.map((choice) => (
               <button
                 key={choice.id}
-                className="choice-card"
+                className="choice-card choiceCard"
                 onClick={() => submitChoice(choice.id)}
                 disabled={loading}
               >
-                <div className="choice-letter">{choice.id}</div>
-                <div className="choice-text">{choice.text}</div>
+                <div className="choice-letter choiceBadge">{choice.id}</div>
+                <div className="choice-text choiceText">{choice.text}</div>
               </button>
             ))}
           </div>
           <label>
             {t.addLine}
             <input
-              className="input"
+              className="input userLineInput"
               value={userLine}
               onChange={(e) => setUserLine(e.target.value)}
               placeholder="Example: Mia felt excited and brave!"
             />
           </label>
-          <div className={`bonus-hint ${bonusReady ? "ready" : ""}`}>
+          <div className={`bonus-hint tipBar ${bonusReady ? "ready" : ""}`}>
             {bonusReady ? t.bonusReady : t.bonusTip}
           </div>
           <div>
