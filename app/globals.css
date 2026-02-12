@@ -700,6 +700,32 @@ body:has(.neon-theme) .button.ghost.small {
   box-shadow: 0 10px 0 rgba(40, 22, 100, 0.7);
 }
 
+.neon-theme::before,
+.neon-theme::after {
+  content: "";
+  position: fixed;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: 999px;
+  filter: blur(40px);
+}
+
+.neon-theme::before {
+  width: 360px;
+  height: 360px;
+  top: 70px;
+  right: 70px;
+  background: radial-gradient(circle, rgba(108, 75, 255, 0.45), rgba(108, 75, 255, 0));
+}
+
+.neon-theme::after {
+  width: 300px;
+  height: 300px;
+  left: 50px;
+  bottom: 40px;
+  background: radial-gradient(circle, rgba(62, 232, 255, 0.33), rgba(62, 232, 255, 0));
+}
+
 .onboarding-hero {
   text-align: center;
   background: linear-gradient(135deg, rgba(47, 28, 119, 0.92), rgba(26, 16, 61, 0.92));
@@ -717,6 +743,10 @@ body:has(.neon-theme) .button.ghost.small {
   color: transparent;
   background-size: 200% 200%;
   animation: neonFlow 5s ease infinite;
+  text-shadow:
+    0 0 8px rgba(255, 46, 136, 0.75),
+    0 0 20px rgba(108, 75, 255, 0.68);
+  filter: drop-shadow(0 0 8px rgba(255, 46, 136, 0.45));
 }
 
 .challenge-subtitle {
@@ -763,29 +793,43 @@ body:has(.neon-theme) .button.ghost.small {
   box-shadow: 0 8px 0 rgba(28, 16, 78, 0.7);
   background: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.22);
+  opacity: 0.85;
 }
 
 .language-choice:hover {
   transform: translateY(-6px) scale(1.02);
   box-shadow: 0 12px 0 rgba(23, 13, 68, 0.8);
+  opacity: 1;
 }
 
 .language-choice.language-en:hover,
 .language-choice.language-en.selected {
   border-color: #3ee8ff;
-  box-shadow: 0 0 0 4px rgba(62, 232, 255, 0.25), 0 12px 0 rgba(23, 13, 68, 0.8);
+  box-shadow:
+    0 0 12px #3ee8ff,
+    0 0 25px rgba(62, 232, 255, 0.85),
+    0 12px 0 rgba(23, 13, 68, 0.8);
+  opacity: 1;
 }
 
 .language-choice.language-ms:hover,
 .language-choice.language-ms.selected {
   border-color: #44e1a0;
-  box-shadow: 0 0 0 4px rgba(68, 225, 160, 0.25), 0 12px 0 rgba(23, 13, 68, 0.8);
+  box-shadow:
+    0 0 12px #44e1a0,
+    0 0 25px rgba(68, 225, 160, 0.8),
+    0 12px 0 rgba(23, 13, 68, 0.8);
+  opacity: 1;
 }
 
 .language-choice.language-zh:hover,
 .language-choice.language-zh.selected {
   border-color: #ff6ec7;
-  box-shadow: 0 0 0 4px rgba(255, 110, 199, 0.25), 0 12px 0 rgba(23, 13, 68, 0.8);
+  box-shadow:
+    0 0 12px #ff6ec7,
+    0 0 25px rgba(255, 110, 199, 0.8),
+    0 12px 0 rgba(23, 13, 68, 0.8);
+  opacity: 1;
 }
 
 .language-choice.selected {
@@ -845,6 +889,8 @@ body:has(.neon-theme) .button.ghost.small {
   background: rgba(245, 247, 255, 0.14);
   border-color: rgba(108, 75, 255, 0.5);
   box-shadow: 0 0 18px rgba(108, 75, 255, 0.24), 0 8px 0 rgba(34, 19, 92, 0.8);
+  position: relative;
+  overflow: hidden;
 }
 
 .growth-mini-card .feature-title {
@@ -853,6 +899,33 @@ body:has(.neon-theme) .button.ghost.small {
 
 .growth-mini-card .feature-emoji {
   animation: glowFloat 2.2s ease-in-out infinite;
+}
+
+.growth-mini-card::after {
+  content: "";
+  position: absolute;
+  left: 16%;
+  right: 16%;
+  bottom: -14px;
+  height: 22px;
+  filter: blur(8px);
+  opacity: 0.55;
+}
+
+.growth-grid .growth-mini-card:nth-child(1)::after {
+  background: #ff6ec7;
+}
+
+.growth-grid .growth-mini-card:nth-child(2)::after {
+  background: #ffd84d;
+}
+
+.growth-grid .growth-mini-card:nth-child(3)::after {
+  background: #3ee8ff;
+}
+
+.growth-grid .growth-mini-card:nth-child(4)::after {
+  background: #44e1a0;
 }
 
 .auth-cover-card {
@@ -875,6 +948,16 @@ body:has(.neon-theme) .button.ghost.small {
 .cta-primary:hover {
   transform: translateY(-2px) scale(1.02);
   box-shadow: 0 8px 0 #d9166e, 0 0 24px rgba(255, 46, 136, 0.6);
+}
+
+.neon-theme .button.secondary {
+  background: linear-gradient(120deg, #3a63ff, #6c4bff);
+  box-shadow: 0 7px 0 #2d47cb, 0 0 14px rgba(62, 232, 255, 0.35);
+}
+
+.neon-theme .button.secondary:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 0 #2d47cb, 0 0 22px rgba(62, 232, 255, 0.58);
 }
 
 .text-switch-link {
