@@ -20,11 +20,38 @@ type Metrics = {
   hourly: Array<{ hour: string; count: number }>;
 };
 
+type PilotApplication = {
+  id: string;
+  created_at: string;
+  name: string;
+  role: string;
+  email: string;
+  school: string;
+  plan: string;
+  status: string;
+  ai_summary: string;
+};
+
+type PilotApplicationsResult = {
+  rows: PilotApplication[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+};
+
 export default function AdminPage() {
   const [lang] = useState<Language>("en");
   const t = ui(lang);
   const [metrics, setMetrics] = useState<Metrics | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [apps, setApps] = useState<PilotApplicationsResult | null>(null);
+  const [appsLoading, setAppsLoading] = useState(false);
+  const [appsError, setAppsError] = useState<string | null>(null);
+  const [appsPage, setAppsPage] = useState(1);
+  const [appsPageSize, setAppsPageSize] = useState(20);
+  const [appsStatus, setAppsStatus] = useState("ALL");
+  const [appsQuery, setAppsQuery] = useState("");
 
   useEffect(() => {
     fetch("/api/admin/metrics")
@@ -35,6 +62,26 @@ export default function AdminPage() {
       })
       .catch(() => setError("Admin only."));
   }, []);
+
+  useEffect(() => {
+    setAppsLoading(true);
+    setAppsError(null);
+    const params = new URLSearchParams({
+      page: String(appsPage),
+      pageSize: String(appsPageSize),
+      status: appsStatus
+    });
+    if (appsQuery.trim()) params.set("q", appsQuery.trim());
+
+    fetch(`/api/admin/pilot-applications?${params.toString()}`)
+      .then(async (res) => {
+        if (!res.ok) throw new Error("failed");
+        const data = (await res.json()) as PilotApplicationsResult;
+        setApps(data);
+      })
+      .catch(() => setAppsError("Failed to load pilot applications."))
+      .finally(() => setAppsLoading(false));
+  }, [appsPage, appsPageSize, appsStatus, appsQuery]);
 
   const max7 = useMemo(
     () => Math.max(1, ...(metrics?.last7Days.map((d) => d.count) || [1])),
@@ -48,6 +95,11 @@ export default function AdminPage() {
     () => Math.max(1, ...(metrics?.hourly.map((d) => d.count) || [1])),
     [metrics]
   );
+  const exportHref = useMemo(() => {
+    const params = new URLSearchParams({ status: appsStatus });
+    if (appsQuery.trim()) params.set("q", appsQuery.trim());
+    return `/api/admin/pilot-applications/export?${params.toString()}`;
+  }, [appsQuery, appsStatus]);
 
   if (error) {
     return (
@@ -208,6 +260,131 @@ export default function AdminPage() {
             </div>
           ))}
         </div>
+      </section>
+
+      <section className="card grid">
+        <div className="admin-section-header">
+          <div>
+            <h2>Pilot Registration Applications</h2>
+            <p>
+              {apps ? `Showing ${apps.rows.length} / ${apps.total} applications` : "Loading..."}
+            </p>
+          </div>
+          <div className="admin-tools">
+            <input
+              className="input"
+              value={appsQuery}
+              onChange={(e) => {
+                setAppsPage(1);
+                setAppsQuery(e.target.value);
+              }}
+              placeholder="Search name / email / school"
+            />
+            <select
+              className="input"
+              value={appsStatus}
+              onChange={(e) => {
+                setAppsPage(1);
+                setAppsStatus(e.target.value);
+              }}
+            >
+              <option value="ALL">All</option>
+              <option value="UNDER_REVIEW">UNDER_REVIEW</option>
+              <option value="APPROVED">APPROVED</option>
+              <option value="REJECTED">REJECTED</option>
+            </select>
+            <a className="button" href={exportHref}>
+              Export Excel (CSV)
+            </a>
+          </div>
+        </div>
+
+        {appsError && <div className="error-banner">{appsError}</div>}
+        {appsLoading && <div className="badge">Loading applications...</div>}
+
+        {!appsLoading && apps && (
+          <>
+            <div className="admin-table-wrap">
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>Submitted</th>
+                    <th>Name</th>
+                    <th>Role</th>
+                    <th>Email</th>
+                    <th>School</th>
+                    <th>Plan</th>
+                    <th>Status</th>
+                    <th>AI Summary</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {apps.rows.map((row) => (
+                    <tr key={row.id}>
+                      <td>{new Date(row.created_at).toISOString().replace("T", " ").slice(0, 19)}</td>
+                      <td>{row.name}</td>
+                      <td>{row.role}</td>
+                      <td>{row.email}</td>
+                      <td>{row.school}</td>
+                      <td>{row.plan}</td>
+                      <td>
+                        <span className={`status-pill ${row.status.toLowerCase()}`}>{row.status}</span>
+                      </td>
+                      <td>
+                        <span className="summary-clamp" title={row.ai_summary}>
+                          {row.ai_summary}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                  {apps.rows.length === 0 && (
+                    <tr>
+                      <td colSpan={8}>No applications found.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="admin-pagination">
+              <div className="admin-page-size">
+                <label htmlFor="page-size">Rows:</label>
+                <select
+                  id="page-size"
+                  className="input"
+                  value={appsPageSize}
+                  onChange={(e) => {
+                    setAppsPage(1);
+                    setAppsPageSize(Number(e.target.value));
+                  }}
+                >
+                  <option value={20}>20</option>
+                  <option value={50}>50</option>
+                  <option value={100}>100</option>
+                </select>
+              </div>
+              <div className="admin-page-nav">
+                <button
+                  className="button ghost"
+                  onClick={() => setAppsPage((p) => Math.max(1, p - 1))}
+                  disabled={apps.page <= 1}
+                >
+                  Prev
+                </button>
+                <span>
+                  Page {apps.page} / {apps.totalPages}
+                </span>
+                <button
+                  className="button ghost"
+                  onClick={() => setAppsPage((p) => Math.min(apps.totalPages, p + 1))}
+                  disabled={apps.page >= apps.totalPages}
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          </>
+        )}
       </section>
     </main>
   );

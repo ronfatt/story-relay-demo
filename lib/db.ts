@@ -58,6 +58,20 @@ export async function initDb() {
     );
   `;
 
+  await sql`
+    CREATE TABLE IF NOT EXISTS pilot_registrations (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      role TEXT NOT NULL,
+      email TEXT NOT NULL,
+      school TEXT NOT NULL,
+      plan TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'UNDER_REVIEW',
+      ai_summary TEXT NOT NULL DEFAULT '',
+      created_at TIMESTAMP NOT NULL
+    );
+  `;
+
   await sql`ALTER TABLE stories ADD COLUMN IF NOT EXISTS score_json TEXT;`;
   await sql`ALTER TABLE stories ADD COLUMN IF NOT EXISTS feedback_json TEXT;`;
   await sql`ALTER TABLE stories ADD COLUMN IF NOT EXISTS suggested_vocab_json TEXT;`;
