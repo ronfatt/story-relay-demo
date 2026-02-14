@@ -133,6 +133,7 @@ export default function PlayClient({
   const [totalStars, setTotalStars] = useState(0);
   const t = ui(lang);
   const bonusReady = userLine.trim().length > 0;
+  const hasPresetTheme = Boolean(initialTheme && themes.some((x) => x.name === initialTheme));
 
   useEffect(() => {
     setRoundData(null);
@@ -218,49 +219,91 @@ export default function PlayClient({
         <h2>{t.letsStart}</h2>
         {error && <div className="error-banner">{error}</div>}
         <div className="grid">
-          <div className="section-title sectionTitle">{t.language}</div>
-          <div className="choice-grid">
-            {(["en", "zh", "ms"] as Language[]).map((code) => (
-              <button
-                key={code}
-                className={`theme-card optionCard langOption ${lang === code ? "selected" : ""}`}
-                onClick={() => setLang(code)}
-                type="button"
-              >
-                <div className="theme-emoji">🌐</div>
-                <div className="theme-name">{LANG_LABELS[code]}</div>
-                <div className="theme-subtitle">{code.toUpperCase()}</div>
-              </button>
-            ))}
-          </div>
+          {!hasPresetTheme && (
+            <>
+              <div className="section-title sectionTitle">{t.language}</div>
+              <div className="choice-grid">
+                {(["en", "zh", "ms"] as Language[]).map((code) => (
+                  <button
+                    key={code}
+                    className={`theme-card optionCard langOption ${lang === code ? "selected" : ""}`}
+                    onClick={() => setLang(code)}
+                    type="button"
+                  >
+                    <div className="theme-emoji">🌐</div>
+                    <div className="theme-name">{LANG_LABELS[code]}</div>
+                    <div className="theme-subtitle">{code.toUpperCase()}</div>
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
         </div>
         <div className="grid">
-          <div className="section-title sectionTitle">{t.pickWorld}</div>
-          <div className="choice-grid">
-            {themes.map((item) => {
-              const locked = totalStars < item.unlock;
-              return (
-              <button
-                key={item.name}
-                className={`theme-card optionCard worldCard ${theme === item.name ? "selected" : ""} ${
-                  locked ? "locked" : ""
-                }`}
-                onClick={() => !locked && setTheme(item.name)}
-                type="button"
-              >
-                <div className="theme-emoji">{themeEmoji(item.name)}</div>
-                <div className="theme-name">{item.name}</div>
-                <div className="theme-subtitle">
-                  {themeDescriptions[lang]?.[item.name] || "Tap to explore"}
-                </div>
-                {locked && (
-                  <div className="theme-lock unlockPill">
-                    {t.locked} · {t.unlockNext} {item.unlock} ⭐
+          {hasPresetTheme ? (
+            <>
+              <div className="section-title sectionTitle">
+                {lang === "zh" ? "你选择的世界" : lang === "ms" ? "Dunia Pilihan Anda" : "Your Chosen World"}
+              </div>
+              {(() => {
+                const coverSlug = theme.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+                return (
+                  <div className="theme-card optionCard worldCard selected worldSingleCard">
+                    <div className="world-cover">
+                      <img
+                        className="world-cover-img"
+                        src={`/worlds/${coverSlug}.png`}
+                        alt={`${theme} cover`}
+                      />
+                      <span className="world-cover-emoji">{themeEmoji(theme)}</span>
+                    </div>
+                    <div className="theme-name">{theme}</div>
+                    <div className="theme-subtitle">
+                      {themeDescriptions[lang]?.[theme] || "Tap to explore"}
+                    </div>
                   </div>
-                )}
-              </button>
-            )})}
-          </div>
+                );
+              })()}
+            </>
+          ) : (
+            <>
+              <div className="section-title sectionTitle">{t.pickWorld}</div>
+              <div className="choice-grid">
+                {themes.map((item) => {
+                  const locked = totalStars < item.unlock;
+                  const coverSlug = item.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+                  return (
+                    <button
+                      key={item.name}
+                      className={`theme-card optionCard worldCard ${theme === item.name ? "selected" : ""} ${
+                        locked ? "locked" : ""
+                      }`}
+                      onClick={() => !locked && setTheme(item.name)}
+                      type="button"
+                    >
+                      <div className="world-cover">
+                        <img
+                          className="world-cover-img"
+                          src={`/worlds/${coverSlug}.png`}
+                          alt={`${item.name} cover`}
+                        />
+                        <span className="world-cover-emoji">{themeEmoji(item.name)}</span>
+                      </div>
+                      <div className="theme-name">{item.name}</div>
+                      <div className="theme-subtitle">
+                        {themeDescriptions[lang]?.[item.name] || "Tap to explore"}
+                      </div>
+                      {locked && (
+                        <div className="theme-lock unlockPill">
+                          {t.locked} · {t.unlockNext} {item.unlock} ⭐
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </>
+          )}
         </div>
         <div className="grid">
           <div className="section-title sectionTitle">{t.heroName}</div>
