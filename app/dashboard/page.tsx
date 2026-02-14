@@ -147,6 +147,12 @@ export default function DashboardPage() {
                 title={theme.preview}
               >
                 <div className="world-cover">
+                  <img
+                    className="world-cover-img"
+                    src={`/worlds/${coverSlug}.png`}
+                    alt={`${theme.name} cover`}
+                    loading="lazy"
+                  />
                   <span className="world-cover-emoji">{theme.emoji}</span>
                   {locked && <span className="locked-pill">LOCKED</span>}
                 </div>

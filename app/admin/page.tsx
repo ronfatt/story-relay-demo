@@ -52,6 +52,8 @@ export default function AdminPage() {
   const [appsPageSize, setAppsPageSize] = useState(20);
   const [appsStatus, setAppsStatus] = useState("ALL");
   const [appsQuery, setAppsQuery] = useState("");
+  const [coverLoading, setCoverLoading] = useState(false);
+  const [coverMessage, setCoverMessage] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/admin/metrics")
@@ -100,6 +102,27 @@ export default function AdminPage() {
     if (appsQuery.trim()) params.set("q", appsQuery.trim());
     return `/api/admin/pilot-applications/export?${params.toString()}`;
   }, [appsQuery, appsStatus]);
+
+  async function generateCovers(force: boolean) {
+    setCoverLoading(true);
+    setCoverMessage(null);
+    try {
+      const res = await fetch("/api/admin/world-covers/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ force })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || "Generate failed");
+      setCoverMessage(
+        `World covers done: generated ${data.generated}, skipped ${data.skipped}, errors ${data.errors}`
+      );
+    } catch (e) {
+      setCoverMessage(e instanceof Error ? e.message : "Generate failed");
+    } finally {
+      setCoverLoading(false);
+    }
+  }
 
   if (error) {
     return (
@@ -260,6 +283,34 @@ export default function AdminPage() {
             </div>
           ))}
         </div>
+      </section>
+
+      <section className="card grid">
+        <div className="admin-section-header">
+          <div>
+            <h2>World Cover Generator</h2>
+            <p>Generate AI cover images for world cards.</p>
+          </div>
+          <div className="admin-tools admin-tools-covers">
+            <button
+              className="button"
+              disabled={coverLoading}
+              onClick={() => generateCovers(false)}
+              type="button"
+            >
+              {coverLoading ? "Generating..." : "Generate Missing"}
+            </button>
+            <button
+              className="button ghost"
+              disabled={coverLoading}
+              onClick={() => generateCovers(true)}
+              type="button"
+            >
+              Force Regenerate
+            </button>
+          </div>
+        </div>
+        {coverMessage && <div className="badge">{coverMessage}</div>}
       </section>
 
       <section className="card grid">

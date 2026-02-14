@@ -41,7 +41,7 @@ export default function StoryDetailClient() {
     return <div className="badge">{t.gettingReady}</div>;
   }
   return (
-    <section className="card grid">
+    <section className="card grid story-detail-card">
       <h2>{story.title}</h2>
       <div className="badge">
         {story.theme} · {story.difficulty} · ⭐ {story.total_stars}
