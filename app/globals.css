@@ -2911,6 +2911,28 @@ body:has(main.play-focused) .tagline {
   transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
 }
 
+.world-hub-card {
+  position: relative;
+  padding-top: 38px;
+}
+
+.world-hub-ai-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(62, 232, 255, 0.45);
+  background: rgba(62, 232, 255, 0.12);
+  box-shadow: 0 0 12px rgba(62, 232, 255, 0.16);
+}
+
 .world-hub-card:hover,
 .world-child-card:hover {
   transform: scale(1.02);

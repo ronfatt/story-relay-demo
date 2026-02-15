@@ -16,6 +16,15 @@ const MAIN_WORLDS = Object.entries(WORLD_DATA).map(([slug, world]) => ({
   ...world
 }));
 
+const AI_SUGGEST_TAGS: Record<string, string> = {
+  "magic-forest": "Beginner Friendly",
+  "ocean-quest": "Adventure & Vocabulary",
+  "space-school": "STEM Theme",
+  "dino-valley": "Fun & Easy",
+  "marvel-world": "Hero Story",
+  "kpop-demon-hunter-world": "Epic Action"
+};
+
 export default function WorldHubClient() {
   const [lang] = useState<Language>("en");
   const [user, setUser] = useState<{ id: number; email: string } | null>(null);
@@ -82,6 +91,9 @@ export default function WorldHubClient() {
             const progress = worldProgress[world.slug] || 0;
             return (
               <Link key={world.slug} href={`/world/${world.slug}`} className="world-hub-card">
+                <span className="world-hub-ai-badge">
+                  AI Suggests: {AI_SUGGEST_TAGS[world.slug] || "Recommended"}
+                </span>
                 <div className="world-hub-cover">
                   <img
                     className="world-hub-cover-img"
