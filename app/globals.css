@@ -2843,12 +2843,12 @@ body:has(main.play-focused) .tagline {
   margin: 0;
   font-size: clamp(28px, 4vw, 40px);
   line-height: 1.1;
-  color: rgba(255, 255, 255, 0.95);
+  color: #1c1740;
 }
 
 .world-detail-description {
   margin: 8px 0 0;
-  color: rgba(255, 255, 255, 0.76);
+  color: #4f4a78;
 }
 
 .world-detail-grid {
@@ -2877,13 +2877,13 @@ body:has(main.play-focused) .tagline {
 
 .world-child-title {
   margin: 0;
-  color: rgba(255, 255, 255, 0.94);
+  color: #221d49;
   font-size: 20px;
 }
 
 .world-child-description {
   margin: 0;
-  color: rgba(255, 255, 255, 0.72);
+  color: #5b5683;
   font-size: 14px;
 }
 
@@ -2899,9 +2899,9 @@ body:has(main.play-focused) .tagline {
   border-radius: 999px;
   font-size: 12px;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.88);
-  background: rgba(62, 232, 255, 0.12);
-  border: 1px solid rgba(62, 232, 255, 0.35);
+  color: #2a2558;
+  background: rgba(62, 232, 255, 0.2);
+  border: 1px solid rgba(62, 232, 255, 0.48);
 }
 
 .world-child-enter {
