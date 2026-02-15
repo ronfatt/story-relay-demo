@@ -68,10 +68,6 @@ export default function WorldHubClient() {
   return (
     <main className="grid dashboard-neon world-hub-page">
       <section className="card sectionCard grid world-hub-shell">
-        <div className="breadcrumbs" aria-label="Breadcrumb">
-          <span className="crumb current">World Hub</span>
-        </div>
-
         <div className="world-hub-head">
           <div>
             <div className="hero-kicker">STORYBAH</div>
@@ -109,6 +105,12 @@ export default function WorldHubClient() {
           })}
         </div>
       </section>
+
+      <footer className="world-hub-footer">
+        <Link className="world-hub-footer-link" href="/stories">
+          My Stories
+        </Link>
+      </footer>
     </main>
   );
 }
