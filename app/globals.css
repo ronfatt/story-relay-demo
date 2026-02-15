@@ -2820,14 +2820,129 @@ body:has(main.play-focused) .tagline {
   color: rgba(255, 255, 255, 0.95);
 }
 
+.world-detail-shell {
+  gap: 20px;
+}
+
+.world-detail-head {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 18px;
+  align-items: center;
+}
+
+.world-detail-cover {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 16px;
+  border: 1px solid rgba(62, 232, 255, 0.35);
+}
+
+.world-detail-title {
+  margin: 0;
+  font-size: clamp(28px, 4vw, 40px);
+  line-height: 1.1;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.world-detail-description {
+  margin: 8px 0 0;
+  color: rgba(255, 255, 255, 0.76);
+}
+
+.world-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.world-child-card {
+  display: grid;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(108, 75, 255, 0.35);
+  border-radius: 18px;
+  padding: 12px;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.3);
+}
+
+.world-child-cover {
+  width: 100%;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid rgba(62, 232, 255, 0.28);
+}
+
+.world-child-title {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 20px;
+}
+
+.world-child-description {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 14px;
+}
+
+.world-child-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.world-child-pill {
+  display: inline-flex;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.88);
+  background: rgba(62, 232, 255, 0.12);
+  border: 1px solid rgba(62, 232, 255, 0.35);
+}
+
+.world-child-enter {
+  margin-top: auto;
+  text-decoration: none;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 40px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ff2e88, #6c4bff);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #fff;
+  font-weight: 800;
+  box-shadow: 0 0 14px rgba(255, 46, 136, 0.28), 0 0 28px rgba(108, 75, 255, 0.18);
+}
+
+.world-child-enter:hover {
+  transform: translateY(-1px);
+}
+
 @media (max-width: 1024px) {
   .world-hub-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .world-detail-head {
+    grid-template-columns: 1fr;
+  }
+
+  .world-detail-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 700px) {
   .world-hub-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .world-detail-grid {
     grid-template-columns: 1fr;
   }
 }

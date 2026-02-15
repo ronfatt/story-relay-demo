@@ -3,50 +3,17 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { ui, type Language } from "@/lib/i18n";
+import { WORLD_DATA } from "@/lib/world-data";
 
 type SessionHistoryItem = {
   id: string;
   theme: string;
 };
 
-const MAIN_WORLDS = [
-  {
-    name: "Magic Forest",
-    slug: "magic-forest",
-    emoji: "✨",
-    description: "Glowing paths and hidden forest doors."
-  },
-  {
-    name: "Ocean Quest",
-    slug: "ocean-quest",
-    emoji: "🌊",
-    description: "Dive deep for clues and secret pearls."
-  },
-  {
-    name: "Space School",
-    slug: "space-school",
-    emoji: "🚀",
-    description: "Train with robots among stars."
-  },
-  {
-    name: "Dino Valley",
-    slug: "dino-valley",
-    emoji: "🦕",
-    description: "Explore giant trails and ancient signs."
-  },
-  {
-    name: "Marvel World",
-    slug: "marvel-world",
-    emoji: "🦸",
-    description: "Mission alarms, masks, and city action."
-  },
-  {
-    name: "Kpop Demon Hunter World",
-    slug: "kpop-demon-hunter-world",
-    emoji: "🎤",
-    description: "Neon stages and shadow challenges."
-  }
-];
+const MAIN_WORLDS = Object.entries(WORLD_DATA).map(([slug, world]) => ({
+  slug,
+  ...world
+}));
 
 export default function DashboardPage() {
   const [lang] = useState<Language>("en");
@@ -74,7 +41,7 @@ export default function DashboardPage() {
 
   const worldProgress = useMemo(() => {
     return MAIN_WORLDS.reduce<Record<string, number>>((acc, world) => {
-      const plays = history.filter((row) => row.theme === world.name).length;
+      const plays = history.filter((row) => row.theme === world.title).length;
       acc[world.slug] = Math.min(100, plays * 20);
       return acc;
     }, {});
@@ -114,15 +81,14 @@ export default function DashboardPage() {
             return (
               <Link key={world.slug} href={`/world/${world.slug}`} className="world-hub-card">
                 <div className="world-hub-cover">
-                  <img
-                    className="world-hub-cover-img"
-                    src={`/worlds/${world.slug}.png`}
-                    alt={`${world.name} cover`}
-                    loading="lazy"
-                  />
-                  <span className="world-hub-emoji">{world.emoji}</span>
+                    <img
+                      className="world-hub-cover-img"
+                      src={world.thumbnail}
+                      alt={`${world.title} cover`}
+                      loading="lazy"
+                    />
                 </div>
-                <div className="world-hub-name">{world.name}</div>
+                <div className="world-hub-name">{world.title}</div>
                 <div className="world-hub-desc">{world.description}</div>
                 <div className="world-hub-progress-wrap">
                   <div className="world-hub-progress-head">
