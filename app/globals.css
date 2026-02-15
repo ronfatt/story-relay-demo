@@ -2705,6 +2705,93 @@ body:has(main.play-focused) .tagline {
   gap: 18px;
 }
 
+.ai-live-panel {
+  border-radius: 24px;
+  border: 1px solid rgba(62, 232, 255, 0.35);
+  background: linear-gradient(180deg, rgba(22, 14, 54, 0.92), rgba(15, 9, 38, 0.92));
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.5), 0 0 18px rgba(255, 46, 136, 0.16);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 14px;
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.ai-live-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  border: 1px solid rgba(62, 232, 255, 0.45);
+  background: rgba(62, 232, 255, 0.12);
+  display: grid;
+  place-items: center;
+  font-size: 26px;
+  box-shadow: 0 0 14px rgba(62, 232, 255, 0.2);
+}
+
+.ai-live-center {
+  display: grid;
+  gap: 8px;
+}
+
+.ai-live-label {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.74);
+}
+
+.ai-live-tip {
+  font-size: 15px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.ai-live-input-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+}
+
+.ai-live-input {
+  width: 100%;
+  border-radius: 999px;
+  border: 1px solid rgba(108, 75, 255, 0.45);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.95);
+  min-height: 40px;
+  padding: 0 14px;
+}
+
+.ai-live-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.ai-live-input:focus {
+  outline: none;
+  border-color: rgba(62, 232, 255, 0.55);
+  box-shadow: 0 0 14px rgba(62, 232, 255, 0.18);
+}
+
+.ai-live-cta {
+  min-height: 40px;
+  border-radius: 999px;
+  border: 1px solid rgba(62, 232, 255, 0.45);
+  background: rgba(62, 232, 255, 0.1);
+  color: #fff;
+  font-weight: 800;
+  padding: 0 18px;
+  box-shadow: 0 0 14px rgba(62, 232, 255, 0.18);
+  cursor: pointer;
+}
+
+.ai-live-cta:hover {
+  box-shadow: 0 0 22px rgba(62, 232, 255, 0.25);
+}
+
 .world-hub-footer {
   display: flex;
   justify-content: center;
@@ -2727,6 +2814,39 @@ body:has(main.play-focused) .tagline {
 
 .world-hub-footer-link:hover {
   box-shadow: 0 0 22px rgba(62, 232, 255, 0.25);
+}
+
+.ai-pick-page {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.ai-pick-card {
+  gap: 10px;
+}
+
+.ai-pick-title {
+  margin: 0;
+}
+
+.ai-pick-prompt {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.ai-pick-result {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+@media (max-width: 700px) {
+  .ai-live-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .ai-live-input-row {
+    grid-template-columns: 1fr;
+  }
 }
 
 .breadcrumbs {

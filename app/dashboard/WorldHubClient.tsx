@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { ui, type Language } from "@/lib/i18n";
 import { WORLD_DATA } from "@/lib/world-data";
+import AILivePanel from "./AILivePanel";
 
 type SessionHistoryItem = {
   id: string;
@@ -67,6 +68,7 @@ export default function WorldHubClient() {
 
   return (
     <main className="grid dashboard-neon world-hub-page">
+      <AILivePanel />
       <section className="card sectionCard grid world-hub-shell">
         <div className="world-hub-head">
           <div>
