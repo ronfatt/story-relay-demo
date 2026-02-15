@@ -994,15 +994,17 @@ export function createOpening(
   theme: string,
   difficulty: Difficulty,
   heroName?: string,
-  lang: Language = "en"
+  lang: Language = "en",
+  branchName?: string
 ) {
   const hero = heroName && heroName.trim().length > 0
     ? heroName.trim()
     : pick(heroByTheme[theme] || heroByTheme["Magic Forest"], 0);
-  const location = pick(getLocationPool(theme, difficulty, lang), 1);
+  const branchContext = getBranchContext(branchName, lang);
+  const location = branchContext.locationHint || pick(getLocationPool(theme, difficulty, lang), 1);
   const moodPool = moodWordsByLang[lang]?.[difficulty] || moodWords[difficulty];
-  const mood = pick(moodPool, 2);
-  const conflict = pick(getConflictPool(theme, difficulty, lang), 3);
+  const mood = branchContext.moodHint || pick(moodPool, 2);
+  const conflict = branchContext.conflictHint || pick(getConflictPool(theme, difficulty, lang), 3);
 
   const themeLabel = themeLabelsByLang[lang]?.[theme] || theme;
   let opening = buildOpeningByDifficulty(
@@ -1026,12 +1028,54 @@ export function createOpening(
       .replace("{theme}", themeLabel);
   }
 
+  if (branchContext.openingHint) {
+    opening = `${opening}\n\n${branchContext.openingHint}`;
+  }
+
   return {
     opening: clampByDifficulty(opening, difficulty),
     hero,
     location,
     mood,
     conflict
+  };
+}
+
+function getBranchContext(branchName: string | undefined, lang: Language) {
+  if (!branchName) {
+    return {
+      locationHint: "",
+      moodHint: "",
+      conflictHint: "",
+      openingHint: ""
+    };
+  }
+  const label = branchName
+    .split("-")
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+  if (lang === "zh") {
+    return {
+      locationHint: `${label} 路线`,
+      moodHint: "专注",
+      conflictHint: `完成 ${label} 挑战`,
+      openingHint: `${label} 分支已开启，新的线索正在前方等待。`
+    };
+  }
+  if (lang === "ms") {
+    return {
+      locationHint: `Laluan ${label}`,
+      moodHint: "fokus",
+      conflictHint: `selesaikan cabaran ${label}`,
+      openingHint: `Laluan ${label} kini aktif. Petunjuk baharu menanti di hadapan.`
+    };
+  }
+  return {
+    locationHint: `${label} Path`,
+    moodHint: "focused",
+    conflictHint: `complete the ${label} challenge`,
+    openingHint: `The ${label} branch is now active. New clues are waiting ahead.`
   };
 }
 

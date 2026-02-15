@@ -42,6 +42,7 @@ export async function generateStoryRound(opts: {
   lang: Language;
   difficulty: Difficulty;
   theme: string;
+  branchName?: string;
   heroName?: string;
   storySoFar?: string;
   chosenAction?: string;
@@ -168,6 +169,7 @@ function buildUserPrompt(opts: {
   lang: Language;
   difficulty: Difficulty;
   theme: string;
+  branchName?: string;
   heroName?: string;
   storySoFar?: string;
   chosenAction?: string;
@@ -177,6 +179,7 @@ function buildUserPrompt(opts: {
 }) {
   const lines: string[] = [];
   lines.push(`Theme: ${opts.theme}.`);
+  if (opts.branchName) lines.push(`Branch: ${opts.branchName}.`);
   lines.push(`Difficulty: ${opts.difficulty}.`);
   lines.push(`Round: ${opts.round} of ${opts.maxRounds}.`);
   if (opts.heroName) lines.push(`Hero name: ${opts.heroName}.`);

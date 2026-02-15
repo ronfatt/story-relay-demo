@@ -422,6 +422,50 @@ body {
   color: rgba(255, 255, 255, 0.92);
 }
 
+.setupCard h2 {
+  margin: 0;
+  font-size: clamp(30px, 5vw, 44px);
+  line-height: 1.05;
+}
+
+.setupCard .branch-headline {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(62, 232, 255, 0.28);
+  border-radius: 18px;
+  padding: 14px;
+}
+
+.setupCard .branch-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(108, 75, 255, 0.35);
+  box-shadow: 0 0 14px rgba(108, 75, 255, 0.14);
+}
+
+.setupCard .branch-copy {
+  display: grid;
+  gap: 4px;
+}
+
+.setupCard .branch-title {
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.setupCard .branch-description {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 13px;
+}
+
 .setupCard .theme-subtitle {
   color: rgba(255, 255, 255, 0.6);
 }
@@ -473,6 +517,21 @@ body {
 
 .setupCard .worldSingleCard {
   max-width: 420px;
+}
+
+.setupCard .world-branch-tag {
+  margin-top: 8px;
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  width: fit-content;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.88);
+  background: rgba(62, 232, 255, 0.12);
+  border: 1px solid rgba(62, 232, 255, 0.35);
 }
 
 .setupCard .world-cover {
@@ -1316,6 +1375,10 @@ body:has(.neon-theme) .button.ghost.small {
   color: #f5f7ff;
   border-color: rgba(108, 75, 255, 0.8);
   box-shadow: 0 6px 0 rgba(53, 30, 130, 0.8);
+}
+
+body:has(main.play-focused) .tagline {
+  display: none;
 }
 
 .neon-theme .card {

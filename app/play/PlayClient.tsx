@@ -107,25 +107,32 @@ type RoundPayload = {
 type PlayClientProps = {
   initialName?: string;
   initialTheme?: string;
+  initialWorld?: string;
+  initialBranch?: string;
   initialLang?: Language;
 };
 
 export default function PlayClient({
   initialName = "",
   initialTheme,
+  initialWorld = "",
+  initialBranch = "",
   initialLang = "en"
 }: PlayClientProps) {
   const router = useRouter();
+  const initialThemeValue = normalizeTheme(initialWorld || initialTheme || "");
+  const initialBranchValue = normalizeBranch(initialBranch);
   const [lang, setLang] = useState<Language>(initialLang);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [roundData, setRoundData] = useState<RoundPayload | null>(null);
   const [theme, setTheme] = useState(
-    initialTheme && themes.some((t) => t.name === initialTheme)
-      ? initialTheme
+    initialThemeValue
+      ? initialThemeValue
       : themes[0].name
   );
+  const [branchName] = useState(initialBranchValue);
   const [difficulty, setDifficulty] = useState(difficulties[0]);
   const [userLine, setUserLine] = useState("");
   const [heroName, setHeroName] = useState(initialName);
@@ -133,7 +140,10 @@ export default function PlayClient({
   const [totalStars, setTotalStars] = useState(0);
   const t = ui(lang);
   const bonusReady = userLine.trim().length > 0;
-  const hasPresetTheme = Boolean(initialTheme && themes.some((x) => x.name === initialTheme));
+  const hasPresetTheme = Boolean(initialThemeValue);
+  const branchLabel = formatBranchLabel(branchName);
+  const branchIcon = branchEmoji(branchName);
+  const branchDescription = getBranchDescription(lang, branchName, theme);
 
   useEffect(() => {
     setRoundData(null);
@@ -154,7 +164,13 @@ export default function PlayClient({
       const res = await fetch("/api/session/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ theme, difficulty, heroName, lang })
+        body: JSON.stringify({
+          worldName: theme,
+          branchName,
+          difficulty,
+          heroName,
+          lang
+        })
       });
       const data = await res.json();
       if (!res.ok || data.error) {
@@ -214,9 +230,20 @@ export default function PlayClient({
   }
 
   return (
-    <main className="grid">
+    <main className={`grid ${hasPresetTheme ? "play-focused" : ""}`}>
       <section className="card grid setupCard">
-        <h2>{t.letsStart}</h2>
+        <h2>{branchName ? `${theme} – ${branchLabel}` : t.letsStart}</h2>
+        {branchName && (
+          <div className="branch-headline">
+            <div className="branch-icon" aria-hidden="true">
+              {branchIcon}
+            </div>
+            <div className="branch-copy">
+              <div className="branch-title">{theme} – {branchLabel}</div>
+              <div className="branch-description">{branchDescription}</div>
+            </div>
+          </div>
+        )}
         {error && <div className="error-banner">{error}</div>}
         <div className="grid">
           {!hasPresetTheme && (
@@ -261,6 +288,11 @@ export default function PlayClient({
                     <div className="theme-subtitle">
                       {themeDescriptions[lang]?.[theme] || "Tap to explore"}
                     </div>
+                    {branchName && (
+                      <div className="world-branch-tag">
+                        {branchIcon} {branchLabel}
+                      </div>
+                    )}
                   </div>
                 );
               })()}
@@ -478,4 +510,49 @@ function ConfettiBurst({ burstKey }: { burstKey: number }) {
       ))}
     </div>
   );
+}
+
+function normalizeTheme(value: string) {
+  if (!value) return "";
+  const normalized = value.trim().toLowerCase().replace(/[_\s]+/g, "-");
+  const bySlug = themes.find(
+    (item) => item.name.toLowerCase().replace(/[^a-z0-9]+/g, "-") === normalized
+  );
+  if (bySlug) return bySlug.name;
+  const byName = themes.find((item) => item.name.toLowerCase() === value.trim().toLowerCase());
+  return byName?.name || "";
+}
+
+function normalizeBranch(value: string) {
+  return value.trim().replace(/[_]+/g, "-");
+}
+
+function formatBranchLabel(value: string) {
+  if (!value) return "Main Path";
+  return value
+    .split("-")
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+}
+
+function branchEmoji(value: string) {
+  const lowered = value.toLowerCase();
+  if (!lowered) return "🧭";
+  if (lowered.includes("shadow") || lowered.includes("demon")) return "🌒";
+  if (lowered.includes("hero")) return "🦸";
+  if (lowered.includes("ocean") || lowered.includes("wave")) return "🌊";
+  if (lowered.includes("space") || lowered.includes("star")) return "🚀";
+  return "🧭";
+}
+
+function getBranchDescription(lang: Language, branchName: string, worldName: string) {
+  const branch = formatBranchLabel(branchName || "Main Path");
+  if (lang === "zh") {
+    return `你正在进入 ${worldName} 的「${branch}」分支。你的选择会影响故事走向。`;
+  }
+  if (lang === "ms") {
+    return `Anda memasuki cabang "${branch}" untuk ${worldName}. Pilihan anda akan ubah cerita.`;
+  }
+  return `You are entering the ${branch} branch in ${worldName}. Your choices will shape this story path.`;
 }

@@ -8,7 +8,9 @@ export const runtime = "nodejs";
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const theme = body.theme ?? "Magic Forest";
+  const worldName = body.worldName ?? body.theme ?? "Magic Forest";
+  const theme = worldName;
+  const branchName = typeof body.branchName === "string" ? body.branchName : "";
   const difficulty = (body.difficulty ?? "Beginner") as Difficulty;
   let heroName = (body.heroName ?? "") as string;
   const lang = (body.lang ?? "en") as "en" | "zh" | "ms";
@@ -33,6 +35,7 @@ export async function POST(req: Request) {
       lang,
       difficulty,
       theme,
+      branchName,
       heroName,
       round,
       maxRounds
@@ -43,7 +46,7 @@ export async function POST(req: Request) {
     targetWords = ai.target_words;
     scene = ai.scene;
   } else {
-    const opening = createOpening(theme, difficulty, heroName, lang);
+    const opening = createOpening(theme, difficulty, heroName, lang, branchName);
     story = opening.opening;
     const roundData = makeRound(
       theme,
@@ -66,6 +69,7 @@ export async function POST(req: Request) {
     theme,
     difficulty,
     lang,
+    branchName,
     round,
     story,
     targetWords,

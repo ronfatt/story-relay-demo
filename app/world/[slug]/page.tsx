@@ -17,5 +17,5 @@ export default async function WorldPage({ params }: { params: Promise<{ slug: st
   if (!theme) {
     redirect("/dashboard");
   }
-  redirect(`/play?theme=${encodeURIComponent(theme)}&lang=en&difficulty=Beginner`);
+  redirect(`/play?world=${encodeURIComponent(theme)}&lang=en&difficulty=Beginner`);
 }

@@ -11,6 +11,7 @@ export type Session = {
   theme: string;
   difficulty: "Beginner" | "Intermediate" | "Advanced";
   lang: "en" | "zh" | "ms";
+  branchName?: string;
   round: number;
   story: string;
   targetWords: string[];

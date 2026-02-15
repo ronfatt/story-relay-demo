@@ -63,6 +63,7 @@ export async function POST(req: Request) {
       lang: session.lang,
       difficulty: session.difficulty,
       theme: session.theme,
+      branchName: session.branchName,
       heroName: session.hero,
       storySoFar: session.story,
       chosenAction: choiceText,
