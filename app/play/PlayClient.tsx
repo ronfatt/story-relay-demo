@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ui, type Language, LANG_LABELS } from "@/lib/i18n";
@@ -232,6 +233,26 @@ export default function PlayClient({
   return (
     <main className={`grid ${hasPresetTheme ? "play-focused" : ""}`}>
       <section className="card grid setupCard">
+        <div className="breadcrumbs" aria-label="Breadcrumb">
+          <Link className="crumb" href="/dashboard/worlds">
+            World Hub
+          </Link>
+          {hasPresetTheme ? (
+            <>
+              <span className="crumb-sep">&gt;</span>
+              <Link className="crumb" href={`/world/${themeToSlug(theme)}`}>
+                {theme}
+              </Link>
+            </>
+          ) : null}
+          {hasPresetTheme && branchName ? (
+            <>
+              <span className="crumb-sep">&gt;</span>
+              <span className="crumb current">{branchLabel}</span>
+            </>
+          ) : null}
+        </div>
+
         <h2>{branchName ? `${theme} – ${branchLabel}` : t.letsStart}</h2>
         {branchName && (
           <div className="branch-headline">
@@ -521,6 +542,10 @@ function normalizeTheme(value: string) {
   if (bySlug) return bySlug.name;
   const byName = themes.find((item) => item.name.toLowerCase() === value.trim().toLowerCase());
   return byName?.name || "";
+}
+
+function themeToSlug(value: string) {
+  return value.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-");
 }
 
 function normalizeBranch(value: string) {

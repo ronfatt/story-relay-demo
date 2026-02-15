@@ -2705,6 +2705,34 @@ body:has(main.play-focused) .tagline {
   gap: 18px;
 }
 
+.breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.crumb {
+  color: rgba(255, 255, 255, 0.88);
+  text-decoration: none;
+}
+
+.crumb:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.crumb.current {
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 700;
+}
+
+.crumb-sep {
+  color: rgba(255, 255, 255, 0.52);
+}
+
 .world-hub-head {
   display: flex;
   justify-content: space-between;
@@ -2877,6 +2905,44 @@ body:has(main.play-focused) .tagline {
   font-size: 20px;
 }
 
+.world-child-card {
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.06)),
+    rgba(255, 255, 255, 0.07);
+}
+
+.world-child-card::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 5px;
+  background: linear-gradient(90deg, transparent, var(--world-neon, #3ee8ff), transparent);
+  box-shadow: 0 0 14px var(--world-neon, #3ee8ff);
+  opacity: 0.95;
+}
+
+.world-child-card.locked {
+  opacity: 0.82;
+  filter: grayscale(0.2);
+}
+
+.lockBadge {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  background: rgba(255, 46, 136, 0.2);
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid rgba(255, 46, 136, 0.36);
+}
+
 .world-child-description {
   margin: 0;
   color: #5b5683;
@@ -2908,6 +2974,11 @@ body:has(main.play-focused) .tagline {
 .world-hub-enter:hover,
 .world-child-enter:hover {
   box-shadow: 0 0 22px rgba(62, 232, 255, 0.25);
+}
+
+.world-child-enter.disabled {
+  opacity: 0.72;
+  cursor: not-allowed;
 }
 
 @media (max-width: 1024px) {
