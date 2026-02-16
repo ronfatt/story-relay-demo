@@ -82,7 +82,7 @@ export default async function WorldPage({ params }: { params: Promise<{ slug: st
                     className="world-child-enter enterButton"
                     href={`/play?world=${encodeURIComponent(slug)}&branch=${encodeURIComponent(
                       childSlug
-                    )}&difficulty=${encodeURIComponent(child.difficulty.toLowerCase())}`}
+                    )}`}
                   >
                     Enter
                   </Link>
