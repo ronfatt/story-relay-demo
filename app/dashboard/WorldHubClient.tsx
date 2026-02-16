@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { ui, type Language } from "@/lib/i18n";
+import { ui } from "@/lib/i18n";
 import { WORLD_DATA } from "@/lib/world-data";
 import AILivePanel from "./AILivePanel";
+import { useLanguage } from "@/lib/language-context";
 
 type SessionHistoryItem = {
   id: string;
@@ -26,7 +27,7 @@ const AI_SUGGEST_TAGS: Record<string, string> = {
 };
 
 export default function WorldHubClient() {
-  const [lang] = useState<Language>("en");
+  const { language: lang } = useLanguage();
   const [user, setUser] = useState<{ id: number; email: string } | null>(null);
   const [history, setHistory] = useState<SessionHistoryItem[]>([]);
   const t = ui(lang);

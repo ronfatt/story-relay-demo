@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ui, type Language, LANG_LABELS } from "@/lib/i18n";
+import { useLanguage } from "@/lib/language-context";
 
 export default function HomePage() {
   const router = useRouter();
-  const [lang, setLang] = useState<Language>("en");
+  const { language: lang, setLanguage } = useLanguage();
   const [authMode, setAuthMode] = useState<"login" | "register">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -100,7 +101,7 @@ export default function HomePage() {
             <button
               key={code}
               className={`theme-card language-choice language-${code} ${lang === code ? "selected" : ""}`}
-              onClick={() => setLang(code)}
+              onClick={() => setLanguage(code)}
               type="button"
             >
               <div className="language-card-top">

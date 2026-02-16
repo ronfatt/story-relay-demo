@@ -10,7 +10,7 @@ export default function PlayPage({
     theme?: string;
     world?: string;
     branch?: string;
-    lang?: "en" | "zh" | "ms";
+    difficulty?: string;
   };
 }) {
   return (
@@ -19,7 +19,7 @@ export default function PlayPage({
       initialTheme={searchParams?.theme ?? ""}
       initialWorld={searchParams?.world ?? ""}
       initialBranch={searchParams?.branch ?? ""}
-      initialLang={(searchParams?.lang as "en" | "zh" | "ms") ?? "en"}
+      initialDifficulty={searchParams?.difficulty ?? ""}
     />
   );
 }

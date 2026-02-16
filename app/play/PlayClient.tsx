@@ -1,89 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ui, type Language, LANG_LABELS } from "@/lib/i18n";
-
-const themes = [
-  { name: "Magic Forest", unlock: 0 },
-  { name: "Space School", unlock: 0 },
-  { name: "Ocean Quest", unlock: 0 },
-  { name: "Dino Valley", unlock: 0 },
-  { name: "Fairy Circus", unlock: 0 },
-  { name: "Pirate Cove", unlock: 0 },
-  { name: "Sky Castle", unlock: 50 },
-  { name: "Robot City", unlock: 50 },
-  { name: "Candy Kingdom", unlock: 50 },
-  { name: "Toy Town", unlock: 50 },
-  { name: "Rainbow Ranch", unlock: 50 },
-  { name: "Jungle Rescue", unlock: 80 },
-  { name: "Ice Mountain", unlock: 80 },
-  { name: "Desert Caravan", unlock: 120 },
-  { name: "Marvel World", unlock: 120 },
-  { name: "DC World", unlock: 120 },
-  { name: "Kpop Demon Hunter World", unlock: 120 }
-];
-const difficulties = ["Beginner", "Intermediate", "Advanced"];
-const themeDescriptions: Record<Language, Record<string, string>> = {
-  en: {
-    "Magic Forest": "Whispering trees and glow trails.",
-    "Space School": "Robots, stars, and secret doors.",
-    "Ocean Quest": "Dolphins, shells, and sea caves.",
-    "Dino Valley": "Friendly giants and hidden paths.",
-    "Fairy Circus": "Tiny wings and a twinkling big top.",
-    "Pirate Cove": "Treasure maps and gentle waves.",
-    "Sky Castle": "Cloud bridges and sky bells.",
-    "Robot City": "Neon lights and helper bots.",
-    "Candy Kingdom": "Sweet streets and sparkle clues.",
-    "Toy Town": "Playful toys and secret switches.",
-    "Rainbow Ranch": "Colorful stables and kind ponies.",
-    "Jungle Rescue": "Drums, vines, and rescue calls.",
-    "Ice Mountain": "Crystal caves and snow clues.",
-    "Desert Caravan": "Golden dunes and oasis secrets.",
-    "Marvel World": "Hero masks and mission alarms.",
-    "DC World": "City lights and brave signals.",
-    "Kpop Demon Hunter World": "Bright stages and hidden shadows."
-  },
-  zh: {
-    "Magic Forest": "会低语的树和发光小路。",
-    "Space School": "机器人、星星、秘密门。",
-    "Ocean Quest": "海豚、贝壳、海底洞。",
-    "Dino Valley": "友善巨兽和隐藏小路。",
-    "Fairy Circus": "小翅膀与闪亮帐篷。",
-    "Pirate Cove": "宝藏地图与轻浪。",
-    "Sky Castle": "云桥与天空铃声。",
-    "Robot City": "霓虹灯与小助手。",
-    "Candy Kingdom": "甜甜街道与闪光线索。",
-    "Toy Town": "玩具城与秘密机关。",
-    "Rainbow Ranch": "彩虹牧场与可爱小马。",
-    "Jungle Rescue": "鼓声、藤蔓与救援。",
-    "Ice Mountain": "水晶洞与雪中线索。",
-    "Desert Caravan": "金色沙丘与绿洲秘密。",
-    "Marvel World": "英雄面具与任务警报。",
-    "DC World": "城市灯光与勇敢信号。",
-    "Kpop Demon Hunter World": "闪亮舞台与隐藏影子。"
-  },
-  ms: {
-    "Magic Forest": "Pokok berbisik dan laluan bercahaya.",
-    "Space School": "Robot, bintang, dan pintu rahsia.",
-    "Ocean Quest": "Lumba-lumba, cangkerang, gua laut.",
-    "Dino Valley": "Gergasi mesra dan laluan tersembunyi.",
-    "Fairy Circus": "Sayap kecil dan khemah berkilau.",
-    "Pirate Cove": "Peta harta dan ombak lembut.",
-    "Sky Castle": "Jambatan awan dan loceng langit.",
-    "Robot City": "Lampu neon dan bot pembantu.",
-    "Candy Kingdom": "Jalan manis dan petunjuk berkilau.",
-    "Toy Town": "Mainan comel dan suis rahsia.",
-    "Rainbow Ranch": "Ladang pelangi dan kuda poni comel.",
-    "Jungle Rescue": "Gendang, pokok anggur, panggilan selamat.",
-    "Ice Mountain": "Gua kristal dan petunjuk salji.",
-    "Desert Caravan": "Gurun keemasan dan rahsia oasis.",
-    "Marvel World": "Topeng wira dan amaran misi.",
-    "DC World": "Lampu kota dan isyarat berani.",
-    "Kpop Demon Hunter World": "Pentas cerah dan bayang tersembunyi."
-  }
-};
+import { ui, type Language } from "@/lib/i18n";
+import { useLanguage } from "@/lib/language-context";
+import { WORLD_DATA, type DifficultyLevel } from "@/lib/world-data";
 
 type Choice = { id: string; text: string };
 
@@ -110,46 +32,78 @@ type PlayClientProps = {
   initialTheme?: string;
   initialWorld?: string;
   initialBranch?: string;
-  initialLang?: Language;
+  initialDifficulty?: string;
 };
+
+const DIFFICULTIES: DifficultyLevel[] = ["Beginner", "Intermediate", "Advanced"];
+const WORLD_ENTRIES = Object.entries(WORLD_DATA);
+const DEFAULT_WORLD_SLUG = WORLD_ENTRIES[0]?.[0] ?? "magic-forest";
 
 export default function PlayClient({
   initialName = "",
   initialTheme,
   initialWorld = "",
   initialBranch = "",
-  initialLang = "en"
+  initialDifficulty = ""
 }: PlayClientProps) {
   const router = useRouter();
-  const initialThemeValue = normalizeTheme(initialWorld || initialTheme || "");
-  const initialBranchValue = normalizeBranch(initialBranch);
-  const [lang, setLang] = useState<Language>(initialLang);
+  const { language: lang } = useLanguage();
+  const t = ui(lang);
+
+  const rawWorld = (initialWorld || initialTheme || "").trim();
+  const rawBranch = initialBranch.trim();
+  const hasBranchSelection = Boolean(rawWorld) && Boolean(rawBranch);
+  const routeWorldSlug = resolveWorldSlug(rawWorld);
+  const defaultWorldSlug = routeWorldSlug || DEFAULT_WORLD_SLUG;
+  const routeBranchSlug = resolveBranchSlug(rawBranch, defaultWorldSlug);
+  const launchMode = hasBranchSelection && Boolean(routeWorldSlug && routeBranchSlug);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [roundData, setRoundData] = useState<RoundPayload | null>(null);
-  const [theme, setTheme] = useState(
-    initialThemeValue
-      ? initialThemeValue
-      : themes[0].name
+  const [worldSlug, setWorldSlug] = useState(defaultWorldSlug);
+  const [branchSlug, setBranchSlug] = useState<string>(
+    routeBranchSlug || firstBranchSlug(defaultWorldSlug)
   );
-  const [branchName] = useState(initialBranchValue);
-  const [difficulty, setDifficulty] = useState(difficulties[0]);
+  const [difficulty, setDifficulty] = useState<DifficultyLevel>(
+    normalizeDifficulty(
+      initialDifficulty ||
+        (routeBranchSlug
+          ? WORLD_DATA[defaultWorldSlug]?.childWorlds?.[routeBranchSlug]?.difficulty
+          : undefined)
+    )
+  );
   const [userLine, setUserLine] = useState("");
   const [heroName, setHeroName] = useState(initialName);
   const [burstKey, setBurstKey] = useState(0);
   const [totalStars, setTotalStars] = useState(0);
-  const t = ui(lang);
-  const bonusReady = userLine.trim().length > 0;
-  const hasPresetTheme = Boolean(initialThemeValue);
-  const branchLabel = formatBranchLabel(branchName);
-  const branchIcon = branchEmoji(branchName);
-  const branchDescription = getBranchDescription(lang, branchName, theme);
+
+  const world = WORLD_DATA[worldSlug] ?? WORLD_DATA[DEFAULT_WORLD_SLUG];
+  const branchEntries = useMemo(() => Object.entries(world.childWorlds), [world]);
+  const branch = world.childWorlds[branchSlug];
+  const branchLabel = branch?.title || formatBranchLabel(branchSlug);
+  const branchDescription = branch?.description || getBranchDescription(lang, branchSlug, world.title);
+  const branchIcon = branchEmoji(branchSlug);
+  const branchLocked = branch ? totalStars < branch.requiredStars : false;
+
+  useEffect(() => {
+    if (!world.childWorlds[branchSlug]) {
+      setBranchSlug(firstBranchSlug(worldSlug));
+    }
+  }, [worldSlug, branchSlug, world.childWorlds]);
+
+  useEffect(() => {
+    if (!branch) return;
+    if (!initialDifficulty) {
+      setDifficulty(branch.difficulty);
+    }
+  }, [branch, initialDifficulty]);
 
   useEffect(() => {
     setRoundData(null);
     setSessionId(null);
-  }, [theme, difficulty, heroName, lang]);
+  }, [worldSlug, branchSlug, difficulty, heroName, lang]);
 
   useEffect(() => {
     fetch("/api/auth/me", { credentials: "include", cache: "no-store" })
@@ -159,6 +113,15 @@ export default function PlayClient({
   }, []);
 
   async function startSession() {
+    if (!branch) {
+      setError("Please choose a branch first.");
+      return;
+    }
+    if (branchLocked) {
+      setError(`This branch unlocks at ${branch.requiredStars}⭐.`);
+      return;
+    }
+
     setLoading(true);
     setError(null);
     try {
@@ -166,8 +129,9 @@ export default function PlayClient({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          worldName: theme,
-          branchName,
+          worldName: world.title,
+          worldSlug,
+          branchName: branchSlug,
           difficulty,
           heroName,
           lang
@@ -211,10 +175,7 @@ export default function PlayClient({
         if (data.storyId) {
           params.set("storyId", data.storyId);
           if (data.result) {
-            sessionStorage.setItem(
-              `storybah:result:${data.storyId}`,
-              JSON.stringify(data.result)
-            );
+            sessionStorage.setItem(`storybah:result:${data.storyId}`, JSON.stringify(data.result));
           }
         } else {
           params.set("sessionId", sessionId);
@@ -230,168 +191,9 @@ export default function PlayClient({
     }
   }
 
-  return (
-    <main className={`grid ${hasPresetTheme ? "play-focused" : ""}`}>
-      <section className="card grid setupCard">
-        <div className="breadcrumbs" aria-label="Breadcrumb">
-          <Link className="crumb" href="/dashboard/worlds">
-            World Hub
-          </Link>
-          {hasPresetTheme ? (
-            <>
-              <span className="crumb-sep">&gt;</span>
-              <Link className="crumb" href={`/world/${themeToSlug(theme)}`}>
-                {theme}
-              </Link>
-            </>
-          ) : null}
-          {hasPresetTheme && branchName ? (
-            <>
-              <span className="crumb-sep">&gt;</span>
-              <span className="crumb current">{branchLabel}</span>
-            </>
-          ) : null}
-        </div>
-
-        <h2>{branchName ? `${theme} – ${branchLabel}` : t.letsStart}</h2>
-        {branchName && (
-          <div className="branch-headline">
-            <div className="branch-icon" aria-hidden="true">
-              {branchIcon}
-            </div>
-            <div className="branch-copy">
-              <div className="branch-title">{theme} – {branchLabel}</div>
-              <div className="branch-description">{branchDescription}</div>
-            </div>
-          </div>
-        )}
-        {error && <div className="error-banner">{error}</div>}
-        <div className="grid">
-          {!hasPresetTheme && (
-            <>
-              <div className="section-title sectionTitle">{t.language}</div>
-              <div className="choice-grid">
-                {(["en", "zh", "ms"] as Language[]).map((code) => (
-                  <button
-                    key={code}
-                    className={`theme-card optionCard langOption ${lang === code ? "selected" : ""}`}
-                    onClick={() => setLang(code)}
-                    type="button"
-                  >
-                    <div className="theme-emoji">🌐</div>
-                    <div className="theme-name">{LANG_LABELS[code]}</div>
-                    <div className="theme-subtitle">{code.toUpperCase()}</div>
-                  </button>
-                ))}
-              </div>
-            </>
-          )}
-        </div>
-        <div className="grid">
-          {hasPresetTheme ? (
-            <>
-              <div className="section-title sectionTitle">
-                {lang === "zh" ? "你选择的世界" : lang === "ms" ? "Dunia Pilihan Anda" : "Your Chosen World"}
-              </div>
-              {(() => {
-                const coverSlug = theme.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-                return (
-                  <div className="theme-card optionCard worldCard selected worldSingleCard">
-                    <div className="world-cover">
-                      <img
-                        className="world-cover-img"
-                        src={`/worlds/${coverSlug}.png`}
-                        alt={`${theme} cover`}
-                      />
-                      <span className="world-cover-emoji">{themeEmoji(theme)}</span>
-                    </div>
-                    <div className="theme-name">{theme}</div>
-                    <div className="theme-subtitle">
-                      {themeDescriptions[lang]?.[theme] || "Tap to explore"}
-                    </div>
-                    {branchName && (
-                      <div className="world-branch-tag">
-                        {branchIcon} {branchLabel}
-                      </div>
-                    )}
-                  </div>
-                );
-              })()}
-            </>
-          ) : (
-            <>
-              <div className="section-title sectionTitle">{t.pickWorld}</div>
-              <div className="choice-grid">
-                {themes.map((item) => {
-                  const locked = totalStars < item.unlock;
-                  const coverSlug = item.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-                  return (
-                    <button
-                      key={item.name}
-                      className={`theme-card optionCard worldCard ${theme === item.name ? "selected" : ""} ${
-                        locked ? "locked" : ""
-                      }`}
-                      onClick={() => !locked && setTheme(item.name)}
-                      type="button"
-                    >
-                      <div className="world-cover">
-                        <img
-                          className="world-cover-img"
-                          src={`/worlds/${coverSlug}.png`}
-                          alt={`${item.name} cover`}
-                        />
-                        <span className="world-cover-emoji">{themeEmoji(item.name)}</span>
-                      </div>
-                      <div className="theme-name">{item.name}</div>
-                      <div className="theme-subtitle">
-                        {themeDescriptions[lang]?.[item.name] || "Tap to explore"}
-                      </div>
-                      {locked && (
-                        <div className="theme-lock unlockPill">
-                          {t.locked} · {t.unlockNext} {item.unlock} ⭐
-                        </div>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            </>
-          )}
-        </div>
-        <div className="grid">
-          <div className="section-title sectionTitle">{t.heroName}</div>
-          <input
-            className="input"
-            value={heroName}
-            onChange={(e) => setHeroName(e.target.value)}
-            placeholder={t.heroPlaceholder}
-          />
-        </div>
-        <div className="grid">
-          <div className="section-title sectionTitle">{t.pickLevel}</div>
-          <div className="choice-grid">
-            {difficulties.map((d) => (
-              <button
-                key={d}
-                className={`theme-card optionCard levelCard ${d.toLowerCase()} ${
-                  difficulty === d ? "selected" : ""
-                }`}
-                onClick={() => setDifficulty(d)}
-                type="button"
-              >
-                <div className="theme-emoji">{difficultyEmoji(d)}</div>
-                <div className="theme-name">{difficultyLabel(d, t)}</div>
-                <div className="theme-subtitle">{difficultyHint(d, t)}</div>
-              </button>
-            ))}
-          </div>
-        </div>
-        <button className="button btnPrimary" onClick={startSession} disabled={loading}>
-          {loading ? t.gettingReady : lang === "zh" ? "开始任务" : lang === "ms" ? "Mula Misi" : "Start Mission"}
-        </button>
-      </section>
-
-      {roundData && (
+  if (roundData) {
+    return (
+      <main className="grid">
         <section className="card grid play-card playPanel">
           <ConfettiBurst burstKey={burstKey} />
           {roundData.maxRounds && roundData.round >= roundData.maxRounds && (
@@ -403,18 +205,15 @@ export default function PlayClient({
             {t.round} {roundData.round} / {roundData.maxRounds ?? 10}
           </div>
           <div className="scene-card missionMeta">
-            <div className="scene-emoji metaIcon">{themeEmoji(theme)}</div>
+            <div className="scene-emoji metaIcon">{themeEmoji(world.title)}</div>
             <div className="metaLines">
               <div className="scene-title value">{roundData.scene.hero}</div>
               <div className="scene-meta">
-                <span className="label">{t.location}:</span>{" "}
-                <span className="value">{roundData.scene.location}</span>{" "}
-                <span className="label">· {t.mood}:</span>{" "}
-                <span className="value">{roundData.scene.mood}</span>
+                <span className="label">{t.location}:</span> <span className="value">{roundData.scene.location}</span>{" "}
+                <span className="label">· {t.mood}:</span> <span className="value">{roundData.scene.mood}</span>
               </div>
               <div className="scene-meta">
-                <span className="label">{t.goal}:</span>{" "}
-                <span className="value">{roundData.scene.conflict}</span>
+                <span className="label">{t.goal}:</span> <span className="value">{roundData.scene.conflict}</span>
               </div>
               {roundData.inventory && roundData.inventory.length > 0 && (
                 <div className="scene-meta">
@@ -423,7 +222,7 @@ export default function PlayClient({
               )}
             </div>
             <div className="avatar-card">
-              <div className="avatar-emoji">{avatarEmoji(theme)}</div>
+              <div className="avatar-emoji">{avatarEmoji(world.title)}</div>
               <div className="avatar-name">{roundData.scene.hero}</div>
             </div>
           </div>
@@ -455,37 +254,188 @@ export default function PlayClient({
               placeholder="Example: Mia felt excited and brave!"
             />
           </label>
-          <div className={`bonus-hint tipBar ${bonusReady ? "ready" : ""}`}>
-            {bonusReady ? t.bonusReady : t.bonusTip}
+          <div className={`bonus-hint tipBar ${userLine.trim().length > 0 ? "ready" : ""}`}>
+            {userLine.trim().length > 0 ? t.bonusReady : t.bonusTip}
           </div>
           <div>
             {t.targetWords}: {roundData.targetWords.join(", ")}
           </div>
         </section>
-      )}
+      </main>
+    );
+  }
+
+  return (
+    <main className="grid play-setup-only">
+      <section className="card grid setupCard">
+        <div className="breadcrumbs" aria-label="Breadcrumb">
+          <Link className="crumb" href="/dashboard/worlds">
+            World Hub
+          </Link>
+          {launchMode ? (
+            <>
+              <span className="crumb-sep">&gt;</span>
+              <Link className="crumb" href={`/world/${worldSlug}`}>
+                {world.title}
+              </Link>
+              <span className="crumb-sep">&gt;</span>
+              <span className="crumb current">{branchLabel}</span>
+            </>
+          ) : null}
+        </div>
+
+        <h2>{launchMode ? `${world.title} – ${branchLabel}` : t.letsStart}</h2>
+        {launchMode && branch && (
+          <div className="branch-headline">
+            <div className="branch-icon" aria-hidden="true">
+              {branchIcon}
+            </div>
+            <div className="branch-copy">
+              <div className="branch-title">
+                {world.title} – {branchLabel}
+              </div>
+              <div className="branch-description">{branchDescription}</div>
+            </div>
+          </div>
+        )}
+
+        {!launchMode && (
+          <>
+            <div className="grid">
+              <div className="section-title sectionTitle">{t.pickWorld}</div>
+              <div className="choice-grid">
+                {WORLD_ENTRIES.map(([slug, item]) => (
+                  <button
+                    key={slug}
+                    className={`theme-card optionCard worldCard ${worldSlug === slug ? "selected" : ""}`}
+                    onClick={() => setWorldSlug(slug)}
+                    type="button"
+                  >
+                    <div className="world-cover">
+                      <img className="world-cover-img" src={item.thumbnail} alt={`${item.title} cover`} />
+                      <span className="world-cover-emoji">{themeEmoji(item.title)}</span>
+                    </div>
+                    <div className="theme-name">{item.title}</div>
+                    <div className="theme-subtitle">{item.description}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="grid">
+              <div className="section-title sectionTitle">Branch</div>
+              <div className="choice-grid">
+                {branchEntries.map(([slug, item]) => {
+                  const locked = totalStars < item.requiredStars;
+                  return (
+                    <button
+                      key={slug}
+                      className={`theme-card optionCard worldCard ${branchSlug === slug ? "selected" : ""} ${locked ? "locked" : ""}`}
+                      onClick={() => {
+                        if (!locked) setBranchSlug(slug);
+                      }}
+                      type="button"
+                    >
+                      <div className="theme-name">{item.title}</div>
+                      <div className="theme-subtitle">{item.description}</div>
+                      <div className="theme-lock unlockPill">
+                        {locked ? `${t.locked} · ${item.requiredStars}⭐` : `${item.difficulty} · ${item.requiredStars}⭐`}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </>
+        )}
+
+        {launchMode && (
+          <details className="optional-hero-panel">
+            <summary>Optional Hero Name</summary>
+            <input
+              className="input"
+              value={heroName}
+              onChange={(e) => setHeroName(e.target.value)}
+              placeholder={t.heroPlaceholder}
+            />
+          </details>
+        )}
+
+        {!launchMode && (
+          <div className="grid">
+            <div className="section-title sectionTitle">{t.heroName}</div>
+            <input
+              className="input"
+              value={heroName}
+              onChange={(e) => setHeroName(e.target.value)}
+              placeholder={t.heroPlaceholder}
+            />
+          </div>
+        )}
+
+        <div className="grid">
+          <div className="section-title sectionTitle">{t.pickLevel}</div>
+          <div className="choice-grid">
+            {DIFFICULTIES.map((level) => (
+              <button
+                key={level}
+                className={`theme-card optionCard levelCard ${level.toLowerCase()} ${difficulty === level ? "selected" : ""}`}
+                onClick={() => setDifficulty(level)}
+                type="button"
+              >
+                <div className="theme-emoji">{difficultyEmoji(level)}</div>
+                <div className="theme-name">{difficultyLabel(level, t)}</div>
+                <div className="theme-subtitle">{difficultyHint(level, t)}</div>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {branchLocked && (
+          <div className="error-banner">This branch unlocks at {branch?.requiredStars ?? 0}⭐.</div>
+        )}
+        {error && <div className="error-banner">{error}</div>}
+
+        <button className="button btnPrimary" onClick={startSession} disabled={loading || !branch || branchLocked}>
+          {loading ? t.gettingReady : lang === "zh" ? "开始任务" : lang === "ms" ? "Mula Misi" : "Start Mission"}
+        </button>
+      </section>
     </main>
   );
 }
 
-function themeEmoji(theme: string) {
-  if (theme === "Magic Forest") return "✨";
-  if (theme === "Space School") return "🚀";
-  if (theme === "Ocean Quest") return "🌊";
-  if (theme === "Dino Valley") return "🦕";
-  if (theme === "Fairy Circus") return "🎪";
-  if (theme === "Pirate Cove") return "🏴‍☠️";
-  if (theme === "Sky Castle") return "🏰";
-  if (theme === "Robot City") return "🤖";
-  if (theme === "Candy Kingdom") return "🍭";
-  if (theme === "Toy Town") return "🧸";
-  if (theme === "Rainbow Ranch") return "🌈";
-  if (theme === "Jungle Rescue") return "🌿";
-  if (theme === "Ice Mountain") return "❄️";
-  if (theme === "Desert Caravan") return "🏜️";
-  if (theme === "Marvel World") return "🦸";
-  if (theme === "DC World") return "🛡️";
-  if (theme === "Kpop Demon Hunter World") return "🎤";
-  return "⭐";
+function firstBranchSlug(worldSlug: string) {
+  const world = WORLD_DATA[worldSlug] ?? WORLD_DATA[DEFAULT_WORLD_SLUG];
+  return Object.keys(world.childWorlds)[0] ?? "";
+}
+
+function resolveWorldSlug(value: string) {
+  if (!value) return "";
+  const normalized = value.trim().toLowerCase().replace(/[_\s]+/g, "-");
+  if (WORLD_DATA[normalized]) return normalized;
+  for (const [slug, world] of WORLD_ENTRIES) {
+    if (world.title.toLowerCase() === value.trim().toLowerCase()) {
+      return slug;
+    }
+  }
+  return "";
+}
+
+function resolveBranchSlug(value: string, worldSlug: string) {
+  if (!value) return "";
+  const world = WORLD_DATA[worldSlug];
+  if (!world) return "";
+  const normalized = value.trim().toLowerCase().replace(/[_\s]+/g, "-");
+  if (world.childWorlds[normalized]) return normalized;
+  return "";
+}
+
+function normalizeDifficulty(value?: string) {
+  const normalized = (value || "").trim().toLowerCase();
+  if (normalized === "beginner") return "Beginner";
+  if (normalized === "intermediate") return "Intermediate";
+  if (normalized === "advanced") return "Advanced";
+  return "Beginner";
 }
 
 function difficultyEmoji(level: string) {
@@ -507,6 +457,27 @@ function difficultyLabel(level: string, t: ReturnType<typeof ui>) {
   if (level === "Intermediate") return t.levelIntermediate;
   if (level === "Advanced") return t.levelAdvanced;
   return level;
+}
+
+function themeEmoji(theme: string) {
+  if (theme === "Magic Forest") return "✨";
+  if (theme === "Space School") return "🚀";
+  if (theme === "Ocean Quest") return "🌊";
+  if (theme === "Dino Valley") return "🦕";
+  if (theme === "Fairy Circus") return "🎪";
+  if (theme === "Pirate Cove") return "🏴‍☠️";
+  if (theme === "Sky Castle") return "🏰";
+  if (theme === "Robot City") return "🤖";
+  if (theme === "Candy Kingdom") return "🍭";
+  if (theme === "Toy Town") return "🧸";
+  if (theme === "Rainbow Ranch") return "🌈";
+  if (theme === "Jungle Rescue") return "🌿";
+  if (theme === "Ice Mountain") return "❄️";
+  if (theme === "Desert Caravan") return "🏜️";
+  if (theme === "Marvel World") return "🦸";
+  if (theme === "DC World") return "🛡️";
+  if (theme === "Kpop Demon Hunter World") return "🎤";
+  return "⭐";
 }
 
 function avatarEmoji(theme: string) {
@@ -531,25 +502,6 @@ function ConfettiBurst({ burstKey }: { burstKey: number }) {
       ))}
     </div>
   );
-}
-
-function normalizeTheme(value: string) {
-  if (!value) return "";
-  const normalized = value.trim().toLowerCase().replace(/[_\s]+/g, "-");
-  const bySlug = themes.find(
-    (item) => item.name.toLowerCase().replace(/[^a-z0-9]+/g, "-") === normalized
-  );
-  if (bySlug) return bySlug.name;
-  const byName = themes.find((item) => item.name.toLowerCase() === value.trim().toLowerCase());
-  return byName?.name || "";
-}
-
-function themeToSlug(value: string) {
-  return value.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-");
-}
-
-function normalizeBranch(value: string) {
-  return value.trim().replace(/[_]+/g, "-");
 }
 
 function formatBranchLabel(value: string) {
