@@ -1,25 +1,34 @@
 import PlayClient from "./PlayClient";
+import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
-export default function PlayPage({
+function pickParam(input?: string | string[]) {
+  if (!input) return "";
+  return Array.isArray(input) ? input[0] ?? "" : input;
+}
+
+export default async function PlayPage({
   searchParams
 }: {
-  searchParams?: {
-    name?: string;
-    theme?: string;
-    world?: string;
-    branch?: string;
-    difficulty?: string;
-  };
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }) {
+  const params = searchParams ? await searchParams : undefined;
+  const initialWorld = pickParam(params?.world);
+  const initialBranch = pickParam(params?.branch);
+  const initialDifficulty = pickParam(params?.difficulty);
+  const initialName = pickParam(params?.name);
+
+  if (!initialWorld || !initialBranch) {
+    redirect("/setup");
+  }
+
   return (
     <PlayClient
-      initialName={searchParams?.name ?? ""}
-      initialTheme={searchParams?.theme ?? ""}
-      initialWorld={searchParams?.world ?? ""}
-      initialBranch={searchParams?.branch ?? ""}
-      initialDifficulty={searchParams?.difficulty ?? ""}
+      initialName={initialName}
+      initialWorld={initialWorld}
+      initialBranch={initialBranch}
+      initialDifficulty={initialDifficulty}
     />
   );
 }

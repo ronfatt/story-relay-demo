@@ -29,19 +29,15 @@ type RoundPayload = {
 
 type PlayClientProps = {
   initialName?: string;
-  initialTheme?: string;
   initialWorld?: string;
   initialBranch?: string;
   initialDifficulty?: string;
 };
 
 const DIFFICULTIES: DifficultyLevel[] = ["Beginner", "Intermediate", "Advanced"];
-const WORLD_ENTRIES = Object.entries(WORLD_DATA);
-const DEFAULT_WORLD_SLUG = WORLD_ENTRIES[0]?.[0] ?? "magic-forest";
 
 export default function PlayClient({
   initialName = "",
-  initialTheme,
   initialWorld = "",
   initialBranch = "",
   initialDifficulty = ""
@@ -50,60 +46,33 @@ export default function PlayClient({
   const { language: lang } = useLanguage();
   const t = ui(lang);
 
-  const rawWorld = (initialWorld || initialTheme || "").trim();
-  const rawBranch = initialBranch.trim();
-  const hasBranchSelection = Boolean(rawWorld) && Boolean(rawBranch);
-  const routeWorldSlug = resolveWorldSlug(rawWorld);
-  const defaultWorldSlug = routeWorldSlug || DEFAULT_WORLD_SLUG;
-  const routeBranchSlug = resolveBranchSlug(rawBranch, defaultWorldSlug);
-  const launchMode = hasBranchSelection && Boolean(routeWorldSlug && routeBranchSlug);
+  const normalizedWorldSlug = resolveWorldSlug(initialWorld);
+  const normalizedBranchSlug = normalizedWorldSlug
+    ? resolveBranchSlug(initialBranch, normalizedWorldSlug)
+    : "";
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [roundData, setRoundData] = useState<RoundPayload | null>(null);
-  const [worldSlug, setWorldSlug] = useState(defaultWorldSlug);
-  const [branchSlug, setBranchSlug] = useState<string>(
-    routeBranchSlug || firstBranchSlug(defaultWorldSlug)
-  );
-  const [difficulty, setDifficulty] = useState<DifficultyLevel>(
-    normalizeDifficulty(
-      initialDifficulty ||
-        (routeBranchSlug
-          ? WORLD_DATA[defaultWorldSlug]?.childWorlds?.[routeBranchSlug]?.difficulty
-          : undefined)
-    )
-  );
   const [userLine, setUserLine] = useState("");
   const [heroName, setHeroName] = useState(initialName);
   const [burstKey, setBurstKey] = useState(0);
   const [totalStars, setTotalStars] = useState(0);
 
-  const world = WORLD_DATA[worldSlug] ?? WORLD_DATA[DEFAULT_WORLD_SLUG];
-  const branchEntries = useMemo(() => Object.entries(world.childWorlds), [world]);
-  const branch = world.childWorlds[branchSlug];
-  const branchLabel = branch?.title || formatBranchLabel(branchSlug);
-  const branchDescription = branch?.description || getBranchDescription(lang, branchSlug, world.title);
-  const branchIcon = branchEmoji(branchSlug);
-  const branchLocked = branch ? totalStars < branch.requiredStars : false;
-
-  useEffect(() => {
-    if (!world.childWorlds[branchSlug]) {
-      setBranchSlug(firstBranchSlug(worldSlug));
+  const [difficulty, setDifficulty] = useState<DifficultyLevel>(() => {
+    const preset = toDifficulty(initialDifficulty);
+    if (preset) return preset;
+    if (normalizedWorldSlug && normalizedBranchSlug) {
+      return WORLD_DATA[normalizedWorldSlug]?.childWorlds?.[normalizedBranchSlug]?.difficulty || "Beginner";
     }
-  }, [worldSlug, branchSlug, world.childWorlds]);
+    return "Beginner";
+  });
 
-  useEffect(() => {
-    if (!branch) return;
-    if (!initialDifficulty) {
-      setDifficulty(branch.difficulty);
-    }
-  }, [branch, initialDifficulty]);
-
-  useEffect(() => {
-    setRoundData(null);
-    setSessionId(null);
-  }, [worldSlug, branchSlug, difficulty, heroName, lang]);
+  const world = normalizedWorldSlug ? WORLD_DATA[normalizedWorldSlug] : null;
+  const branch = normalizedWorldSlug && normalizedBranchSlug
+    ? WORLD_DATA[normalizedWorldSlug]?.childWorlds?.[normalizedBranchSlug]
+    : null;
 
   useEffect(() => {
     fetch("/api/auth/me", { credentials: "include", cache: "no-store" })
@@ -112,12 +81,64 @@ export default function PlayClient({
       .catch(() => setTotalStars(0));
   }, []);
 
-  async function startSession() {
-    if (!branch) {
-      setError("Please choose a branch first.");
+  useEffect(() => {
+    if (roundData) return;
+    if (!normalizedWorldSlug || !normalizedBranchSlug || !world || !branch) {
+      router.replace("/setup");
       return;
     }
-    if (branchLocked) {
+
+    const normalizedDifficulty = normalizeDifficultyParam(initialDifficulty);
+    const nextParams = new URLSearchParams();
+    nextParams.set("world", normalizedWorldSlug);
+    nextParams.set("branch", normalizedBranchSlug);
+    if (normalizedDifficulty) {
+      nextParams.set("difficulty", normalizedDifficulty);
+    }
+
+    const currentParams = new URLSearchParams();
+    if (initialWorld) currentParams.set("world", initialWorld);
+    if (initialBranch) currentParams.set("branch", initialBranch);
+    if (initialDifficulty) currentParams.set("difficulty", initialDifficulty);
+
+    if (nextParams.toString() !== currentParams.toString()) {
+      router.replace(`/play?${nextParams.toString()}`);
+    }
+  }, [
+    branch,
+    initialBranch,
+    initialDifficulty,
+    initialWorld,
+    normalizedBranchSlug,
+    normalizedWorldSlug,
+    roundData,
+    router,
+    world
+  ]);
+
+  useEffect(() => {
+    if (!branch) return;
+    const preset = toDifficulty(initialDifficulty);
+    if (preset) {
+      setDifficulty(preset);
+      return;
+    }
+    setDifficulty(branch.difficulty);
+  }, [branch, initialDifficulty]);
+
+  useEffect(() => {
+    setRoundData(null);
+    setSessionId(null);
+  }, [normalizedWorldSlug, normalizedBranchSlug, difficulty, heroName, lang]);
+
+  async function startSession() {
+    if (!world || !branch || !normalizedWorldSlug || !normalizedBranchSlug) {
+      setError("Missing world or branch.");
+      return;
+    }
+
+    const locked = totalStars < branch.requiredStars;
+    if (locked) {
       setError(`This branch unlocks at ${branch.requiredStars}⭐.`);
       return;
     }
@@ -130,8 +151,8 @@ export default function PlayClient({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           worldName: world.title,
-          worldSlug,
-          branchName: branchSlug,
+          worldSlug: normalizedWorldSlug,
+          branchName: normalizedBranchSlug,
           difficulty,
           heroName,
           lang
@@ -171,7 +192,7 @@ export default function PlayClient({
       setUserLine("");
       setBurstKey(Date.now());
       if (data.done) {
-        const params = new URLSearchParams({ lang });
+        const params = new URLSearchParams();
         if (data.storyId) {
           params.set("storyId", data.storyId);
           if (data.result) {
@@ -193,8 +214,8 @@ export default function PlayClient({
 
   if (roundData) {
     return (
-      <main className="grid">
-        <section className="card grid play-card playPanel">
+      <main className="grid dashboard-neon play-mode">
+        <section className="card sectionCard grid play-card playPanel">
           <ConfettiBurst burstKey={burstKey} />
           {roundData.maxRounds && roundData.round >= roundData.maxRounds && (
             <div className="last-round-banner">
@@ -205,7 +226,7 @@ export default function PlayClient({
             {t.round} {roundData.round} / {roundData.maxRounds ?? 10}
           </div>
           <div className="scene-card missionMeta">
-            <div className="scene-emoji metaIcon">{themeEmoji(world.title)}</div>
+            <div className="scene-emoji metaIcon">{themeEmoji(world?.title || "")}</div>
             <div className="metaLines">
               <div className="scene-title value">{roundData.scene.hero}</div>
               <div className="scene-meta">
@@ -222,7 +243,7 @@ export default function PlayClient({
               )}
             </div>
             <div className="avatar-card">
-              <div className="avatar-emoji">{avatarEmoji(world.title)}</div>
+              <div className="avatar-emoji">{avatarEmoji(world?.title || "")}</div>
               <div className="avatar-name">{roundData.scene.hero}</div>
             </div>
           </div>
@@ -265,113 +286,58 @@ export default function PlayClient({
     );
   }
 
+  if (!world || !branch || !normalizedWorldSlug || !normalizedBranchSlug) {
+    return (
+      <main className="grid dashboard-neon play-mode">
+        <section className="card sectionCard grid play-card playPanel">
+          <div className="badge">Redirecting to setup...</div>
+        </section>
+      </main>
+    );
+  }
+
+  const branchLocked = totalStars < branch.requiredStars;
+  const normalizedDifficulty = (difficulty || "Beginner").toLowerCase();
+
   return (
-    <main className="grid play-setup-only">
-      <section className="card grid setupCard">
+    <main className="grid dashboard-neon play-mode">
+      <section className="card sectionCard grid setupCard playPanel">
         <div className="breadcrumbs" aria-label="Breadcrumb">
           <Link className="crumb" href="/dashboard/worlds">
             World Hub
           </Link>
-          {launchMode ? (
-            <>
-              <span className="crumb-sep">&gt;</span>
-              <Link className="crumb" href={`/world/${worldSlug}`}>
-                {world.title}
-              </Link>
-              <span className="crumb-sep">&gt;</span>
-              <span className="crumb current">{branchLabel}</span>
-            </>
-          ) : null}
+          <span className="crumb-sep">&gt;</span>
+          <Link className="crumb" href={`/world/${normalizedWorldSlug}`}>
+            {world.title}
+          </Link>
+          <span className="crumb-sep">&gt;</span>
+          <span className="crumb current">{branch.title}</span>
         </div>
 
-        <h2>{launchMode ? `${world.title} – ${branchLabel}` : t.letsStart}</h2>
-        {launchMode && branch && (
-          <div className="branch-headline">
-            <div className="branch-icon" aria-hidden="true">
-              {branchIcon}
-            </div>
-            <div className="branch-copy">
-              <div className="branch-title">
-                {world.title} – {branchLabel}
-              </div>
-              <div className="branch-description">{branchDescription}</div>
+        <div className="branch-headline">
+          <img className="world-detail-cover" src={branch.thumbnail} alt={`${branch.title} cover`} />
+          <div className="branch-copy">
+            <div className="hero-kicker">BRANCH</div>
+            <h2>
+              {world.title} – {branch.title}
+            </h2>
+            <div className="branch-description">{branch.description}</div>
+            <div className="world-child-meta">
+              <span className="world-child-pill">{branch.requiredStars} ⭐</span>
+              <span className="world-child-pill">{branch.difficulty}</span>
             </div>
           </div>
-        )}
+        </div>
 
-        {!launchMode && (
-          <>
-            <div className="grid">
-              <div className="section-title sectionTitle">{t.pickWorld}</div>
-              <div className="choice-grid">
-                {WORLD_ENTRIES.map(([slug, item]) => (
-                  <button
-                    key={slug}
-                    className={`theme-card optionCard worldCard ${worldSlug === slug ? "selected" : ""}`}
-                    onClick={() => setWorldSlug(slug)}
-                    type="button"
-                  >
-                    <div className="world-cover">
-                      <img className="world-cover-img" src={item.thumbnail} alt={`${item.title} cover`} />
-                      <span className="world-cover-emoji">{themeEmoji(item.title)}</span>
-                    </div>
-                    <div className="theme-name">{item.title}</div>
-                    <div className="theme-subtitle">{item.description}</div>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="grid">
-              <div className="section-title sectionTitle">Branch</div>
-              <div className="choice-grid">
-                {branchEntries.map(([slug, item]) => {
-                  const locked = totalStars < item.requiredStars;
-                  return (
-                    <button
-                      key={slug}
-                      className={`theme-card optionCard worldCard ${branchSlug === slug ? "selected" : ""} ${locked ? "locked" : ""}`}
-                      onClick={() => {
-                        if (!locked) setBranchSlug(slug);
-                      }}
-                      type="button"
-                    >
-                      <div className="theme-name">{item.title}</div>
-                      <div className="theme-subtitle">{item.description}</div>
-                      <div className="theme-lock unlockPill">
-                        {locked ? `${t.locked} · ${item.requiredStars}⭐` : `${item.difficulty} · ${item.requiredStars}⭐`}
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          </>
-        )}
-
-        {launchMode && (
-          <details className="optional-hero-panel">
-            <summary>Optional Hero Name</summary>
-            <input
-              className="input"
-              value={heroName}
-              onChange={(e) => setHeroName(e.target.value)}
-              placeholder={t.heroPlaceholder}
-            />
-          </details>
-        )}
-
-        {!launchMode && (
-          <div className="grid">
-            <div className="section-title sectionTitle">{t.heroName}</div>
-            <input
-              className="input"
-              value={heroName}
-              onChange={(e) => setHeroName(e.target.value)}
-              placeholder={t.heroPlaceholder}
-            />
-          </div>
-        )}
+        <details className="optional-hero-panel">
+          <summary>Optional Hero Name</summary>
+          <input
+            className="input"
+            value={heroName}
+            onChange={(e) => setHeroName(e.target.value)}
+            placeholder={t.heroPlaceholder}
+          />
+        </details>
 
         <div className="grid">
           <div className="section-title sectionTitle">{t.pickLevel}</div>
@@ -391,30 +357,44 @@ export default function PlayClient({
           </div>
         </div>
 
-        {branchLocked && (
-          <div className="error-banner">This branch unlocks at {branch?.requiredStars ?? 0}⭐.</div>
-        )}
+        {branchLocked && <div className="error-banner">This branch unlocks at {branch.requiredStars}⭐.</div>}
         {error && <div className="error-banner">{error}</div>}
 
-        <button className="button btnPrimary" onClick={startSession} disabled={loading || !branch || branchLocked}>
-          {loading ? t.gettingReady : lang === "zh" ? "开始任务" : lang === "ms" ? "Mula Misi" : "Start Mission"}
+        <button
+          className="button btnPrimary"
+          onClick={startSession}
+          disabled={loading || branchLocked}
+          type="button"
+        >
+          {loading
+            ? t.gettingReady
+            : lang === "zh"
+              ? "开始任务"
+              : lang === "ms"
+                ? "Mula Misi"
+                : "Start Mission"}
         </button>
+
+        <Link
+          href={`/play?world=${encodeURIComponent(normalizedWorldSlug)}&branch=${encodeURIComponent(
+            normalizedBranchSlug
+          )}&difficulty=${encodeURIComponent(normalizedDifficulty)}`}
+          className="hidden"
+          aria-hidden="true"
+        >
+          normalized-route
+        </Link>
       </section>
     </main>
   );
 }
 
-function firstBranchSlug(worldSlug: string) {
-  const world = WORLD_DATA[worldSlug] ?? WORLD_DATA[DEFAULT_WORLD_SLUG];
-  return Object.keys(world.childWorlds)[0] ?? "";
-}
-
 function resolveWorldSlug(value: string) {
   if (!value) return "";
-  const normalized = value.trim().toLowerCase().replace(/[_\s]+/g, "-");
+  const normalized = slugify(value);
   if (WORLD_DATA[normalized]) return normalized;
-  for (const [slug, world] of WORLD_ENTRIES) {
-    if (world.title.toLowerCase() === value.trim().toLowerCase()) {
+  for (const [slug, world] of Object.entries(WORLD_DATA)) {
+    if (slugify(world.title) === normalized) {
       return slug;
     }
   }
@@ -422,20 +402,35 @@ function resolveWorldSlug(value: string) {
 }
 
 function resolveBranchSlug(value: string, worldSlug: string) {
-  if (!value) return "";
+  if (!value || !worldSlug) return "";
   const world = WORLD_DATA[worldSlug];
   if (!world) return "";
-  const normalized = value.trim().toLowerCase().replace(/[_\s]+/g, "-");
+  const normalized = slugify(value);
   if (world.childWorlds[normalized]) return normalized;
+  for (const [slug, branch] of Object.entries(world.childWorlds)) {
+    if (slugify(branch.title) === normalized) {
+      return slug;
+    }
+  }
   return "";
 }
 
-function normalizeDifficulty(value?: string) {
+function slugify(value: string) {
+  return value.trim().toLowerCase().replace(/[_\s]+/g, "-");
+}
+
+function normalizeDifficultyParam(value?: string) {
+  const difficulty = toDifficulty(value);
+  if (!difficulty) return "";
+  return difficulty.toLowerCase();
+}
+
+function toDifficulty(value?: string): DifficultyLevel | null {
   const normalized = (value || "").trim().toLowerCase();
   if (normalized === "beginner") return "Beginner";
   if (normalized === "intermediate") return "Intermediate";
   if (normalized === "advanced") return "Advanced";
-  return "Beginner";
+  return null;
 }
 
 function difficultyEmoji(level: string) {
@@ -502,34 +497,4 @@ function ConfettiBurst({ burstKey }: { burstKey: number }) {
       ))}
     </div>
   );
-}
-
-function formatBranchLabel(value: string) {
-  if (!value) return "Main Path";
-  return value
-    .split("-")
-    .filter(Boolean)
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(" ");
-}
-
-function branchEmoji(value: string) {
-  const lowered = value.toLowerCase();
-  if (!lowered) return "🧭";
-  if (lowered.includes("shadow") || lowered.includes("demon")) return "🌒";
-  if (lowered.includes("hero")) return "🦸";
-  if (lowered.includes("ocean") || lowered.includes("wave")) return "🌊";
-  if (lowered.includes("space") || lowered.includes("star")) return "🚀";
-  return "🧭";
-}
-
-function getBranchDescription(lang: Language, branchName: string, worldName: string) {
-  const branch = formatBranchLabel(branchName || "Main Path");
-  if (lang === "zh") {
-    return `你正在进入 ${worldName} 的「${branch}」分支。你的选择会影响故事走向。`;
-  }
-  if (lang === "ms") {
-    return `Anda memasuki cabang "${branch}" untuk ${worldName}. Pilihan anda akan ubah cerita.`;
-  }
-  return `You are entering the ${branch} branch in ${worldName}. Your choices will shape this story path.`;
 }
